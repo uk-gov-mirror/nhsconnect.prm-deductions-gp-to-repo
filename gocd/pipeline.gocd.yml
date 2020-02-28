@@ -61,22 +61,22 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks build
-      # - docker:
-      #     clean_workspace: true
-      #     jobs:
-      #       build:
-      #         resources:
-      #           - docker
-      #         tasks:
-      #           - fetch:
-      #               stage: build
-      #               job: npm_install
-      #               source: build
-      #           - exec:
-      #               command: /bin/bash
-      #               arguments:
-      #                 - -c
-      #                 - ./tasks build_docker
+      - docker:
+          clean_workspace: true
+          jobs:
+            build:
+              resources:
+                - docker
+              tasks:
+                - fetch:
+                    stage: build
+                    job: npm_install
+                    source: build
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks build_docker
       # - test_docker:
       #     clean_workspace: true
       #     jobs:

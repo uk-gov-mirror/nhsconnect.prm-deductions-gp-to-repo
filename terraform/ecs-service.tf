@@ -1,6 +1,6 @@
 locals {
   ecs_cluster_id  = data.aws_ssm_parameter.deductions_private_ecs_cluster_id.value
-  ecs_tasks_sg_id = data.aws_ssm_parameter.deductions_private_gen_comp_sg_id.value
+  ecs_task_sg_id = data.aws_ssm_parameter.deductions_private_gp_to_repo_sg_id.value
   private_subnets = split(",", data.aws_ssm_parameter.deductions_private_private_subnets.value)
   alb_tg_arn      = aws_alb_target_group.alb-tg.arn
 }
@@ -13,7 +13,7 @@ resource "aws_ecs_service" "ecs-service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups = [local.ecs_tasks_sg_id]
+    security_groups = [local.ecs_task_sg_id]
     subnets         = local.private_subnets
   }
 
@@ -23,5 +23,7 @@ resource "aws_ecs_service" "ecs-service" {
     container_port   = var.port
   }
 
-  depends_on = [aws_alb_target_group.alb-tg, aws_alb_listener_rule.alb-listener-rule]
+  depends_on = [aws_alb_target_group.alb-tg, 
+                    aws_alb_listener_rule.alb-http-listener-rule, 
+                    aws_alb_listener_rule.alb-https-listener-rule]
 }

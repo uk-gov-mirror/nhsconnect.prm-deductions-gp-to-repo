@@ -12,12 +12,8 @@ data "aws_ssm_parameter" "deductions_private_ecs_cluster_id" {
   name = "/nhs/${var.environment}/deductions_private_ecs_cluster_id"
 }
 
-data "aws_ssm_parameter" "deductions_private_ecs_tasks_sg_id" {
-  name = "/nhs/${var.environment}/deductions_private_ecs_tasks_sg_id"
-}
-
-data "aws_ssm_parameter" "deductions_private_gen_comp_sg_id" {
-  name = "/nhs/${var.environment}/deductions_private_gen_comp_sg_id"
+data "aws_ssm_parameter" "deductions_private_gp_to_repo_sg_id" {
+  name = "/nhs/${var.environment}/deductions_private_gp_to_repo_sg_id"
 }
 
 data "aws_ssm_parameter" "deductions_private_private_subnets" {
@@ -34,5 +30,13 @@ data "aws_ssm_parameter" "deductions_private_vpc_id" {
 
 data "aws_ssm_parameter" "deductions_private_alb_arn" {
   name = "/nhs/${var.environment}/deductions_private_alb_arn"
+}
+
+data "aws_ssm_parameter" "deductions_private_alb_httpl_arn" {
+  name = "/nhs/${var.environment}/deductions_private_alb_httpl_arn"
+}
+
+data "aws_ssm_parameter" "deductions_private_alb_httpsl_arn" {
+  name = "/nhs/${var.environment}/deductions_private_alb_httpsl_arn"
 }
 

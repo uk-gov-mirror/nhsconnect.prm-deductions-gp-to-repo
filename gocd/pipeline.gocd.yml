@@ -21,7 +21,7 @@ common:
             - ./tasks wait_ecs
 
 pipelines:
-  'prm-deductions-generic-component':
+  'prm-deductions-gp-to-repo':
     group: deductions
     label_template: '${git[:8]}'
     materials:
@@ -89,35 +89,35 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks test_docker
-  "prm-deductions-generic-component.dev":
-    group: deductions
-    label_template: '${git[:8]}'
-    materials:
-      git:
-        type: configrepo
-      app:
-        pipeline: prm-deductions-generic-component
-        stage: test_docker
-      base_infra:
-        pipeline: prm-deductions-infra
-        stage: deploy_dev
-    environment_variables:
-      NHS_ENVIRONMENT: dev
-    stages:
-      - deploy:
-          clean_workspace: true
-          jobs:
-            deploy: *deploy_job
+  # "prm-deductions-gp-to-repo.dev":
+  #   group: deductions
+  #   label_template: '${git[:8]}'
+  #   materials:
+  #     git:
+  #       type: configrepo
+  #     app:
+  #       pipeline: prm-deductions-gp-to-repo
+  #       stage: test_docker
+  #     base_infra:
+  #       pipeline: prm-deductions-infra
+  #       stage: deploy_dev
+  #   environment_variables:
+  #     NHS_ENVIRONMENT: dev
+  #   stages:
+  #     - deploy:
+  #         clean_workspace: true
+  #         jobs:
+  #           deploy: *deploy_job
 
-      - test:
-          clean_workspace: true
-          jobs:
-            smoke:
-              resources:
-                - docker
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks smoke_test
+  #     - test:
+  #         clean_workspace: true
+  #         jobs:
+  #           smoke:
+  #             resources:
+  #               - docker
+  #             tasks:
+  #               - exec:
+  #                   command: /bin/bash
+  #                   arguments:
+  #                     - -c
+  #                     - ./tasks smoke_test

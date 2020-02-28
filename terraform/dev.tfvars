@@ -1,5 +1,6 @@
 environment          = "dev"
 component_name       = "gp-to-repo"
+dns_name             = "gp-to-repo"
 
 task_cpu             = 256
 task_memory          = 512

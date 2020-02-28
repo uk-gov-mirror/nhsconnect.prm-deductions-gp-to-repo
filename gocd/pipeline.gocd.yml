@@ -61,34 +61,34 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks build
-      - docker:
-          clean_workspace: true
-          jobs:
-            build:
-              resources:
-                - docker
-              tasks:
-                - fetch:
-                    stage: build
-                    job: npm_install
-                    source: build
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks build_docker
-      - test_docker:
-          clean_workspace: true
-          jobs:
-            test:
-              resources:
-                - docker
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks test_docker
+      # - docker:
+      #     clean_workspace: true
+      #     jobs:
+      #       build:
+      #         resources:
+      #           - docker
+      #         tasks:
+      #           - fetch:
+      #               stage: build
+      #               job: npm_install
+      #               source: build
+      #           - exec:
+      #               command: /bin/bash
+      #               arguments:
+      #                 - -c
+      #                 - ./tasks build_docker
+      # - test_docker:
+      #     clean_workspace: true
+      #     jobs:
+      #       test:
+      #         resources:
+      #           - docker
+      #         tasks:
+      #           - exec:
+      #               command: /bin/bash
+      #               arguments:
+      #                 - -c
+      #                 - ./tasks test_docker
   # "prm-deductions-gp-to-repo.dev":
   #   group: deductions
   #   label_template: '${git[:8]}'

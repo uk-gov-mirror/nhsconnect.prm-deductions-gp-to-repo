@@ -98,8 +98,8 @@ pipelines:
         blacklist:
           - docs/**/*.*
       app:
-        pipeline: prm-deductions-gp2gp-adaptor
-        stage: build_docker
+        pipeline: prm-deductions-gp-to-repo
+        stage: docker
       base_infra:
         pipeline: prm-deductions-infra
         stage: deploy_dev

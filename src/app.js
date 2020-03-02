@@ -2,7 +2,7 @@ import express from 'express';
 import httpContext from 'express-http-context';
 import { errorLogger, logger as requestLogger } from 'express-winston';
 import swaggerUi from 'swagger-ui-express';
-import deductPatient from './api/deductPatient';
+import deductPatient from './api/deduct-patient';
 import healthCheck from './api/health';
 import { options } from './config/logging';
 import swaggerDocument from './swagger.json';

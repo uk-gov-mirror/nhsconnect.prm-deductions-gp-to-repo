@@ -8,6 +8,10 @@ data "aws_ssm_parameter" "authorization_keys" {
   name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/${var.component_name}/authorization_keys"
 }
 
+data "aws_ssm_parameter" "gp2gp_authorization_keys" {
+  name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/gp2gp-adaptor/authorization_keys"
+}
+
 data "aws_ssm_parameter" "deductions_private_ecs_cluster_id" {
   name = "/nhs/${var.environment}/deductions_private_ecs_cluster_id"
 }

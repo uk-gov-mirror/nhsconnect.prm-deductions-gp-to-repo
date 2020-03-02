@@ -120,7 +120,7 @@ pipelines:
         blacklist:
           - docs/**/*.*
       dev_env:
-        pipeline: prm-deductions-gp2gp-adaptor.dev
+        pipeline: prm-deductions-gp-to-repo.dev
         stage: deploy #TODO: Add a smoke test in dev, then depend on smoke test
       base_infra:
         pipeline: prm-deductions-infra

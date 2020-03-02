@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Component Template",
+    "description": "GP to Repo Component",
     "version": "1.0.0",
-    "title": "Component Template"
+    "title": "GP to Repo"
   },
   "paths": {
     "/health": {

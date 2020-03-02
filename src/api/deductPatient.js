@@ -2,7 +2,6 @@ import express from 'express';
 import { param } from 'express-validator';
 import { checkIsAuthenticated } from '../middleware/auth';
 import { validate } from '../middleware/validation';
-// import logger from '../config/logging';
 const router = express.Router();
 
 const validationRules = [

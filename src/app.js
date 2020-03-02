@@ -2,8 +2,7 @@ import express from 'express';
 import httpContext from 'express-http-context';
 import { errorLogger, logger as requestLogger } from 'express-winston';
 import swaggerUi from 'swagger-ui-express';
-import example from './api/example';
-import exampleAuthenticated from './api/exampleAuthenticated';
+import deductPatient from './api/deductPatient';
 import healthCheck from './api/health';
 import { options } from './config/logging';
 import swaggerDocument from './swagger.json';
@@ -14,10 +13,7 @@ app.use(httpContext.middleware);
 app.use(requestLogger(options));
 
 app.use('/health', healthCheck);
-
-app.use('/example', example);
-app.use('/exampleAuthenticated', exampleAuthenticated);
-
+app.use('/deduct-patient', deductPatient);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger(options));

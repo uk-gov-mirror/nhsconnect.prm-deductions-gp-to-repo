@@ -4,6 +4,7 @@ locals {
   task_log_group      = "/nhs/deductions/${var.environment}-${data.aws_caller_identity.current.account_id}/${var.component_name}"
   environment_variables = [
     { name = "NODE_ENV", value = var.environment },
+    { name = "GP2GP_URL", value = "https://${var.environment}.gp2gp-adaptor.patient-deductions.nhs.uk" }
   ]
   secret_environment_variables = [
     { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn },

@@ -9,7 +9,7 @@ export const message = {
 };
 
 router.get('/', (req, res) => {
-  res.json({ ...message, node_env: config.nodeEnv });
+  res.json({ ...message, node_env: config.nodeEnv, example: process.env.GP2GP_AUTHORIZATION_KEYS });
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import express from 'express';
-import config from '../config';
+import * as config from '../config';
 const router = express.Router();
 
 export const message = {
@@ -8,8 +8,10 @@ export const message = {
   status: 'running'
 };
 
+const { nodeEnv } = config.default;
+
 router.get('/', (req, res) => {
-  res.json({ ...message, node_env: config.nodeEnv, example: process.env.GP2GP_AUTHORIZATION_KEYS });
+  res.json({ ...message, nodeEnv });
 });
 
 export default router;

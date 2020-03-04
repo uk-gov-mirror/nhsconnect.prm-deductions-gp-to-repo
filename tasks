@@ -13,6 +13,16 @@ function check_env {
   fi
 }
 
+function configure_local_envs {
+  export GPTOREPO_URL="http://gptorepo:3000"
+  export NODE_ENV=local
+  export NHS_ENVIRONMENT="${NHS_ENVIRONMENT:-test}"
+  export AUTHORIZATION_KEYS=not-real
+  export GP2GP_AUTHORIZATION_KEYS=also-not-real
+  export GP2GP_URL="www.notreal.com"
+  export GPTOREPO_DOCKER_IMAGE="${GPTOREPO_DOCKER_IMAGE:-$IMAGE_REPO_NAME}"
+}
+
 function tf_plan {
   operation=$1
   cd terraform
@@ -104,19 +114,28 @@ case "${command}" in
       docker push $REPOSITORY_URI:$IMAGE_TAG
       ;;
   _test_docker)
-      while ! curl -i ${PORTAL_URL}; do
-        echo "Waiting for portal server endpoint at ${PORTAL_URL}"
+      npm install axios
+      echo "Waiting for gp-to-repo endpoint to start responding at ${GPTOREPO_URL}"
+      count=1
+      set +e
+      while ! node infra-tests/test_health.js; do
+        echo "Waiting for gp-to-repo endpoint at ${GPTOREPO_URL}"
         sleep 1
         ((count++))
         if [ 30 -le $count ]; then
-          echo "Timed-out waiting for portal server at ${PORTAL_URL}"
+          echo "Timed-out waiting for gp-to-repo endpoint at ${GPTOREPO_URL}"
           exit 5
         fi
       done
+      echo "GP To Repo endpoint at ${GPTOREPO_URL} is healthy"
       ;;
   test_docker)
-      export PORTAL_URL="http://${PORTAL_DOMAIN_NAME}:3000"
+      export PORTAL_URL="http://gptorepo:3000"
       export PORTAL_DOCKER_IMAGE="${PORTAL_DOCKER_IMAGE:-$IMAGE_REPO_NAME}"
+      dojo -c Dojofile-dtest "./tasks _test_docker"
+      ;;
+  test_docker_local)
+      configure_local_envs
       dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   tf)

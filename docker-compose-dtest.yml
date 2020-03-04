@@ -2,8 +2,8 @@ version: '2'
 services:
   default:
     links:
-      - portal:portal
+      - gptorepo:gptorepo
     ports:
       - 3000:3000
-  portal:
-    image: ${PORTAL_DOCKER_IMAGE}
+  gptorepo:
+    image: ${GPTOREPO_DOCKER_IMAGE}

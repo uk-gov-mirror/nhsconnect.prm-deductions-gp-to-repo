@@ -113,30 +113,13 @@ case "${command}" in
       docker push $REPOSITORY_URI:latest
       docker push $REPOSITORY_URI:$IMAGE_TAG
       ;;
-  _test_docker)
-      npm install axios
-      echo "Waiting for gp-to-repo endpoint to start responding at ${GPTOREPO_URL}"
-      count=1
-      set +e
-      while ! node infra-tests/test_health.js; do
-        echo "Waiting for gp-to-repo endpoint at ${GPTOREPO_URL}"
-        sleep 1
-        ((count++))
-        if [ 30 -le $count ]; then
-          echo "Timed-out waiting for gp-to-repo endpoint at ${GPTOREPO_URL}"
-          exit 5
-        fi
-      done
-      echo "GP To Repo endpoint at ${GPTOREPO_URL} is healthy"
-      ;;
   test_docker)
-      export PORTAL_URL="http://gptorepo:3000"
-      export PORTAL_DOCKER_IMAGE="${PORTAL_DOCKER_IMAGE:-$IMAGE_REPO_NAME}"
-      dojo -c Dojofile-dtest "./tasks _test_docker"
+      export GPTOREPO_DOCKER_IMAGE=$REPOSITORY_URI:$IMAGE_TAG
+      dojo -c Dojofile-dtest "./tasks _smoke_test"
       ;;
   test_docker_local)
       configure_local_envs
-      dojo -c Dojofile-dtest "./tasks _test_docker"
+      dojo -c Dojofile-dtest "./tasks _smoke_test"
       ;;
   tf)
       check_env
@@ -168,7 +151,7 @@ case "${command}" in
       ;;
   _smoke_test)
       npm install
-      npm run test-smoke
+      npm run test:functional
       ;;
   smoke_test)
       dojo "./tasks _smoke_test"

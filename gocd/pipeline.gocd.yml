@@ -77,18 +77,6 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks build_docker
-      # - test_docker:
-      #     clean_workspace: true
-      #     jobs:
-      #       test:
-      #         resources:
-      #           - docker
-      #         tasks:
-      #           - exec:
-      #               command: /bin/bash
-      #               arguments:
-      #                 - -c
-      #                 - ./tasks test_docker
   'prm-deductions-gp-to-repo.dev':
     group: deductions
     label_template: '${git[:8]}'
@@ -110,7 +98,19 @@ pipelines:
           clean_workspace: true
           jobs:
             deploy: *deploy_job
-
+      - test_docker:
+          clean_workspace: true
+          jobs:
+            test:
+              resources:
+                - deductions-private
+                - dev
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks test_docker
   'prm-deductions-gp-to-repo.test':
     group: deductions
     label_template: '${git[:8]}'
@@ -132,3 +132,16 @@ pipelines:
           clean_workspace: true
           jobs:
             deploy: *deploy_job
+      - test_docker:
+          clean_workspace: true
+          jobs:
+            test:
+              resources:
+                - deductions-private
+                - test
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks test_docker

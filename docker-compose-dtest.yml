@@ -6,4 +6,4 @@ services:
     ports:
       - 3000:3000
   gptorepo:
-    image: ${GPTOREPO_DOCKER_IMAGE}
+    image: ${REPOSITORY_URI}:latest

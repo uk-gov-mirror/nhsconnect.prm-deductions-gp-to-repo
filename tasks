@@ -20,7 +20,7 @@ function configure_local_envs {
   export AUTHORIZATION_KEYS=not-real
   export GP2GP_AUTHORIZATION_KEYS=also-not-real
   export GP2GP_URL="www.notreal.com"
-  export GPTOREPO_DOCKER_IMAGE="${GPTOREPO_DOCKER_IMAGE:-$IMAGE_REPO_NAME}"
+  export REPOSITORY_URI=$IMAGE_REPO_NAME
 }
 
 function tf_plan {
@@ -53,6 +53,21 @@ function tf_apply {
 function docker_login {
   echo Logging in to Amazon ECR...
   eval $(dojo -c Dojofile-infra "aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION")
+}
+
+function build_docker_image {
+  echo Build started on `date`
+  COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+  IMAGE_TAG=${COMMIT_HASH}
+  echo Building the Docker image...
+  docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG .
+  echo Build completed on `date`
+}
+
+function configure_docker_repository_uri {
+    docker_login
+    AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
+    REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
 }
 
 function get_aws_secret {
@@ -88,38 +103,48 @@ case "${command}" in
   test)
       dojo "./tasks _test"
       ;;
+  _test_integration)
+      npm install
+      npm run test:integration
+      ;;
+  test_integration)
+      dojo -c Dojofile-itest "./tasks _test_integration"
+      ;;
+  _test_functional)
+      npm install
+      npm run test:functional
+      ;;
+  test_functional)
+      export GPTOREPO_URL=https://${NHS_ENVIRONMENT}.gp-to-repo.patient-deductions.nhs.uk
+      dojo "./tasks _test_functional"
+      ;;
+  _test_coverage)
+      npm install
+      npm run test:coverage
+      ;;
+  test_coverage)
+      dojo -c Dojofile-itest "./tasks _test_coverage"
+      ;;
   build_docker_local)
-      REPOSITORY_URI=$IMAGE_REPO_NAME
-      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
-      IMAGE_TAG=${COMMIT_HASH}
-      echo Build started on `date`
-      echo Building the Docker image...
-      docker build -t $REPOSITORY_URI:latest .
-      docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-      echo Build completed on `date`
+      configure_local_envs
+      build_docker_image
       ;;
   build_docker)
-      docker_login
-      AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
-      REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
-      ./tasks build_docker_local
-      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
-      IMAGE_TAG=${COMMIT_HASH}
-      docker tag $IMAGE_REPO_NAME $REPOSITORY_URI:$IMAGE_TAG
-      docker tag $IMAGE_REPO_NAME $REPOSITORY_URI:latest
+      configure_docker_repository_uri
+      build_docker_image
       echo "Pushing the Docker image...
       $REPOSITORY_URI:latest
       $REPOSITORY_URI:$IMAGE_TAG"
-      docker push $REPOSITORY_URI:latest
-      docker push $REPOSITORY_URI:$IMAGE_TAG
+      docker push $REPOSITORY_URI
       ;;
   test_docker)
-      export GPTOREPO_DOCKER_IMAGE=$REPOSITORY_URI:$IMAGE_TAG
-      dojo -c Dojofile-dtest "./tasks _smoke_test"
+      configure_docker_repository_uri
+      export GPTOREPO_URL="http://gptorepo:3000"
+      dojo -c Dojofile-dtest "./tasks _test_functional"
       ;;
   test_docker_local)
       configure_local_envs
-      dojo -c Dojofile-dtest "./tasks _smoke_test"
+      dojo -c Dojofile-dtest "./tasks _test_functional"
       ;;
   tf)
       check_env
@@ -148,13 +173,6 @@ case "${command}" in
   wait_ecs)
       check_env
       dojo -c Dojofile-infra "./tasks _wait_ecs"
-      ;;
-  _smoke_test)
-      npm install
-      npm run test:functional
-      ;;
-  smoke_test)
-      dojo "./tasks _smoke_test"
       ;;
   *)
       echo "Invalid command: '${command}'"

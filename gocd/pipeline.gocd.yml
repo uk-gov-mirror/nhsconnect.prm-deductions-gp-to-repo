@@ -122,7 +122,7 @@ pipelines:
           - docs/**/*.*
       app:
         pipeline: prm-deductions-gp-to-repo
-        stage: docker
+        stage: test_docker
       base_infra:
         pipeline: prm-deductions-infra
         stage: deploy_dev
@@ -156,7 +156,7 @@ pipelines:
           - docs/**/*.*
       dev_env:
         pipeline: prm-deductions-gp-to-repo.dev
-        stage: deploy
+        stage: functional
       base_infra:
         pipeline: prm-deductions-infra
         stage: deploy_test

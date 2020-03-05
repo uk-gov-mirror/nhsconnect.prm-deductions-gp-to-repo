@@ -30,7 +30,7 @@ router.post(
             status: '200 GP2GP response received',
             response: gp2gpResponse
           });
-          res.status(200).json({ message: gp2gpResponse.data });
+          res.status(200).json(gp2gpResponse.data);
           break;
         default:
           throw new Error(`Unexpected Error: ${gp2gpResponse.data}`);

@@ -1,18 +1,14 @@
 import request from 'supertest';
 import { when } from 'jest-when';
-import { updateLogEvent } from './middleware/logging';
-import { message } from './api/health';
-import { sendRequest } from './services/gp2gp-service';
-import app from './app';
-import config from './config';
+import { updateLogEvent } from '../middleware/logging';
+import { message } from '../api/health';
+import { sendRequest } from '../services/gp2gp-service';
+import app from '../app';
+import config from '../config';
 
-jest.mock('./config/logging');
-jest.mock('./middleware/logging', () => mockLoggingMiddleware());
-jest.mock('./services/gp2gp-service');
-jest.mock('express-winston', () => ({
-  errorLogger: () => (req, res, next) => next(),
-  logger: () => (req, res, next) => next()
-}));
+jest.mock('../config/logging');
+jest.mock('../middleware/logging');
+jest.mock('../services/gp2gp-service');
 
 function generateLogEvent(message) {
   return {
@@ -21,15 +17,6 @@ function generateLogEvent(message) {
       errors: message,
       status: 'failed'
     }
-  };
-}
-
-function mockLoggingMiddleware() {
-  const original = jest.requireActual('./middleware/logging.js');
-  return {
-    ...original,
-    updateLogEvent: jest.fn(),
-    updateLogEventWithError: jest.fn()
   };
 }
 
@@ -51,9 +38,6 @@ describe('app', () => {
         .mockResolvedValue({ status: 503, data: 'MHS error' })
         .calledWith('1111111111')
         .mockResolvedValue({ status: 200, data: message });
-    });
-    afterEach(() => {
-      jest.clearAllMocks();
     });
 
     it('should return a 200 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {

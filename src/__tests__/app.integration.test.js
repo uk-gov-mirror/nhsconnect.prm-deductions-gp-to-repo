@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { message } from './api/health';
-import app from './app';
-import config from './config';
+import { message } from '../api/health';
+import app from '../app';
+import config from '../config';
 
 describe('app', () => {
   describe('GET /health', () => {

@@ -24,9 +24,16 @@ describe('app', () => {
     beforeEach(() => {
       process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
       when(sendRequest)
-        .mockResolvedValue({ status: 503, data: 'MHS error' })
         .calledWith('1111111111')
         .mockResolvedValue({ status: 200, data: message });
+    });
+
+    it('should return a 200 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
+      request(app)
+        .post('/deduct-patient/1111111111')
+        .set('Authorization', 'correct-key')
+        .expect(200)
+        .end(done);
     });
   });
 });

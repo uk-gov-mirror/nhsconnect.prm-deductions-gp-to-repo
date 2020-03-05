@@ -60,3 +60,6 @@ data "aws_ssm_parameter" "deductions_private_int_alb_httpsl_arn" {
   name = "/nhs/${var.environment}/deductions_private_int_alb_httpsl_arn"
 }
 
+data "aws_ssm_parameter" "deductions_private_alb_internal_dns" {
+   name = "/nhs/${var.environment}/deductions_private_alb_internal_dns"
+} 

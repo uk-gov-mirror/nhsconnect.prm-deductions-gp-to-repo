@@ -31,41 +31,20 @@
         }
       }
     },
-    "/example": {
-      "get": {
+    "/deduct-patient/{nhsNumber}": {
+      "post": {
         "tags": [
-          "example"
+          "deduct-patient/{nhsNumber}"
         ],
-        "summary": "hello world example api call",
-        "produces": [
-          "text/plain"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful retrieval"
-          },
-          "500": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/errorResponse"
-            }
-          }
-        },
-        "security": [
+        "summary": "Sends PDS patient retrieval request to GP2GP Adaptor",
+        "parameters": [
           {
-            "api_key": []
+            "in": "path",
+            "name": "nhsNumber",
+            "description": "NHS Number (must be 10 digits)",
+            "required": true,
+            "type": "string"
           }
-        ]
-      }
-    },
-    "/exampleAuthenticated": {
-      "get": {
-        "tags": [
-          "exampleAuthenticated"
-        ],
-        "summary": "hello world example api call with authentication",
-        "produces": [
-          "text/plain"
         ],
         "responses": {
           "200": {

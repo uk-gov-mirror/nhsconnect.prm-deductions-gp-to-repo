@@ -53,7 +53,7 @@ pipelines:
               resources:
                 - docker
               tasks:
-                - exec
+                - exec:
                     command: /bin/bash
                     arguments:
                       - -c
@@ -156,7 +156,7 @@ pipelines:
           - docs/**/*.*
       dev_env:
         pipeline: prm-deductions-gp-to-repo.dev
-        stage: deploy #TODO: Add a smoke test in dev, then depend on smoke test
+        stage: deploy
       base_infra:
         pipeline: prm-deductions-infra
         stage: deploy_test

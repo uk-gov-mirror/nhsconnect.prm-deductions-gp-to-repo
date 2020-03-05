@@ -32,8 +32,6 @@ router.post(
           });
           res.status(200).json({ message: gp2gpResponse.data });
           break;
-        case 500:
-          throw new Error(`GP2GP Adaptor Error: ${gp2gpResponse.data}`);
         default:
           throw new Error(`Unexpected Error: ${gp2gpResponse.data}`);
       }

@@ -19,6 +19,12 @@ resource "aws_iam_role" "component-ecs-role" {
   name               = "${var.environment}-${var.component_name}-EcsTaskRole"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
   description        = "Role assumed by ${var.component_name} ECS task"
+
+  tags = {
+    Terraform = "true"
+    Environment = var.environment
+    Deductions-VPC = var.component_name
+  }
 }
 
 data "aws_iam_policy_document" "ecr_policy_doc" {

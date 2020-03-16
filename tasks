@@ -8,7 +8,7 @@ set -Eeo pipefail
 
 AWS_DEFAULT_REGION=eu-west-2
 IMAGE_REPO_NAME=deductions/gp-to-repo
-NHS_SERVICE=gp-to-repo
+export NHS_SERVICE=gp-to-repo
 
 ####################################
 # Instance (Environment) Variables #

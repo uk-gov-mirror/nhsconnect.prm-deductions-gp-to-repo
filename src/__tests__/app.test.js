@@ -20,7 +20,7 @@ describe('app', () => {
     });
   });
 
-  describe('POST /deduct-patient', () => {
+  describe('POST /deduction-requests', () => {
     beforeEach(() => {
       process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
       when(sendRequest)
@@ -30,7 +30,7 @@ describe('app', () => {
 
     it('should return a 200 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
       request(app)
-        .post('/deduct-patient/1111111111')
+        .post('/deduction-requests/1111111111')
         .set('Authorization', 'correct-key')
         .expect(200)
         .end(done);

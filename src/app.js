@@ -13,7 +13,7 @@ app.use(httpContext.middleware);
 app.use(requestLogger(options));
 
 app.use('/health', healthCheck);
-app.use('/deduct-patient', deductPatient);
+app.use('/deduction-requests', deductPatient);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger(options));

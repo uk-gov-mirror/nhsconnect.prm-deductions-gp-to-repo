@@ -21,7 +21,7 @@ describe('gp2gp-adaptor', () => {
     return sendRequest(nhsNumber).then(response => {
       expect(response.status).toBe(200);
       expect(axios.get).toBeCalledWith(
-        `${config.gp2gpUrl}/pds-retrieval/${nhsNumber}`,
+        `${config.gp2gpUrl}/patient-demographics/${nhsNumber}`,
         axiosHeaders
       );
     });
@@ -32,7 +32,7 @@ describe('gp2gp-adaptor', () => {
     const nhsNumber = '0123456789';
 
     return expect(sendRequest(nhsNumber)).rejects.toThrowError(
-      `POST ${config.gp2gpUrl}/pds-retrieval/${nhsNumber} - Request failed`
+      `POST ${config.gp2gpUrl}/patient-demographics/${nhsNumber} - Request failed`
     );
   });
 });

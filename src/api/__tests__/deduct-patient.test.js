@@ -19,7 +19,7 @@ function generateLogEvent(message) {
   };
 }
 
-describe('POST /deduct-patient', () => {
+describe('POST /deduction-requests', () => {
   beforeEach(() => {
     process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
     when(sendRequest)
@@ -31,20 +31,20 @@ describe('POST /deduct-patient', () => {
 
   it('should return a 200 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
     request(app)
-      .post('/deduct-patient/1111111111')
+      .post('/deduction-requests/1111111111')
       .set('Authorization', 'correct-key')
       .expect(200)
       .end(done);
   });
   it('should return a 401 when no authorization header provided', done => {
     request(app)
-      .post('/deduct-patient/1111111111')
+      .post('/deduction-requests/1111111111')
       .expect(401)
       .end(done);
   });
   it('should return a 403 when authorization key is incorrect', done => {
     request(app)
-      .post('/deduct-patient/1111111111')
+      .post('/deduction-requests/1111111111')
       .set('Authorization', 'incorrect-key')
       .expect(403)
       .end(done);
@@ -52,7 +52,7 @@ describe('POST /deduct-patient', () => {
   it('should return an error if :nhsNumber is less than 10 digits', done => {
     const errorMessage = [{ nhsNumber: "'nhsNumber' provided is not 10 characters" }];
     request(app)
-      .post('/deduct-patient/99')
+      .post('/deduction-requests/99')
       .set('Authorization', 'correct-key')
       .expect(422)
       .expect('Content-Type', /json/)
@@ -68,7 +68,7 @@ describe('POST /deduct-patient', () => {
   it('should return an error if :nhsNumber is not numeric', done => {
     const errorMessage = [{ nhsNumber: "'nhsNumber' provided is not numeric" }];
     request(app)
-      .post('/deduct-patient/xxxxxxxxxx')
+      .post('/deduction-requests/xxxxxxxxxx')
       .set('Authorization', 'correct-key')
       .expect(422)
       .expect('Content-Type', /json/)
@@ -83,7 +83,7 @@ describe('POST /deduct-patient', () => {
   });
   it('should return a 503 if sendRequest throws an error', done => {
     request(app)
-      .post('/deduct-patient/1234567890')
+      .post('/deduction-requests/1234567890')
       .set('Authorization', 'correct-key')
       .expect(res => {
         expect(res.status).toBe(503);

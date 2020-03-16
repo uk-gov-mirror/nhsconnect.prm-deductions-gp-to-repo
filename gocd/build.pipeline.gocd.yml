@@ -6,8 +6,8 @@ pipelines:
     materials:
       git:
         type: configrepo
-      blacklist:
-        - docs/**/*.*
+        blacklist:
+          - docs/**/*.*
     stages:
       - build:
           clean_workspace: true

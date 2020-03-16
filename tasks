@@ -38,7 +38,7 @@ function configure_local_envs {
   export REPOSITORY_URI=$IMAGE_REPO_NAME
 }
 
-function get_aws_secret {
+function get_aws_ssm_secret {
   secret_id=$1
   json=$(aws ssm get-parameter --with-decryption --region $AWS_DEFAULT_REGION --name $secret_id)
   if [ $? != 0 ]; then

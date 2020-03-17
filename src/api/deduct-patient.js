@@ -1,6 +1,6 @@
 import express from 'express';
 import { param } from 'express-validator';
-import { sendRetrievalRequest } from '../services/gp2gp-service';
+import { sendRetrievalRequest, sendUpdateRequest } from '../services/gp2gp-service';
 import { checkIsAuthenticated } from '../middleware/auth';
 import { updateLogEventWithError, updateLogEvent } from '../middleware/logging';
 import { validate } from '../middleware/validation';
@@ -24,16 +24,27 @@ router.post(
     try {
       const gp2gpResponse = await sendRetrievalRequest(req.params.nhsNumber);
 
-      switch (gp2gpResponse.status) {
-        case 200:
-          updateLogEvent({
-            status: '200 GP2GP response received',
-            response: gp2gpResponse
-          });
-          res.status(200).json(gp2gpResponse.data);
-          break;
-        default:
-          throw new Error(`Unexpected Error: ${gp2gpResponse.data}`);
+      if (gp2gpResponse.status === 200) {
+        updateLogEvent({
+          status: '200 GP2GP response received',
+          response: gp2gpResponse
+        });
+
+        const updateResponse = await sendUpdateRequest(
+          gp2gpResponse.data.data.serialChangeNumber,
+          gp2gpResponse.data.data.patientPdsId,
+          req.params.nhsNumber
+        );
+
+        if (updateResponse.status === 204) {
+          res.status(204).json(gp2gpResponse.data);
+        } else {
+          throw new Error(
+            `Retrieved pds data successfully, failed to update. Update response: ${updateResponse}`
+          );
+        }
+      } else {
+        throw new Error(`Unexpected Error: ${gp2gpResponse.data}`);
       }
       next();
     } catch (err) {

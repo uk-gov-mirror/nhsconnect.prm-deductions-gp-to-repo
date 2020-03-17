@@ -9,7 +9,11 @@ jest.mock('../../middleware/logging');
 jest.mock('../../services/gp2gp-service');
 
 const retrievalResponse = {
-  data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: 1111111111 }
+  data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: '1111111111' }
+};
+
+const invalidRetrievalResponse = {
+  data: { serialChangeNumber: '123', patientPdsId: 'hellno', nhsNumber: '1111111112' }
 };
 
 function generateLogEvent(message) {
@@ -29,11 +33,15 @@ describe('POST /deduction-requests', () => {
       .calledWith('1234567890')
       .mockResolvedValue({ status: 503, data: 'broken :(' })
       .calledWith('1111111111')
-      .mockResolvedValue({ status: 200, data: retrievalResponse });
+      .mockResolvedValue({ status: 200, data: retrievalResponse })
+      .calledWith('1111111112')
+      .mockResolvedValue({ status: 200, data: invalidRetrievalResponse });
 
     when(sendUpdateRequest)
       .calledWith('123', 'hello', '1111111111')
-      .mockResolvedValue({ status: 204 });
+      .mockResolvedValue({ status: 204 })
+      .calledWith('123', 'hellno', '1111111112')
+      .mockResolvedValue({ status: 503, data: 'could not update ods code on pds' });
   });
 
   it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
@@ -95,6 +103,16 @@ describe('POST /deduction-requests', () => {
       .expect(res => {
         expect(res.status).toBe(503);
         expect(res.body.errors).toBe('Unexpected Error: broken :(');
+      })
+      .end(done);
+  });
+  it('should return a 503 if patient is retrieved but not updated', done => {
+    request(app)
+      .post('/deduction-requests/1111111112')
+      .set('Authorization', 'correct-key')
+      .expect(503)
+      .expect(res => {
+        expect(res.body.errors).toBe('Failed to Update: could not update ods code on pds');
       })
       .end(done);
   });

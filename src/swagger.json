@@ -36,7 +36,7 @@
         "tags": [
           "deduction-requests/{nhsNumber}"
         ],
-        "summary": "Sends PDS patient retrieval request to GP2GP Adaptor",
+        "summary": "Sends PDS patient retrieval and update requests to GP2GP Adaptor",
         "parameters": [
           {
             "in": "path",
@@ -47,8 +47,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Successful retrieval"
+          "204": {
+            "description": "No Content"
           },
           "401": {
             "description": "Authorization header missing"

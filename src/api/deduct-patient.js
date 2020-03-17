@@ -1,6 +1,6 @@
 import express from 'express';
 import { param } from 'express-validator';
-import { sendRequest } from '../services/gp2gp-service';
+import { sendRetrievalRequest } from '../services/gp2gp-service';
 import { checkIsAuthenticated } from '../middleware/auth';
 import { updateLogEventWithError, updateLogEvent } from '../middleware/logging';
 import { validate } from '../middleware/validation';
@@ -22,7 +22,7 @@ router.post(
   validate,
   async (req, res, next) => {
     try {
-      const gp2gpResponse = await sendRequest(req.params.nhsNumber);
+      const gp2gpResponse = await sendRetrievalRequest(req.params.nhsNumber);
 
       switch (gp2gpResponse.status) {
         case 200:

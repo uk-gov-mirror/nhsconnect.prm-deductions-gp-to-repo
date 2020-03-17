@@ -2,7 +2,7 @@ import request from 'supertest';
 import { when } from 'jest-when';
 import { updateLogEvent } from '../../middleware/logging';
 import { message } from '../health';
-import { sendRequest } from '../../services/gp2gp-service';
+import { sendRetrievalRequest } from '../../services/gp2gp-service';
 import app from '../../app';
 
 jest.mock('../../config/logging');
@@ -22,7 +22,7 @@ function generateLogEvent(message) {
 describe('POST /deduction-requests', () => {
   beforeEach(() => {
     process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
-    when(sendRequest)
+    when(sendRetrievalRequest)
       .calledWith('1234567890')
       .mockResolvedValue({ status: 503, data: 'broken :(' })
       .calledWith('1111111111')
@@ -81,7 +81,7 @@ describe('POST /deduction-requests', () => {
       })
       .end(done);
   });
-  it('should return a 503 if sendRequest throws an error', done => {
+  it('should return a 503 if sendRetrievalRequest throws an error', done => {
     request(app)
       .post('/deduction-requests/1234567890')
       .set('Authorization', 'correct-key')

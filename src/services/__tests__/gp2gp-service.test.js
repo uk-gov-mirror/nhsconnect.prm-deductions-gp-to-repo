@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../../config';
-import { sendRequest } from '../../services/gp2gp-service';
+import { sendRetrievalRequest } from '../../services/gp2gp-service';
 
 jest.mock('../../config/logging');
 jest.mock('../../middleware/logging');
@@ -18,7 +18,7 @@ describe('gp2gp-adaptor', () => {
     axios.get.mockResolvedValue({ status: 200 });
     const nhsNumber = '0123456789';
 
-    return sendRequest(nhsNumber).then(response => {
+    return sendRetrievalRequest(nhsNumber).then(response => {
       expect(response.status).toBe(200);
       expect(axios.get).toBeCalledWith(
         `${config.gp2gpUrl}/patient-demographics/${nhsNumber}`,
@@ -31,7 +31,7 @@ describe('gp2gp-adaptor', () => {
     axios.get.mockRejectedValue(new Error());
     const nhsNumber = '0123456789';
 
-    return expect(sendRequest(nhsNumber)).rejects.toThrowError(
+    return expect(sendRetrievalRequest(nhsNumber)).rejects.toThrowError(
       `POST ${config.gp2gpUrl}/patient-demographics/${nhsNumber} - Request failed`
     );
   });

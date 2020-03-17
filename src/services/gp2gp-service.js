@@ -2,7 +2,7 @@ import axios from 'axios';
 import { updateLogEventWithError } from '../middleware/logging';
 import * as config from '../config/index';
 
-export const sendRequest = nhsNumber => {
+const sendRetrievalRequest = nhsNumber => {
   const { gp2gpUrl, gp2gpAuthKeys } = config.default;
   const url = `${gp2gpUrl}/patient-demographics/${nhsNumber}`;
   return new Promise((resolve, reject) => {
@@ -16,3 +16,5 @@ export const sendRequest = nhsNumber => {
       });
   });
 };
+
+export { sendRetrievalRequest };

@@ -31,10 +31,10 @@
         }
       }
     },
-    "/deduct-patient/{nhsNumber}": {
+    "/deduction-requests/{nhsNumber}": {
       "post": {
         "tags": [
-          "deduct-patient/{nhsNumber}"
+          "deduction-requests/{nhsNumber}"
         ],
         "summary": "Sends PDS patient retrieval request to GP2GP Adaptor",
         "parameters": [

@@ -1,6 +1,7 @@
 import httpContext from 'async-local-storage';
 import merge from 'lodash.merge';
 import logger from '../config/logging';
+import { setCorrelationInfo } from './correlation';
 
 const LOG_EVENT_KEY = 'logEvent';
 
@@ -15,6 +16,13 @@ export const middleware = (req, res, next) => {
   httpContext.set(LOG_EVENT_KEY, { status: 'unknown' });
   res.on('finish', eventFinished);
   next();
+};
+
+export const withContext = fn => {
+  httpContext.scope();
+  httpContext.set(LOG_EVENT_KEY, { status: 'unknown' });
+  setCorrelationInfo();
+  fn();
 };
 
 export const eventFinished = () => {

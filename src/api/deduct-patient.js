@@ -2,7 +2,7 @@ import express from 'express';
 import { param } from 'express-validator';
 import { sendRetrievalRequest } from '../services/gp2gp-service';
 import { handleUpdateRequest } from './handle-update-request';
-import { checkIsAuthenticated } from '../middleware/auth';
+import { authenticateRequest } from '../middleware/auth';
 import { updateLogEventWithError } from '../middleware/logging';
 import { validate } from '../middleware/validation';
 const router = express.Router();
@@ -18,7 +18,7 @@ const validationRules = [
 
 router.post(
   '/:nhsNumber',
-  checkIsAuthenticated,
+  authenticateRequest,
   validationRules,
   validate,
   async (req, res, next) => {

@@ -6,6 +6,7 @@ import app from '../../app';
 
 jest.mock('../../config/logging');
 jest.mock('../../middleware/logging');
+jest.mock('../../middleware/auth');
 jest.mock('../../services/gp2gp-service');
 
 const retrievalResponse = {
@@ -47,28 +48,13 @@ describe('POST /deduction-requests', () => {
   it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
     request(app)
       .post('/deduction-requests/1111111111')
-      .set('Authorization', 'correct-key')
       .expect(204)
-      .end(done);
-  });
-  it('should return a 401 when no authorization header provided', done => {
-    request(app)
-      .post('/deduction-requests/1111111111')
-      .expect(401)
-      .end(done);
-  });
-  it('should return a 403 when authorization key is incorrect', done => {
-    request(app)
-      .post('/deduction-requests/1111111111')
-      .set('Authorization', 'incorrect-key')
-      .expect(403)
       .end(done);
   });
   it('should return an error if :nhsNumber is less than 10 digits', done => {
     const errorMessage = [{ nhsNumber: "'nhsNumber' provided is not 10 characters" }];
     request(app)
       .post('/deduction-requests/99')
-      .set('Authorization', 'correct-key')
       .expect(422)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -84,7 +70,6 @@ describe('POST /deduction-requests', () => {
     const errorMessage = [{ nhsNumber: "'nhsNumber' provided is not numeric" }];
     request(app)
       .post('/deduction-requests/xxxxxxxxxx')
-      .set('Authorization', 'correct-key')
       .expect(422)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -99,7 +84,6 @@ describe('POST /deduction-requests', () => {
   it('should return a 503 if sendRetrievalRequest throws an error', done => {
     request(app)
       .post('/deduction-requests/1234567890')
-      .set('Authorization', 'correct-key')
       .expect(res => {
         expect(res.status).toBe(503);
         expect(res.body.errors).toBe('Unexpected Error: broken :(');
@@ -109,7 +93,6 @@ describe('POST /deduction-requests', () => {
   it('should return a 503 if patient is retrieved but not updated', done => {
     request(app)
       .post('/deduction-requests/1111111112')
-      .set('Authorization', 'correct-key')
       .expect(503)
       .expect(res => {
         expect(res.body.errors).toBe('Failed to Update: could not update ods code on pds');

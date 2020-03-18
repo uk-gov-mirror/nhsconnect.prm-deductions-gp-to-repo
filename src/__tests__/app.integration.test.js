@@ -14,12 +14,8 @@ const retrievalResponse = {
 describe('app', () => {
   beforeEach(() => {
     process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
-    axios.get.mockImplementation(() =>
-      Promise.resolve({ status: 200, data: retrievalResponse })
-    );
-    axios.patch.mockImplementation(() =>
-      Promise.resolve({ status: 204, data: {} })
-    );
+    axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: retrievalResponse }));
+    axios.patch.mockImplementation(() => Promise.resolve({ status: 204, data: {} }));
   });
 
   afterEach(() => {
@@ -96,7 +92,7 @@ describe('app', () => {
         .set('Authorization', 'correct-key')
         .expect(503)
         .expect(res => {
-          expect(res.body).toEqual({ "errors": "Failed to Update: incorrect data!" });
+          expect(res.body).toEqual({ errors: 'Failed to Update: incorrect data!' });
         })
         .end(done);
     });

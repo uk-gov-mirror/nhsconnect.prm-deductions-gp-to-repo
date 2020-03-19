@@ -5,5 +5,5 @@ services:
       - gp-to-repo:gp-to-repo
     ports:
       - 3000:3000
-  gptorepo:
+  gp-to-repo:
     image: ${REPOSITORY_URI}:latest

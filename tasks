@@ -29,7 +29,6 @@ function check_nhs_service {
 }
 
 function configure_local_envs {
-  export GPTOREPO_URL="http://gptorepo:3000"
   export NODE_ENV=local
   export NHS_ENVIRONMENT="${NHS_ENVIRONMENT:-test}"
   export AUTHORIZATION_KEYS=not-real
@@ -238,11 +237,7 @@ case "${command}" in
       configure_docker_repository_uri
       get_latest_commit_hash
       configure_service_url
-      export GPTOREPO_URL=$SERVICE_URL
       export AUTHORIZATION_KEYS=auth-key-1,auth-key-2
-      echo "Running tests with repo uri: ${REPOSITORY_URI}"
-      echo "Running tests with service url: ${SERVICE_URL}"
-      echo "Running tests with gp2repo url: ${GPTOREPO_URL}"
       dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   test_docker_local)

@@ -6,16 +6,13 @@ const { gp2gpUrl, gp2gpAuthKeys } = config.default;
 
 const sendRetrievalRequest = nhsNumber => {
   const url = `${gp2gpUrl}/patient-demographics/${nhsNumber}`;
-  return new Promise((resolve, reject) => {
-    return axios
-      .get(url, { headers: { Authorization: gp2gpAuthKeys } })
-      .then(resolve)
-      .catch(error => {
-        const axiosError = new Error(`GET ${url} - ${error.message || 'Request failed'}`);
-        updateLogEventWithError(axiosError);
-        reject(axiosError);
-      });
-  });
+  return axios
+    .get(url, { headers: { Authorization: gp2gpAuthKeys } })
+    .catch(error => {
+      const axiosError = new Error(`GET ${url} - ${error.message || 'Request failed'}`);
+      updateLogEventWithError(axiosError);
+      throw axiosError;
+    });
 };
 
 const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber) => {
@@ -32,19 +29,16 @@ const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber) => {
     }
   };
 
-  return new Promise((resolve, reject) => {
-    return axios
-      .patch(url, axiosBody, axiosHeaders)
-      .then(resolve)
-      .catch(error => {
-        const axiosError = new Error(
-          `PATCH ${url} - ${error.message ||
-            'Request failed'}, body: ${(axiosBody.serialChangeNumber, axiosBody.pdsId)}`
-        );
-        updateLogEventWithError(axiosError);
-        reject(axiosError);
-      });
-  });
+  return axios
+    .patch(url, axiosBody, axiosHeaders)
+    .catch(error => {
+      const axiosError = new Error(
+        `PATCH ${url} - ${error.message ||
+        'Request failed'}, body: ${(axiosBody.serialChangeNumber, axiosBody.pdsId)}`
+      );
+      updateLogEventWithError(axiosError);
+      throw axiosError;
+    });
 };
 
 export { sendRetrievalRequest, sendUpdateRequest };

@@ -36,6 +36,35 @@ function configure_local_envs {
   export GP2GP_AUTHORIZATION_KEYS=also-not-real
   export GP2GP_URL="www.notreal.com"
   export REPOSITORY_URI=$IMAGE_REPO_NAME
+  configure_service_url
+}
+
+function configure_service_url {
+  if [[ -z "${NHS_ENVIRONMENT}" ]]; then
+    export SERVICE_URL=http://${NHS_SERVICE}:3000
+  else
+    export SERVICE_URL=https://${NHS_ENVIRONMENT}.${NHS_SERVICE}.patient-deductions.nhs.uk
+  fi
+}
+
+function get_aws_account_id {
+    AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
+ }
+
+function configure_aws_service_gp2gp_auth_keys {
+    check_env
+    get_aws_account_id
+    parameter_name="/NHS/${NHS_ENVIRONMENT}-${AWS_ACCOUNT_ID}/gp2gp-adaptor/authorization_keys"
+    echo "${parameter_name}"
+    export AUTHORIZATION_KEYS=$(dojo -c Dojofile-infra "aws ssm get-parameter --with-decryption --region ${AWS_DEFAULT_REGION} --name  ${parameter_name} | jq -r .Parameter.Value")
+}
+
+function configure_aws_service_auth_keys {
+    check_env
+    get_aws_account_id
+    parameter_name="/NHS/${NHS_ENVIRONMENT}-${AWS_ACCOUNT_ID}/${NHS_SERVICE}/authorization_keys"
+    echo "${parameter_name}"
+    export AUTHORIZATION_KEYS=$(dojo -c Dojofile-infra "aws ssm get-parameter --with-decryption --region ${AWS_DEFAULT_REGION} --name  ${parameter_name} | jq -r .Parameter.Value")
 }
 
 function get_aws_ssm_secret {
@@ -175,7 +204,9 @@ case "${command}" in
       npm run test:functional
       ;;
   test_functional)
-      export GPTOREPO_URL=https://${NHS_ENVIRONMENT}.gp-to-repo.patient-deductions.nhs.uk
+      configure_aws_service_auth_keys
+      configure_aws_service_gp2gp_auth_keys
+      configure_service_url
       dojo "./tasks _test_functional"
       ;;
   _test_coverage)
@@ -197,15 +228,19 @@ case "${command}" in
       $REPOSITORY_URI:$IMAGE_TAG"
       docker push $REPOSITORY_URI
       ;;
+  _test_docker)
+      npm install
+      npm run test:docker
+      ;;
   test_docker)
       configure_docker_repository_uri
-      export GPTOREPO_URL="http://gptorepo:3000"
+      configure_service_url
       export AUTHORIZATION_KEYS=auth-key-1,auth-key-2
-      dojo -c Dojofile-dtest "./tasks _test_functional"
+      dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   test_docker_local)
       configure_local_envs
-      dojo -c Dojofile-dtest "./tasks _test_functional"
+      dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   tf)
       check_env

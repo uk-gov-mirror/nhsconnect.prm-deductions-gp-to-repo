@@ -238,7 +238,7 @@ case "${command}" in
       configure_docker_repository_uri
       get_latest_commit_hash
       configure_service_url
-      export GPTOREPO_URL= SERVICE_URL;
+      export GPTOREPO_URL=$SERVICE_URL
       export AUTHORIZATION_KEYS=auth-key-1,auth-key-2
       echo "Running tests with repo uri: ${REPOSITORY_URI}"
       echo "Running tests with service url: ${SERVICE_URL}"

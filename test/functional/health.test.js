@@ -3,7 +3,7 @@ import adapter from 'axios/lib/adapters/http';
 import config from '../../src/config';
 
 describe('/health', () => {
-    const baseURL = (process.env.GPTOREPO_URL) ? process.env.GPTOREPO_URL : config.url;
+    const baseURL = (process.env.SERVICE_URL) ? process.env.SERVICE_URL : config.url;
     const healthUrl = `${baseURL}/health`;
     it('should return 200', () => {
         return expect(

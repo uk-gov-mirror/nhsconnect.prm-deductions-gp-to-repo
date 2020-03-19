@@ -47,6 +47,10 @@ function configure_service_url {
   fi
 }
 
+function get_latest_commit_hash {
+  export COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+}
+
 function get_aws_account_id {
     AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
  }
@@ -69,9 +73,9 @@ function configure_aws_service_auth_keys {
 
 function get_aws_ssm_secret {
   secret_id=$1
-  json=$(aws ssm get-parameter --with-decryption --region $AWS_DEFAULT_REGION --name $secret_id)
+  json=$(dojo -c Dojofile-infra "aws ssm get-parameter --with-decryption --region $AWS_DEFAULT_REGION --name $secret_id")
   if [ $? != 0 ]; then
-    >&2 echo "Failed to obtain AWS secret: $secret_id"
+    >&2 echo "Failed to obtain AWS secret from SSM: $secret_id"
     exit 5
   fi
   echo $json | jq -r ".Parameter.Value"
@@ -134,19 +138,19 @@ function docker_login {
   eval $(dojo -c Dojofile-infra "aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION")
 }
 
+function configure_docker_repository_uri {
+  docker_login
+  get_aws_account_id
+  export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
+}
+
 function build_docker_image {
   echo Build started on `date`
-  COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+  get_latest_commit_hash
   IMAGE_TAG=${COMMIT_HASH}
   echo Building the Docker image...
   docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG .
   echo Build completed on `date`
-}
-
-function configure_docker_repository_uri {
-    docker_login
-    AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
-    export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
 }
 
 ###########
@@ -223,9 +227,7 @@ case "${command}" in
   build_docker)
       configure_docker_repository_uri
       build_docker_image
-      echo "Pushing the Docker image...
-      $REPOSITORY_URI:latest
-      $REPOSITORY_URI:$IMAGE_TAG"
+      echo "Pushing the Docker image... $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG"
       docker push $REPOSITORY_URI
       ;;
   _test_docker)
@@ -234,8 +236,12 @@ case "${command}" in
       ;;
   test_docker)
       configure_docker_repository_uri
+      get_latest_commit_hash
       configure_service_url
       export AUTHORIZATION_KEYS=auth-key-1,auth-key-2
+      echo "Running tests with repo uri: ${REPOSITORY_URI}"
+      echo "Running tests with service url: ${SERVICE_URL}"
+      echo "Running tests with gp2repo url: ${GPTOREPO_URL}"
       dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   test_docker_local)

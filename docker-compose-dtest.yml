@@ -2,7 +2,7 @@ version: '2'
 services:
   default:
     links:
-      - gptorepo:gptorepo
+      - gp-to-repo:gp-to-repo
     ports:
       - 3000:3000
   gptorepo:

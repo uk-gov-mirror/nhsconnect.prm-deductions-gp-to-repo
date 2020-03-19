@@ -36,6 +36,7 @@ function configure_local_envs {
   export GP2GP_URL="www.notreal.com"
   export REPOSITORY_URI=$IMAGE_REPO_NAME
   configure_service_url
+  get_latest_commit_hash
 }
 
 function configure_service_url {
@@ -242,8 +243,7 @@ case "${command}" in
       ;;
   test_docker_local)
       configure_local_envs
-      dojo -c Dojofile-dtest 
-      #"./tasks _test_docker"
+      dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   tf)
       check_env

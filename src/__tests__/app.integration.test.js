@@ -104,4 +104,13 @@ describe('app', () => {
         .end(done);
     });
   });
+
+  describe('POST /health-record-requests/:nhsNumber', () => {
+    it('should return a 401 when authorization is not provided', (done) => {
+      request(app)
+        .post('/health-record-requests/1111111111')
+        .expect(401)
+        .end(done);
+    })
+  })
 });

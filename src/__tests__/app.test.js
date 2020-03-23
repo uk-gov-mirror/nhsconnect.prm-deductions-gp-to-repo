@@ -1,7 +1,10 @@
 import request from 'supertest';
-import { when } from 'jest-when';
 import { message } from '../api/health';
-import { sendRetrievalRequest, sendUpdateRequest, sendHealthRecordRequest } from '../services/gp2gp';
+import {
+  sendRetrievalRequest,
+  sendUpdateRequest,
+  sendHealthRecordRequest
+} from '../services/gp2gp';
 import app from '../app';
 import config from '../config';
 
@@ -39,8 +42,6 @@ describe('app', () => {
   });
 
   describe('POST /deduction-requests', () => {
-
-
     it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
       request(app)
         .post('/deduction-requests/1111111111')
@@ -51,11 +52,11 @@ describe('app', () => {
   });
 
   describe('POST /health-record-requests/:nhsNumber', () => {
-    it('should resolve the request', (done) => {
+    it('should resolve the request', done => {
       request(app)
         .post('/health-record-requests/1111111111')
         .expect(200)
         .end(done);
-    })
-  })
+    });
+  });
 });

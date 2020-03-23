@@ -105,4 +105,3 @@ describe('sendHealthRecordRequest', () => {
     done();
   });
 });
-np

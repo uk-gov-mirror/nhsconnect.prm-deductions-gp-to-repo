@@ -11,10 +11,12 @@ describe('sendHealthRecordRequest', () => {
     axios.post.mockResolvedValue({ status: 200, body: {} });
 
     config.repositoryOdsCode = 'repo_ods_code';
+    config.gp2gpAuthKeys = 'auth_keys';
   });
 
   afterEach(() => {
     config.repositoryOdsCode = oldConfig.repositoryOdsCode;
+    config.gp2gpAuthKeys = oldConfig.gp2gpAuthKeys;
   });
 
   it('should call axios with nhs number and resolve', () => {
@@ -87,4 +89,20 @@ describe('sendHealthRecordRequest', () => {
     );
     done();
   });
+
+  it('should call axios post with authorization header', async done => {
+    await sendHealthRecordRequest('1111111111');
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: config.gp2gpAuthKeys
+        })
+      })
+    );
+    done();
+  });
 });
+np

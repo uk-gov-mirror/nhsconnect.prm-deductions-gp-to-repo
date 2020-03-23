@@ -1,6 +1,6 @@
 import express from 'express';
 import { param } from 'express-validator';
-import { sendRetrievalRequest } from '../services/gp2gp-service';
+import { sendRetrievalRequest } from '../services/gp2gp';
 import { handleUpdateRequest } from './handle-update-request';
 import { authenticateRequest } from '../middleware/auth';
 import { updateLogEventWithError } from '../middleware/logging';

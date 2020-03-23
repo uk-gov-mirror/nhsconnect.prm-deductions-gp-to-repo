@@ -1,12 +1,13 @@
 import request from 'supertest';
 import { when } from 'jest-when';
 import { message } from '../api/health';
-import { sendRetrievalRequest, sendUpdateRequest } from '../services/gp2gp-service';
+import { sendRetrievalRequest, sendUpdateRequest } from '../services/gp2gp';
 import app from '../app';
 import config from '../config';
+
 jest.mock('../config/logging');
 jest.mock('../middleware/logging');
-jest.mock('../services/gp2gp-service');
+jest.mock('../services/gp2gp');
 
 const retrievalResponse = {
   data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: 1111111111 }

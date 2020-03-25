@@ -9,7 +9,7 @@
     "/health": {
       "get": {
         "tags": [
-          "health"
+          "/health"
         ],
         "summary": "Checks health of api",
         "produces": [
@@ -34,7 +34,7 @@
     "/deduction-requests/{nhsNumber}": {
       "post": {
         "tags": [
-          "deduction-requests/{nhsNumber}"
+          "/deduction-requests"
         ],
         "summary": "Sends PDS patient retrieval and update requests to GP2GP Adaptor",
         "parameters": [
@@ -56,7 +56,49 @@
           "403": {
             "description": "Authorization key invalid"
           },
-          "500": {
+          "503": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/health-record-requests/{nhsNumber}": {
+      "post": {
+        "tags": [
+          "/health-record-requests"
+        ],
+        "summary": "Sends PDS patient retrieval and update requests to GP2GP Adaptor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "nhsNumber",
+            "description": "NHS Number (must be 10 digits)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Authorization header missing"
+          },
+          "403": {
+            "description": "Authorization key invalid"
+          },
+          "412": {
+            "description": "Authorization keys have not been defined"
+          },
+          "503": {
             "description": "Error",
             "schema": {
               "$ref": "#/definitions/errorResponse"
@@ -82,9 +124,12 @@
     "errorResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string",
-          "description": "error message"
+        "errors": {
+          "type": "array",
+          "description": "error message",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

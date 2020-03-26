@@ -19,7 +19,7 @@ const retrievalResponse = {
 
 describe('app', () => {
   beforeEach(() => {
-    process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
+    process.env.AUTHORIZATION_KEYS = 'correct-key';
 
     sendRetrievalRequest.mockResolvedValue({
       status: 200,

@@ -13,7 +13,7 @@ const retrievalResponse = {
 
 describe('app', () => {
   beforeEach(() => {
-    process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
+    process.env.AUTHORIZATION_KEYS = 'correct-key';
     axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: retrievalResponse }));
     axios.patch.mockImplementation(() => Promise.resolve({ status: 204, data: {} }));
   });

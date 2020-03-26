@@ -29,7 +29,7 @@ function generateLogEvent(message) {
 
 describe('POST /deduction-requests', () => {
   beforeEach(() => {
-    process.env.AUTHORIZATION_KEYS = 'correct-key,other-key';
+    process.env.AUTHORIZATION_KEYS = 'correct-key';
     when(sendRetrievalRequest)
       .calledWith('1234567890')
       .mockResolvedValue({ status: 503, data: 'broken :(' })

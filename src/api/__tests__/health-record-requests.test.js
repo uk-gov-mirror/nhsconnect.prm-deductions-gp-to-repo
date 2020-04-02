@@ -15,17 +15,11 @@ describe('POST /health-record-requests/:nhsNumber', () => {
   });
 
   it('should resolve the request', done => {
-    request(app)
-      .post('/health-record-requests/1111111111')
-      .expect(200)
-      .end(done);
+    request(app).post('/health-record-requests/1111111111').expect(200).end(done);
   });
 
   it('should return a 422 if nhsNumber is not 10 digits', done => {
-    request(app)
-      .post('/health-record-requests/123456')
-      .expect(422)
-      .end(done);
+    request(app).post('/health-record-requests/123456').expect(422).end(done);
   });
 
   it('should return correct error message if nhsNumber is not 10 digits', done => {
@@ -65,17 +59,11 @@ describe('POST /health-record-requests/:nhsNumber', () => {
   });
 
   it('should return 200', done => {
-    request(app)
-      .post('/health-record-requests/1111111111')
-      .expect(200)
-      .end(done);
+    request(app).post('/health-record-requests/1111111111').expect(200).end(done);
   });
 
   it('should return 503 when error occurs', done => {
-    request(app)
-      .post('/health-record-requests/1222222222')
-      .expect(503)
-      .end(done);
+    request(app).post('/health-record-requests/1222222222').expect(503).end(done);
   });
 
   it('should return error message when error occurs', done => {

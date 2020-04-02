@@ -8,9 +8,7 @@ import { validate } from '../middleware/validation';
 const router = express.Router();
 
 const validationRules = [
-  param('nhsNumber')
-    .isNumeric()
-    .withMessage("'nhsNumber' provided is not numeric"),
+  param('nhsNumber').isNumeric().withMessage("'nhsNumber' provided is not numeric"),
   param('nhsNumber')
     .isLength({ min: 10, max: 10 })
     .withMessage("'nhsNumber' provided is not 10 characters")

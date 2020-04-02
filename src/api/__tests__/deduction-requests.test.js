@@ -46,10 +46,7 @@ describe('POST /deduction-requests', () => {
   });
 
   it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
-    request(app)
-      .post('/deduction-requests/1111111111')
-      .expect(204)
-      .end(done);
+    request(app).post('/deduction-requests/1111111111').expect(204).end(done);
   });
   it('should return an error if :nhsNumber is less than 10 digits', done => {
     const errorMessage = [{ nhsNumber: "'nhsNumber' provided is not 10 characters" }];

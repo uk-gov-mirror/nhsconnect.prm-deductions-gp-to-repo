@@ -20,8 +20,9 @@ export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber) => {
 
   return axios.patch(url, axiosBody, axiosHeaders).catch(error => {
     const axiosError = new Error(
-      `PATCH ${url} - ${error.message || 'Request failed'}, body: ${(axiosBody.serialChangeNumber,
-      axiosBody.pdsId)}`
+      `PATCH ${url} - ${error.message || 'Request failed'}, body: ${
+        (axiosBody.serialChangeNumber, axiosBody.pdsId)
+      }`
     );
     updateLogEventWithError(axiosError);
     throw axiosError;

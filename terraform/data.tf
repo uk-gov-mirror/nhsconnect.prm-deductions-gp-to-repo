@@ -16,6 +16,18 @@ data "aws_ssm_parameter" "gp2gp_authorization_keys" {
   name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/gp2gp-adaptor/authorization_keys"
 }
 
+data "aws_ssm_parameter" "db-username" {
+  name = "/nhs/${var.environment}/state-db/db-username"
+}
+
+data "aws_ssm_parameter" "db-password" {
+  name = "/nhs/${var.environment}/state-db/db-password"
+}
+
+data "aws_ssm_parameter" "rds_endpoint" {
+  name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/private/rds_endpoint"
+}
+
 data "aws_ssm_parameter" "gp2gp_url" {
   name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/gp2gp-adaptor/url"
 }
@@ -61,5 +73,5 @@ data "aws_ssm_parameter" "deductions_private_int_alb_httpsl_arn" {
 }
 
 data "aws_ssm_parameter" "deductions_private_alb_internal_dns" {
-   name = "/nhs/${var.environment}/deductions_private_alb_internal_dns"
+  name = "/nhs/${var.environment}/deductions_private_alb_internal_dns"
 }

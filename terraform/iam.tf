@@ -21,8 +21,8 @@ resource "aws_iam_role" "component-ecs-role" {
   description        = "Role assumed by ${var.component_name} ECS task"
 
   tags = {
-    Terraform = "true"
-    Environment = var.environment
+    Terraform      = "true"
+    Environment    = var.environment
     Deductions-VPC = var.component_name
   }
 }
@@ -69,7 +69,10 @@ data "aws_iam_policy_document" "ssm_policy_doc" {
 
     resources = [
       "arn:aws:ssm:${var.region}:${local.account_id}:parameter/NHS/${var.environment}-${local.account_id}/${var.component_name}/authorization_keys",
-      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/NHS/${var.environment}-${local.account_id}/gp2gp-adaptor/authorization_keys"
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/NHS/${var.environment}-${local.account_id}/gp2gp-adaptor/authorization_keys",
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/NHS/${var.environment}-${local.account_id}/private/rds_endpoint",
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/nhs/${var.environment}/state-db/db-username",
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/nhs/${var.environment}/state-db/db-password"
     ]
   }
 }

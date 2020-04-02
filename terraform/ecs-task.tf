@@ -4,11 +4,15 @@ locals {
   task_log_group      = "/nhs/deductions/${var.environment}-${data.aws_caller_identity.current.account_id}/${var.component_name}"
   environment_variables = [
     { name = "NODE_ENV", value = var.environment },
-    { name = "GP2GP_URL", value = data.aws_ssm_parameter.gp2gp_url.value }
+    { name = "GP2GP_URL", value = data.aws_ssm_parameter.gp2gp_url.value },
+    { name = "DATABASE_NAME", value = var.database_name },
+    { name = "DATABASE_HOST", value = data.aws_ssm_parameter.rds_endpoint.value }
   ]
   secret_environment_variables = [
     { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn },
     { name = "GP2GP_AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.gp2gp_authorization_keys.arn },
+    { name = "DATABASE_USER", valueFrom = data.aws_ssm_parameter.db-username.arn },
+    { name = "DATABASE_PASSWORD", valueFrom = data.aws_ssm_parameter.db-password.arn }
   ]
 }
 
@@ -37,8 +41,8 @@ resource "aws_ecs_task_definition" "task" {
   })
 
   tags = {
-    Terraform = "true"
-    Environment = var.environment
+    Terraform      = "true"
+    Environment    = var.environment
     Deductions-VPC = var.component_name
   }
 }

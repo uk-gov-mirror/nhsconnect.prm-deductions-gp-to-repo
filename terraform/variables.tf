@@ -1,6 +1,6 @@
 variable "region" {
-  type        = string
-  default     = "eu-west-2"
+  type    = string
+  default = "eu-west-2"
 }
 
 variable "environment" {}
@@ -18,3 +18,7 @@ variable "port" {}
 variable "service_desired_count" {}
 
 variable "alb_deregistration_delay" {}
+
+variable "database_name" {
+  type = string
+}

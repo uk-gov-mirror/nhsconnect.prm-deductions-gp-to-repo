@@ -75,7 +75,7 @@
         "tags": [
           "/health-record-requests"
         ],
-        "summary": "Sends PDS patient retrieval and update requests to GP2GP Adaptor",
+        "summary": "Sends EHR Request",
         "parameters": [
           {
             "in": "path",

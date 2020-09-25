@@ -1,6 +1,6 @@
 terraform{
       backend "s3" {
-        bucket = "prm-327778747031-terraform-states"
+        bucket = "prm-deductions-terraform-state"
         region = "eu-west-2"
         encrypt = true
     }

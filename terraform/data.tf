@@ -17,11 +17,11 @@ data "aws_ssm_parameter" "gp2gp_authorization_keys" {
 }
 
 data "aws_ssm_parameter" "db-username" {
-  name = "/repo/${var.environment}/prm-deductions-base-infra/output/state-db-username"
+  name = "/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-username"
 }
 
 data "aws_ssm_parameter" "db-password" {
-  name = "/repo/${var.environment}/prm-deductions-base-infra/output/state-db-password"
+  name = "/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-password"
 }
 
 data "aws_ssm_parameter" "rds_endpoint" {

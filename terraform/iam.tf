@@ -71,8 +71,8 @@ data "aws_iam_policy_document" "ssm_policy_doc" {
       "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-component-template/user-input/${var.component_name}-authorization-keys",
       "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-component-template/user-input/gp2gp-adaptor-authorization-keys",
       "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-infra/output/private-rds-endpoint",
-      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-base-infra/output/state-db-username",
-      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-base-infra/output/state-db-password"
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-username",
+      "arn:aws:ssm:${var.region}:${local.account_id}:parameter/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-password"
     ]
   }
 }

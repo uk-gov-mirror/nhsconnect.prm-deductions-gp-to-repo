@@ -37,10 +37,8 @@ resource "aws_ecs_service" "ecs-service" {
                     # aws_alb_listener_rule.alb-https-listener-rule,
                     aws_alb_listener_rule.int-alb-https-listener-rule]
 
-  # tags = {
-  #   Terraform = "true"
-  #   Environment = var.environment
-  #   Deductions-VPC = var.component_name
-  #   TurnOffAtNight = "True"
-  # }
+  tags = {
+    Environment = var.environment
+    CreatedBy= var.repo_name
+  }
 }

@@ -21,9 +21,8 @@ resource "aws_iam_role" "component-ecs-role" {
   description        = "Role assumed by ${var.component_name} ECS task"
 
   tags = {
-    Terraform      = "true"
-    Environment    = var.environment
-    Deductions-VPC = var.component_name
+    Environment = var.environment
+    CreatedBy= var.repo_name
   }
 }
 

@@ -9,19 +9,19 @@ data "aws_ssm_parameter" "private_zone_id" {
 }
 
 data "aws_ssm_parameter" "authorization_keys" {
-  name = "/repo/${var.environment}/prm-deductions-component-template/user-input/${var.component_name}-authorization-keys"
+  name = "/repo/${var.environment}/user-input/${var.component_name}-authorization-keys"
 }
 
 data "aws_ssm_parameter" "gp2gp_authorization_keys" {
-  name = "/repo/${var.environment}/prm-deductions-component-template/user-input/gp2gp-adaptor-authorization-keys"
+  name = "/repo/${var.environment}/user-input/gp2gp-adaptor-authorization-keys"
 }
 
 data "aws_ssm_parameter" "db-username" {
-  name = "/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-username"
+  name = "/repo/${var.environment}/user-input/state-db-username"
 }
 
 data "aws_ssm_parameter" "db-password" {
-  name = "/repo/${var.environment}/prm-deductions-base-infra/user-input/state-db-password"
+  name = "/repo/${var.environment}/user-input/state-db-password"
 }
 
 data "aws_ssm_parameter" "rds_endpoint" {
@@ -29,7 +29,7 @@ data "aws_ssm_parameter" "rds_endpoint" {
 }
 
 data "aws_ssm_parameter" "gp2gp_url" {
-  name = "/repo/${var.environment}/prm-deductions-gp-to-repo/user-input/gp2gp-adaptor-url"
+  name = "/repo/${var.environment}/user-input/gp2gp-adaptor-url"
 }
 
 data "aws_ssm_parameter" "deductions_private_ecs_cluster_id" {

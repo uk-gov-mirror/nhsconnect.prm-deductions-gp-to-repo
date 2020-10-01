@@ -1,11 +1,11 @@
 data "aws_caller_identity" "current" {}
 
 data "aws_ssm_parameter" "root_zone_id" {
-  name = "/repo/prm-deductions-base-infra/output/root-zone-id"
+  name = "/repo/output/prm-deductions-base-infra/root-zone-id"
 }
 
 data "aws_ssm_parameter" "private_zone_id" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/private-root-zone-id"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/private-root-zone-id"
 }
 
 data "aws_ssm_parameter" "authorization_keys" {
@@ -25,7 +25,7 @@ data "aws_ssm_parameter" "db-password" {
 }
 
 data "aws_ssm_parameter" "rds_endpoint" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/private-rds-endpoint"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/private-rds-endpoint"
 }
 
 data "aws_ssm_parameter" "gp2gp_url" {
@@ -33,29 +33,29 @@ data "aws_ssm_parameter" "gp2gp_url" {
 }
 
 data "aws_ssm_parameter" "deductions_private_ecs_cluster_id" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-ecs-cluster-id"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-ecs-cluster-id"
 }
 
 data "aws_ssm_parameter" "deductions_private_gp_to_repo_sg_id" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-gp-to-repo-sg-id"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-gp-to-repo-sg-id"
 }
 
 data "aws_ssm_parameter" "deductions_private_private_subnets" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-private-subnets"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-private-subnets"
 }
 
 data "aws_ssm_parameter" "deductions_private_vpc_id" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/private-vpc-id"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/private-vpc-id"
 }
 
 data "aws_ssm_parameter" "deductions_private_int_alb_httpl_arn" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-int-alb-httpl-arn"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-int-alb-httpl-arn"
 }
 
 data "aws_ssm_parameter" "deductions_private_int_alb_httpsl_arn" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-int-alb-httpsl-arn"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-int-alb-httpsl-arn"
 }
 
 data "aws_ssm_parameter" "deductions_private_alb_internal_dns" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/deductions-private-alb-internal-dns"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-alb-internal-dns"
 }

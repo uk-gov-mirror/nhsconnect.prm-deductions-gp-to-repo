@@ -29,7 +29,7 @@ data "aws_ssm_parameter" "rds_endpoint" {
 }
 
 data "aws_ssm_parameter" "gp2gp_url" {
-  name = "/repo/${var.environment}/user-input/gp2gp-adaptor-url"
+  name = "/repo/${var.environment}/output/prm-deductions-gp2gp-adaptor/service-url"
 }
 
 data "aws_ssm_parameter" "deductions_private_ecs_cluster_id" {

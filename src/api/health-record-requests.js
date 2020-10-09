@@ -2,6 +2,7 @@ import express from 'express';
 import { param } from 'express-validator';
 import { authenticateRequest } from '../middleware/auth';
 import { validate } from '../middleware/validation';
+import { updateLogEventWithError } from '../middleware/logging';
 import { sendHealthRecordRequest } from '../services/gp2gp';
 
 const router = express.Router();
@@ -18,6 +19,7 @@ router.post('/:nhsNumber', authenticateRequest, validationRules, validate, async
     await sendHealthRecordRequest(req.params.nhsNumber);
     res.sendStatus(200);
   } catch (error) {
+    updateLogEventWithError(error);
     res.status(503).send(error.data);
   }
 });

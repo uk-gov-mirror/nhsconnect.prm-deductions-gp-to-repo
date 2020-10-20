@@ -3,7 +3,7 @@ import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
 
 const OBFUSCATED_VALUE = '********';
-const SECRET_KEYS = ['passcode', 'data'];
+const SECRET_KEYS = ['authorization', 'data'];
 
 export const obfuscateSecrets = format(info => {
   const updated = cloneDeep(info);
@@ -15,7 +15,7 @@ export const obfuscateSecrets = format(info => {
 
 export const options = {
   level: 'debug',
-  format: format.combine(format.timestamp(), format.json(), obfuscateSecrets()),
+  format: format.combine(obfuscateSecrets(), format.timestamp(), format.json()),
   transports: [new transports.Console({ handleExceptions: true })]
 };
 

@@ -1,4 +1,4 @@
-import { obfuscateSecrets } from '../logging';
+import { obfuscateSecrets, options } from '../logging';
 
 describe('logging', () => {
   describe('obfuscateSecrets', () => {
@@ -15,7 +15,7 @@ describe('logging', () => {
             ssl: true,
             connectHeaders: {
               login: 'abcdefg',
-              passcode: '1234567'
+              authorization: '1234567'
             }
           }
         },
@@ -31,12 +31,34 @@ describe('logging', () => {
             ssl: true,
             connectHeaders: {
               login: 'abcdefg',
-              passcode: '********'
+              authorization: '********'
             }
           }
         },
         [messageSymbol]: 'some-symbol-message'
       });
+    });
+  });
+  describe('combined formatter', () => {
+    it('should replace secret values with obfuscated value', () => {
+      const formatter = options.format;
+      const result = formatter.transform({
+        message: `some-message`,
+        data: 'secret-payload',
+        error: {
+          port: 61614,
+          connectArgs: {
+            ssl: true,
+            connectHeaders: {
+              login: 'abcdefg',
+              authorization: '1234567'
+            }
+          }
+        }
+      });
+      const messageSymbol = Object.getOwnPropertySymbols(result)[0];
+
+      expect(result[messageSymbol]).not.toContain('1234567');
     });
   });
 });

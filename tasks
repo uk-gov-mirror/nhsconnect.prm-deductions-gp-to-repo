@@ -220,9 +220,11 @@ case "${command}" in
       ;;
   _test_coverage)
       npm install
+      npm run db:migrate
       npm run test:coverage
       ;;
   test_coverage)
+      configure_local_envs
       dojo -c Dojofile-itest "./tasks _test_coverage"
       ;;
   build_docker_local)

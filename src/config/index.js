@@ -1,3 +1,5 @@
+import sequelizeConfig from './database';
+
 const portNumber = 3000;
 
 export const initialiseConfig = () => ({
@@ -8,7 +10,8 @@ export const initialiseConfig = () => ({
   repositoryAsid: process.env.REPOSITORY_ASID || '200000001161',
   practiceOdsCode: 'M85019',
   practiceAsid: '200000000149',
-  url: process.env.SERVICE_URL || `http://127.0.0.1:${portNumber}`
+  url: process.env.SERVICE_URL || `http://127.0.0.1:${portNumber}`,
+  sequelize: sequelizeConfig[process.env.NODE_ENV]
 });
 
 export default initialiseConfig();

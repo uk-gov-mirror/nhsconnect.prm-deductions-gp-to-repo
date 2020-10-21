@@ -1,6 +1,8 @@
 import axios from 'axios';
-import config from '../../../config';
+import * as config from '../../../config';
 import { sendUpdateRequest } from '../pds-update-request';
+
+const { gp2gpUrl, gp2gpAuthKeys, repositoryOdsCode } = config.default;
 
 jest.mock('../../../config/logging');
 jest.mock('../../../middleware/logging');
@@ -12,13 +14,14 @@ const pdsId = 'hello';
 
 const axiosHeaders = {
   headers: {
-    Authorization: config.gp2gpAuthKeys
+    Authorization: gp2gpAuthKeys
   }
 };
 
 const axiosBody = {
   serialChangeNumber,
-  pdsId
+  pdsId,
+  newOdsCode: repositoryOdsCode
 };
 
 describe('sendUpdateRequest', () => {
@@ -28,7 +31,7 @@ describe('sendUpdateRequest', () => {
     return sendUpdateRequest(serialChangeNumber, pdsId, mockNhsNumber).then(response => {
       expect(response.status).toBe(204);
       expect(axios.patch).toBeCalledWith(
-        `${config.gp2gpUrl}/patient-demographics/${mockNhsNumber}`,
+        `${gp2gpUrl}/patient-demographics/${mockNhsNumber}`,
         axiosBody,
         axiosHeaders
       );
@@ -39,7 +42,7 @@ describe('sendUpdateRequest', () => {
     axios.patch.mockRejectedValue(new Error());
 
     return expect(sendUpdateRequest(serialChangeNumber, pdsId, mockNhsNumber)).rejects.toThrowError(
-      `PATCH ${config.gp2gpUrl}/patient-demographics/${mockNhsNumber} - Request failed`
+      `PATCH ${gp2gpUrl}/patient-demographics/${mockNhsNumber} - Request failed`
     );
   });
 });

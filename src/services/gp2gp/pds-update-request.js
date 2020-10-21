@@ -2,14 +2,15 @@ import axios from 'axios';
 import { updateLogEventWithError } from '../../middleware/logging';
 import * as config from '../../config/index';
 
-const { gp2gpUrl, gp2gpAuthKeys } = config.default;
+const { gp2gpUrl, gp2gpAuthKeys, repositoryOdsCode } = config.default;
 
 export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber) => {
   const url = `${gp2gpUrl}/patient-demographics/${nhsNumber}`;
 
   const axiosBody = {
     serialChangeNumber,
-    pdsId
+    pdsId,
+    newOdsCode: repositoryOdsCode
   };
 
   const axiosHeaders = {

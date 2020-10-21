@@ -1,15 +1,23 @@
 import express from 'express';
-import config from '../config';
+import { updateLogEvent, updateLogEventWithError } from '../middleware/logging';
+import { getHealthCheck } from '../services/get-health-check';
 const router = express.Router();
 
-export const message = {
-  version: '1',
-  description: 'Health of Deductions GP to Repo Component',
-  status: 'running'
-};
-
-router.get('/', (req, res) => {
-  res.json({ ...message, node_env: config.nodeEnv });
+router.get('/', (req, res, next) => {
+  getHealthCheck()
+    .then(status => {
+      updateLogEvent({ status: 'Health check completed' });
+      if (status.details.database.writable) {
+        res.status(200).json(status);
+      } else {
+        updateLogEvent(status);
+        res.status(503).json(status);
+      }
+    })
+    .catch(err => {
+      updateLogEventWithError(err);
+      next(err);
+    });
 });
 
 export default router;

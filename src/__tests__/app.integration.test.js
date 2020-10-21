@@ -2,7 +2,6 @@ import axios from 'axios';
 import request from 'supertest';
 import app from '../app';
 import config from '../config';
-import { message } from '../api/health';
 
 jest.mock('../config/logging');
 jest.mock('axios');
@@ -59,7 +58,14 @@ describe('app', () => {
       request(app)
         .get('/health')
         .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect(200, { ...message, node_env: config.nodeEnv })
+        .expect(200, {
+          version: '1',
+          description: 'Health of GP to Repo service',
+          node_env: config.nodeEnv,
+          details: {
+            database: { type: 'postgresql', connection: true, writable: true }
+          }
+        })
         .end(done);
     });
   });

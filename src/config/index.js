@@ -11,7 +11,7 @@ export const initialiseConfig = () => ({
   practiceOdsCode: 'M85019',
   practiceAsid: '200000000149',
   url: process.env.SERVICE_URL || `http://127.0.0.1:${portNumber}`,
-  sequelize: sequelizeConfig[process.env.NODE_ENV]
+  sequelize: sequelizeConfig
 });
 
 export default initialiseConfig();

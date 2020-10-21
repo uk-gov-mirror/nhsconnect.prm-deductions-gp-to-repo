@@ -15,7 +15,11 @@
     "build": "babel src -d build --ignore '**/*.test.js' && cp src/*.json build",
     "start": "node build/server.js",
     "start:local": "babel-node -r dotenv/config src/server.js",
-    "start:nodemon": "nodemon --exec babel-node -r node_modules/dotenv/config src/server.js"
+    "start:nodemon": "nodemon --exec babel-node -r node_modules/dotenv/config src/server.js",
+    "db:wait": "babel-node scripts/wait_for_postgres.js",
+    "db:migrate": "npm run db:wait && sequelize-cli db:migrate",
+    "db:teardown": "sequelize-cli db:migrate:undo:all",
+    "db:setup": "sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",

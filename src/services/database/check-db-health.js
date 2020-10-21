@@ -19,7 +19,7 @@ export const checkDbHealth = () => {
         type: 'postgresql',
         connection: false,
         writable: false,
-        error: `Sequelize error (Message: ${err.errors[0].message})`
+        error: `Sequelize error (Message: ${err})`
       };
     });
 };

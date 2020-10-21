@@ -201,9 +201,11 @@ case "${command}" in
       ;;
   _test_integration)
       npm install
+      npm run db:migrate
       npm run test:integration
       ;;
   test_integration)
+      configure_local_envs
       dojo -c Dojofile-itest "./tasks _test_integration"
       ;;
   _test_functional)

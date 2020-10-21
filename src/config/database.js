@@ -9,9 +9,4 @@ const base_config = {
   logging: false
 };
 
-module.exports = {
-  local: base_config,
-  dev: base_config,
-  test: base_config,
-  prod: base_config
-};
+module.exports = base_config;

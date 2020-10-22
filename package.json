@@ -15,7 +15,7 @@
     "build": "babel src -d build --ignore '**/*.test.js' && cp src/*.json build",
     "start": "node build/server.js",
     "start:local": "babel-node -r dotenv/config src/server.js",
-    "start:nodemon": "nodemon --exec babel-node -r node_modules/dotenv/config src/server.js",
+    "start:nodemon": "nodemon --exec npm run start:local",
     "db:wait": "babel-node scripts/wait_for_postgres.js",
     "db:migrate": "npm run db:wait && sequelize-cli db:migrate",
     "db:teardown": "sequelize-cli db:migrate:undo:all",
@@ -37,7 +37,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.5.3",
     "jest-when": "^2.7.2",
-    "nodemon": "^2.0.5",
+    "nodemon": "^2.0.6",
     "prettier": "^2.1.2",
     "sequelize-cli": "^6.2.0",
     "supertest": "^5.0.0"

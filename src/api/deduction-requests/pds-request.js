@@ -3,7 +3,7 @@ import { sendRetrievalRequest } from '../../services/gp2gp';
 import { handleUpdateRequest } from './handle-update-request';
 import { updateLogEventWithError } from '../../middleware/logging';
 
-export const pdsValidationRules = [
+export const pdsRequestValidationRules = [
   param('nhsNumber').isNumeric().withMessage("'nhsNumber' provided is not numeric"),
   param('nhsNumber')
     .isLength({ min: 10, max: 10 })

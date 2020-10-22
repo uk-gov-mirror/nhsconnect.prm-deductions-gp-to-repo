@@ -1,16 +1,16 @@
 import request from 'supertest';
-import { message } from '../api/health';
 import {
   sendRetrievalRequest,
   sendUpdateRequest,
   sendHealthRecordRequest
 } from '../services/gp2gp';
+import { getHealthCheck } from '../services/get-health-check';
 import app from '../app';
-import config from '../config';
 
 jest.mock('../config/logging');
 jest.mock('../middleware/logging');
 jest.mock('../services/gp2gp');
+jest.mock('../services/get-health-check');
 jest.mock('../middleware/auth');
 
 const retrievalResponse = {
@@ -20,15 +20,13 @@ const retrievalResponse = {
 describe('app', () => {
   beforeEach(() => {
     process.env.AUTHORIZATION_KEYS = 'correct-key';
-
     sendRetrievalRequest.mockResolvedValue({
       status: 200,
       data: retrievalResponse
     });
-
     sendUpdateRequest.mockResolvedValue({ status: 204 });
-
     sendHealthRecordRequest.mockResolvedValue({ status: 200 });
+    getHealthCheck.mockResolvedValue({ status: 200, details: { database: { writable: true } } });
   });
 
   describe('GET /health', () => {
@@ -36,7 +34,7 @@ describe('app', () => {
       request(app)
         .get('/health')
         .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect(200, { ...message, node_env: config.nodeEnv })
+        .expect(200)
         .end(done);
     });
   });

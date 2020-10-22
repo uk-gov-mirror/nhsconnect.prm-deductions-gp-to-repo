@@ -1,6 +1,6 @@
 import { checkDbHealth } from './database/check-db-health';
 import { updateLogEvent } from '../middleware/logging';
-import config from '../config'
+import config from '../config';
 
 export function getHealthCheck() {
   updateLogEvent({ status: 'Starting health check' });

@@ -12,7 +12,6 @@ import axios from 'axios';
 import { getCorrelationId, middleware } from '../correlation';
 httpContext.enable();
 
-
 describe('correlation middleware', () => {
   it('should set a different correlation id for each request', () => {
     const req = new Map();

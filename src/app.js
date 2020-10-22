@@ -2,9 +2,9 @@ import express from 'express';
 import httpContext from 'express-http-context';
 import { errorLogger, logger as requestLogger } from 'express-winston';
 import swaggerUi from 'swagger-ui-express';
-import deductionRequests from './api/deduction-requests';
+import { deductionRequests } from './api/deduction-requests';
 import healthCheck from './api/health';
-import healthRecordRequests from './api/health-record-requests';
+import { healthRecordRequests } from './api/health-record-requests';
 import { options } from './config/logging';
 import swaggerDocument from './swagger.json';
 

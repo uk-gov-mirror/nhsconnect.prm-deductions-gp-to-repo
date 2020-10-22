@@ -1,13 +1,13 @@
 import request from 'supertest';
 import { when } from 'jest-when';
-import { updateLogEvent } from '../../middleware/logging';
-import { sendRetrievalRequest, sendUpdateRequest } from '../../services/gp2gp';
-import app from '../../app';
+import { updateLogEvent } from '../../../middleware/logging';
+import { sendRetrievalRequest, sendUpdateRequest } from '../../../services/gp2gp';
+import app from '../../../app';
 
-jest.mock('../../config/logging');
-jest.mock('../../middleware/logging');
-jest.mock('../../middleware/auth');
-jest.mock('../../services/gp2gp');
+jest.mock('../../../config/logging');
+jest.mock('../../../middleware/logging');
+jest.mock('../../../middleware/auth');
+jest.mock('../../../services/gp2gp');
 
 const retrievalResponse = {
   data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: '1111111111' }

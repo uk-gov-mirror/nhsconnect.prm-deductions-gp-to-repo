@@ -1,10 +1,10 @@
 import request from 'supertest';
 import { when } from 'jest-when';
-import app from '../../app';
-import { sendHealthRecordRequest } from '../../services/gp2gp';
+import app from '../../../app';
+import { sendHealthRecordRequest } from '../../../services/gp2gp';
 
-jest.mock('../../middleware/auth');
-jest.mock('../../services/gp2gp');
+jest.mock('../../../middleware/auth');
+jest.mock('../../../services/gp2gp');
 
 describe('POST /health-record-requests/:nhsNumber', () => {
   beforeEach(() => {

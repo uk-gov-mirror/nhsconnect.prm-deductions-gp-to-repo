@@ -1,5 +1,5 @@
-import { sendUpdateRequest } from '../services/gp2gp';
-import { updateLogEvent } from '../middleware/logging';
+import { sendUpdateRequest } from '../../services/gp2gp';
+import { updateLogEvent } from '../../middleware/logging';
 
 export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber) => {
   if (pdsRetrievalResponse.status === 200) {

@@ -17,15 +17,15 @@ data "aws_ssm_parameter" "gp2gp_authorization_keys" {
 }
 
 data "aws_ssm_parameter" "db-username" {
-  name = "/repo/${var.environment}/user-input/state-db-username"
+  name = "/repo/${var.environment}/user-input/gp-to-repo-db-username"
 }
 
 data "aws_ssm_parameter" "db-password" {
-  name = "/repo/${var.environment}/user-input/state-db-password"
+  name = "/repo/${var.environment}/user-input/gp-to-repo-db-password"
 }
 
 data "aws_ssm_parameter" "rds_endpoint" {
-  name = "/repo/${var.environment}/output/prm-deductions-infra/private-rds-endpoint"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/gp-to-repo-rds-endpoint"
 }
 
 data "aws_ssm_parameter" "gp2gp_url" {

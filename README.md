@@ -104,14 +104,14 @@ Please follow this design to ensure the ssm keys are easy to maintain and naviga
 
 Note: `npm run start:nodemon` can be used to build the app before launching the Express server on port `3000` using [nodemon](https://www.npmjs.com/package/nodemon) - it will watch and reload the server upon any file changes.
 
-### Productions Mode
+### Debugging and testing the app docker image
 
 A Docker image can be built locally with:
 
-1. Run `npm run build`
-2. Run `./tasks build_docker_local`. This builds the docker containers `deductions/<component-name>:<commit-no>` and `deductions/<component-name>:latest` with the app in.
-3. Run `./tasks test_docker_local` (to ensure the image has been built correctly)
-4. Run `./tasks run_docker_local`
+1. Run `./tasks build`
+2. Run `./tasks build_docker_local`. This builds the docker containers `deductions/<component-name>:<commit-no>` and `deductions/<component-name>:latest` with the app in
+3. Run `./tasks test_docker_local` to ensure the image has been built correctly
+4. If the above fails, `./tasks run_docker_local` to debug production build
 
 ## Swagger
 

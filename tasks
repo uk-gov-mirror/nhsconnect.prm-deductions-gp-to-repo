@@ -38,6 +38,7 @@ function configure_local_envs {
   export GP2GP_AUTHORIZATION_KEYS=auth-key-1
   export GP2GP_URL="www.notreal.com"
   export REPOSITORY_URI=$IMAGE_REPO_NAME
+  export GP_TO_REPO_SKIP_MIGRATION=false
   configure_service_url
   get_latest_commit_hash
 }
@@ -186,6 +187,7 @@ case "${command}" in
       dojo "node scripts/send-canary-error.js"
       ;;
   _build)
+      rm -rf build
       npm install
       npm run build
       ;;

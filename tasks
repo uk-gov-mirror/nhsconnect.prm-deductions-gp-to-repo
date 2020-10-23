@@ -244,10 +244,8 @@ case "${command}" in
       npm run test:docker
       ;;
   test_docker)
+      configure_local_envs
       configure_docker_repository_uri
-      get_latest_commit_hash
-      configure_service_url
-      export AUTHORIZATION_KEYS=auth-key-1
       dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
   test_docker_local)

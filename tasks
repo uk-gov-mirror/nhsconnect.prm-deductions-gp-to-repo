@@ -216,9 +216,11 @@ case "${command}" in
       dojo "./tasks _test"
       ;;
   _test_integration)
+      configure_local_envs
       npm install
       npm run db:migrate
       npm run test:integration
+      npm run db:teardown
       ;;
   test_integration)
       configure_local_envs

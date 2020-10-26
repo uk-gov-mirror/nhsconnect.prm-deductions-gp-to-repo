@@ -158,6 +158,20 @@ function build_docker_image {
 }
 
 ###########
+# Testing #
+###########
+
+function test_functional {
+  check_env
+  npm install
+  if [[ $NHS_ENVIRONMENT == "dev" ]]; then
+    npm run test:health
+  else
+    npm run test:functional
+  fi
+}
+
+###########
 ## TASKS ##
 ###########
 
@@ -211,8 +225,7 @@ case "${command}" in
       dojo -c Dojofile-itest "./tasks _test_integration"
       ;;
   _test_functional)
-      npm install
-      npm run test:functional
+      test_functional
       ;;
   test_functional)
       configure_aws_service_auth_keys

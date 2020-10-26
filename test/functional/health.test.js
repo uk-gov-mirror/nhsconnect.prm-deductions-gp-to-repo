@@ -19,8 +19,11 @@ describe('/health', () => {
         ).resolves.toEqual(
             expect.objectContaining({
                 data: expect.objectContaining({
-                    version: '1',
-                    description: 'Health of Deductions GP to Repo Component'
+                    details: expect.objectContaining({
+                        database: expect.objectContaining({
+                            writable: true
+                        })
+                    })
                 })
             })
         );

@@ -5,6 +5,7 @@ import { sendHealthRecordRequest } from '../../../services/gp2gp';
 
 jest.mock('../../../middleware/auth');
 jest.mock('../../../services/gp2gp');
+jest.mock('../../../middleware/logging');
 
 describe('POST /health-record-requests/:nhsNumber', () => {
   beforeEach(() => {

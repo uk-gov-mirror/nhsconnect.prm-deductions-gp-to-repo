@@ -3,6 +3,7 @@ import app from '../../app';
 import axios from 'axios';
 
 jest.mock('../../middleware/auth');
+jest.mock('../../middleware/logging');
 jest.mock('axios');
 
 describe('POST /health-record-requests/:nhsNumber', () => {

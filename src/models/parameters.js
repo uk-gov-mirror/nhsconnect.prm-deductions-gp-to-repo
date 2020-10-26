@@ -4,7 +4,6 @@ const getParameters = tableName => ({
   updatedAt: 'updated_at',
   deletedAt: 'deleted_at',
   timestamps: true,
-  schema: 'public',
   paranoid: true
 });
 

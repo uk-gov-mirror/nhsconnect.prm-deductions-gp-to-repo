@@ -3,17 +3,15 @@ import { getDeductionRequestByConversationId } from '../database/deduction-reque
 
 describe('Deduction request repository', () => {
   const DeductionRequests = ModelFactory.getByName('DeductionRequests');
-  // let transaction;
-  // ModelFactory.sequelize.transaction().then(t => (transaction = t));
+  let transaction;
+  ModelFactory.sequelize.transaction().then(t => (transaction = t));
 
   const conversationId = '22a748b2-fef6-412d-b93a-4f6c68f0f8dd';
-  beforeAll(async () => {
-    await ModelFactory.sequelize.sync({ force: true });
-  });
-
   afterAll(async () => {
     // await transaction.rollback();
-    await ModelFactory.sequelize.close();
+    await transaction.rollback();
+    ModelFactory.sequelize.close();
+    // } catch (err) {
   });
 
   it('should retrieve DeductionRequest via conversation id', async () => {
@@ -25,10 +23,10 @@ describe('Deduction request repository', () => {
         nhs_number: expectedNhsNumber,
         status: 'pds_update_sent',
         ods_code: 'something'
-      }
-      // { transaction }
+      },
+      { transaction }
     );
-    // await transaction.commit();
+    await transaction.commit();
     // }
 
     //   console.log(err);

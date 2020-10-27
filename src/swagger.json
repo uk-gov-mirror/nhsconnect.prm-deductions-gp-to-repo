@@ -31,7 +31,7 @@
         }
       }
     },
-    "/deduction-requests/{nhsNumber}": {
+    "/deduction-requests/": {
       "post": {
         "tags": [
           "/deduction-requests"
@@ -39,11 +39,12 @@
         "summary": "Sends PDS patient retrieval and update requests to GP2GP Adaptor",
         "parameters": [
           {
-            "in": "path",
+            "in": "body",
             "name": "nhsNumber",
             "description": "NHS Number (must be 10 digits)",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/deductionRequest"
+            }
           }
         ],
         "responses": {
@@ -121,6 +122,15 @@
     }
   },
   "definitions": {
+    "deductionRequest": {
+      "type": "object",
+      "properties": {
+        "nhsNumber": {
+          "type": "string"
+        }
+      },
+      "required": ["nhsNumber"]
+    },
     "errorResponse": {
       "type": "object",
       "properties": {

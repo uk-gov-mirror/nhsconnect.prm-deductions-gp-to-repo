@@ -42,7 +42,8 @@ describe('app', () => {
   describe('POST /deduction-requests', () => {
     it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
       request(app)
-        .post('/deduction-requests/1111111111')
+        .post('/deduction-requests/')
+        .send({ nhsNumber: '1111111111' })
         .set('Authorization', 'correct-key')
         .expect(204)
         .end(done);

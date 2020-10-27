@@ -12,6 +12,7 @@ import * as logging from './middleware/logging';
 httpContext.enable();
 
 const app = express();
+app.use(express.json());
 app.use(requestLogger(options));
 
 app.use('/health', logging.middleware, healthCheck);

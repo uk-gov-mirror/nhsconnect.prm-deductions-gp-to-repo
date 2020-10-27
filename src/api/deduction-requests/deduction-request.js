@@ -1,21 +1,20 @@
-import { param } from 'express-validator';
+import { body } from 'express-validator';
 import { sendRetrievalRequest } from '../../services/gp2gp';
 import { handleUpdateRequest } from './handle-update-request';
 import { updateLogEventWithError } from '../../middleware/logging';
 
-export const pdsRequestValidationRules = [
-  param('nhsNumber').isNumeric().withMessage("'nhsNumber' provided is not numeric"),
-  param('nhsNumber')
+export const deductionRequestValidationRules = [
+  body('nhsNumber').isNumeric().withMessage("'nhsNumber' provided is not numeric"),
+  body('nhsNumber')
     .isLength({ min: 10, max: 10 })
     .withMessage("'nhsNumber' provided is not 10 characters")
 ];
 
-export const pdsRequest = async (req, res, next) => {
+export const deductionRequest = async (req, res) => {
   try {
-    const pdsRetrievalResponse = await sendRetrievalRequest(req.params.nhsNumber);
-    const pdsUpdateResponse = await handleUpdateRequest(pdsRetrievalResponse, req.params.nhsNumber);
+    const pdsRetrievalResponse = await sendRetrievalRequest(req.body.nhsNumber);
+    const pdsUpdateResponse = await handleUpdateRequest(pdsRetrievalResponse, req.body.nhsNumber);
     res.status(204).json(pdsUpdateResponse.data);
-    next();
   } catch (err) {
     updateLogEventWithError(err);
     res.status(503).json({

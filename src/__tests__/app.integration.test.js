@@ -73,7 +73,8 @@ describe('app', () => {
   describe('POST /deduction-requests/:nhsNumber', () => {
     it('should return a 204 status code and empty body for /deduction-requests/:nhsNumber', done => {
       request(app)
-        .post('/deduction-requests/1111111111')
+        .post('/deduction-requests/')
+        .send({ nhsNumber: '1111111111' })
         .set('Authorization', 'correct-key')
         .expect(204)
         .expect(res => {
@@ -88,7 +89,8 @@ describe('app', () => {
       );
 
       request(app)
-        .post('/deduction-requests/9999999999')
+        .post('/deduction-requests/')
+        .send({ nhsNumber: '9999999999' })
         .set('Authorization', 'correct-key')
         .expect(503)
         .expect(res => {
@@ -97,8 +99,12 @@ describe('app', () => {
         .end(done);
     });
 
-    it('should return a 404 status code without nhsNumber parameter', done => {
-      request(app).post('/deduction-requests').expect(404).end(done);
+    it('should return a 422 status code without nhsNumber in body', done => {
+      request(app)
+        .post('/deduction-requests/')
+        .set('Authorization', 'correct-key')
+        .expect(422)
+        .end(done);
     });
   });
 

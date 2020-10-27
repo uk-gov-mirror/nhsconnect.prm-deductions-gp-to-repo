@@ -1,17 +1,17 @@
 import express from 'express';
 import { authenticateRequest } from '../../middleware/auth';
 import { validate } from '../../middleware/validation';
-import { pdsRequestValidationRules, pdsRequest } from './pds-request';
+import { deductionRequestValidationRules, deductionRequest } from './deduction-request';
 import { pdsResponseValidationRules, pdsUpdateResponse } from './pds-update-response';
 
 const deductionRequests = express.Router();
 
 deductionRequests.post(
-  '/:nhsNumber',
+  '/',
   authenticateRequest,
-  pdsRequestValidationRules,
+  deductionRequestValidationRules,
   validate,
-  pdsRequest
+  deductionRequest
 );
 
 deductionRequests.patch(

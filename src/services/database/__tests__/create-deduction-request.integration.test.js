@@ -2,12 +2,12 @@ import ModelFactory from '../../../models';
 import { createDeductionRequest } from '../create-deduction-request';
 import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
 import { runWithinTransaction } from '../helper';
+import { v4 as uuid } from 'uuid';
 
 jest.mock('../../../middleware/logging');
 
 describe('createDeductionRequest', () => {
   const nhsNumber = '1234567890';
-  const conversationId = '099cd501-034f-4e17-a461-cf4fd93ae0cf';
   const odsCode = 'B1234';
   const DeductionRequests = ModelFactory.getByName('DeductionRequests');
   afterAll(() => {
@@ -15,6 +15,7 @@ describe('createDeductionRequest', () => {
   });
 
   it('should call updateLogEvent if data persisted correctly', () => {
+    const conversationId = uuid();
     return createDeductionRequest(conversationId, nhsNumber, odsCode).then(() => {
       expect(updateLogEvent).toHaveBeenCalledTimes(1);
       return expect(updateLogEvent).toHaveBeenCalledWith({
@@ -24,6 +25,7 @@ describe('createDeductionRequest', () => {
   });
 
   it('should create deduction request with correct values', async () => {
+    const conversationId = uuid();
     await createDeductionRequest(conversationId, nhsNumber, odsCode);
     const deductionRequest = await runWithinTransaction(transaction =>
       DeductionRequests.findOne({
@@ -39,6 +41,7 @@ describe('createDeductionRequest', () => {
   });
 
   it('should log errors when nhs number is invalid', () => {
+    const conversationId = uuid();
     return createDeductionRequest(conversationId, '123', odsCode).catch(error => {
       expect(updateLogEventWithError).toHaveBeenCalledTimes(1);
       expect(updateLogEventWithError).toHaveBeenCalledWith(error);

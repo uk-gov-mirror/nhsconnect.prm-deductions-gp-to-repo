@@ -15,7 +15,6 @@ const model = dataType => ({
       isNumeric: true,
       len: 10
     },
-    unique: true,
     allowNull: false
   },
   status: {
@@ -49,17 +48,5 @@ const model = dataType => ({
 });
 
 module.exports = (sequelize, DataTypes) => {
-  const DeductionRequests = sequelize.define(modelName, model(DataTypes), getParameters(tableName));
-
-  DeductionRequests.findOrCreateRequest = (conversationId, nhsNumber, odsCode, transaction) =>
-    DeductionRequests.findOrCreate({
-      where: {
-        conversation_id: conversationId,
-        nhs_number: nhsNumber,
-        ods_code: odsCode
-      },
-      transaction: transaction
-    }).then(requests => requests[0]);
-
-  return DeductionRequests;
+  return sequelize.define(modelName, model(DataTypes), getParameters(tableName));
 };

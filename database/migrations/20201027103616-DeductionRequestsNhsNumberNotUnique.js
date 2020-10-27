@@ -17,14 +17,14 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn(tableName, 'nhs_number');
-    return queryInterface.addColumn(tableName, 'nhs_number', {
+    return await queryInterface.addColumn(tableName, 'nhs_number', {
       type: Sequelize.CHAR(10),
       validate: {
         isNumeric: true,
         len: 10
       },
       unique: true,
-      allowNull: false
+      allowNull: true
     });
   }
 };

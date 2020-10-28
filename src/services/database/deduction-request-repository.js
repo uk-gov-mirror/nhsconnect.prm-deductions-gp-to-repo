@@ -1,9 +1,9 @@
 import ModelFactory from '../../models';
 
-const DeductionRequests = ModelFactory.getByName('DeductionRequests');
+const DeductionRequest = ModelFactory.getByName("DeductionRequest");
 
 export const getDeductionRequestByConversationId = conversationId => {
-  return DeductionRequests.findByPk(conversationId).then(deductionRequest => ({
+  return DeductionRequest.findByPk(conversationId).then(deductionRequest => ({
     nhsNumber: deductionRequest.nhs_number
   }));
 };

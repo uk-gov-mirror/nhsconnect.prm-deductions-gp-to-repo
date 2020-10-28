@@ -1,6 +1,6 @@
 import getParameters from './parameters';
 
-const modelName = 'DeductionRequests';
+const modelName = 'DeductionRequest';
 const tableName = 'deduction_requests';
 
 const model = dataType => ({
@@ -24,7 +24,7 @@ const model = dataType => ({
       [
         'started',
         'pds_update_sent',
-        'success_pds_update',
+        'pds_updated',
         'ehr_request_sent',
         'ehr_extract_received',
         'failed'

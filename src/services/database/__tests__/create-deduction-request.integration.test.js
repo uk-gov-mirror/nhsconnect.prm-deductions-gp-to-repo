@@ -1,15 +1,15 @@
-import ModelFactory from '../../../models';
-import { createDeductionRequest } from '../create-deduction-request';
-import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
-import { runWithinTransaction } from '../helper';
 import { v4 as uuid } from 'uuid';
+import ModelFactory from '../../../models';
+import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
+import { createDeductionRequest } from '../create-deduction-request';
+import { runWithinTransaction } from '../helper';
 
 jest.mock('../../../middleware/logging');
 
 describe('createDeductionRequest', () => {
   const nhsNumber = '1234567890';
   const odsCode = 'B1234';
-  const DeductionRequests = ModelFactory.getByName('DeductionRequests');
+  const DeductionRequest = ModelFactory.getByName("DeductionRequest");
   afterAll(() => {
     ModelFactory.sequelize.close();
   });
@@ -28,7 +28,7 @@ describe('createDeductionRequest', () => {
     const conversationId = uuid();
     await createDeductionRequest(conversationId, nhsNumber, odsCode);
     const deductionRequest = await runWithinTransaction(transaction =>
-      DeductionRequests.findOne({
+      DeductionRequest.findOne({
         where: {
           conversation_id: conversationId
         },

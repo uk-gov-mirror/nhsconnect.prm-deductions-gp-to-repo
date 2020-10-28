@@ -24,7 +24,8 @@ module.exports = {
         len: 10
       },
       unique: true,
-      allowNull: false
+      allowNull: false,
+      defaultValue: '1234567890'
     });
   }
 };

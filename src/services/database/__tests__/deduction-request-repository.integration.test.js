@@ -3,10 +3,10 @@ import { getDeductionRequestByConversationId } from '../../database/deduction-re
 
 describe('Deduction request repository', () => {
   const DeductionRequests = ModelFactory.getByName('DeductionRequests');
-
   const conversationId = '22a748b2-fef6-412d-b93a-4f6c68f0f8dd';
+
   beforeAll(async () => {
-    await ModelFactory.sequelize.sync({ force: true });
+    await DeductionRequests.sequelize.sync({ force: true });
   });
 
   afterAll(async () => {

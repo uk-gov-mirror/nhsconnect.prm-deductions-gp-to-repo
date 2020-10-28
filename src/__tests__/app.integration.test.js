@@ -7,7 +7,12 @@ jest.mock('../config/logging');
 jest.mock('axios');
 
 const retrievalResponse = {
-  data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: '1111111111' }
+  data: {
+    serialChangeNumber: '123',
+    patientPdsId: 'hello',
+    nhsNumber: '1111111111',
+    odsCode: 'B1234'
+  }
 };
 
 describe('app', () => {

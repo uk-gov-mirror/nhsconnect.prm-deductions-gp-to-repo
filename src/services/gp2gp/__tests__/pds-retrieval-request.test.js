@@ -33,4 +33,12 @@ describe('sendRetrievalRequest', () => {
       `GET ${config.gp2gpUrl}/patient-demographics/${mockNhsNumber} - Request failed`
     );
   });
+
+  it('should call updateLogEventWithError if there is a 503 with axios.get request', () => {
+    axios.get.mockRejectedValue({ response: { status: 503 } });
+
+    return expect(sendRetrievalRequest(mockNhsNumber)).rejects.toThrowError(
+      `GET ${config.gp2gpUrl}/patient-demographics/${mockNhsNumber} - Request failed`
+    );
+  });
 });

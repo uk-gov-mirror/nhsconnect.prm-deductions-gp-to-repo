@@ -7,7 +7,7 @@ export const runWithinTransaction = async dbInteractionLambda => {
   const transaction = await sequelize.transaction();
   try {
     const response = await dbInteractionLambda(transaction);
-    transaction.commit();
+    await transaction.commit();
     return response;
   } catch (err) {
     updateLogEventWithError(err);

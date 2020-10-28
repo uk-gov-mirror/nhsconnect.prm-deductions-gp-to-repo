@@ -2,14 +2,11 @@ import ModelFactory from '../../../models';
 import { getDeductionRequestByConversationId } from '../../database/deduction-request-repository';
 
 describe('Deduction request repository', () => {
-  const DeductionRequest = ModelFactory.getByName("DeductionRequest");
+  const DeductionRequest = ModelFactory.getByName('DeductionRequest');
   const conversationId = '22a748b2-fef6-412d-b93a-4f6c68f0f8dd';
 
-  beforeAll(async () => {
-    await DeductionRequest.sequelize.sync({ force: true });
-  });
-
   afterAll(async () => {
+    await DeductionRequest.sequelize.sync({ force: true });
     await ModelFactory.sequelize.close();
   });
 

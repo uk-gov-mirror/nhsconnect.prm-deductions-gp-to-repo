@@ -9,9 +9,11 @@ jest.mock('../../../middleware/logging');
 describe('createDeductionRequest', () => {
   const nhsNumber = '1234567890';
   const odsCode = 'B1234';
-  const DeductionRequest = ModelFactory.getByName("DeductionRequest");
-  afterAll(() => {
-    ModelFactory.sequelize.close();
+  const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+
+  afterAll(async () => {
+    await DeductionRequest.sequelize.sync({ force: true });
+    await ModelFactory.sequelize.close();
   });
 
   it('should call updateLogEvent if data persisted correctly', () => {

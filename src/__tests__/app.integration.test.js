@@ -2,6 +2,7 @@ import axios from 'axios';
 import request from 'supertest';
 import app from '../app';
 import config from '../config';
+import ModelFactory from '../models';
 
 jest.mock('../config/logging');
 jest.mock('axios');
@@ -15,6 +16,8 @@ const retrievalResponse = {
   }
 };
 
+const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+
 describe('app', () => {
   beforeEach(() => {
     process.env.AUTHORIZATION_KEYS = 'correct-key';
@@ -26,6 +29,11 @@ describe('app', () => {
     if (process.env.AUTHORIZATION_KEYS) {
       delete process.env.AUTHORIZATION_KEYS;
     }
+  });
+
+  afterAll(async () => {
+    await DeductionRequest.sequelize.sync({ force: true });
+    await ModelFactory.sequelize.close();
   });
 
   describe('GET /', () => {

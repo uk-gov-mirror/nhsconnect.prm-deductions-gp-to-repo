@@ -71,6 +71,48 @@
         ]
       }
     },
+    "/deduction-requests/{conversationId}": {
+      "get": {
+        "tags": [
+          "/deduction-requests/{conversationId}"
+        ],
+        "summary": "Gets the status of a deduction request",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversationId",
+            "description": "Conversation Id (must be UUID)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved"
+          },
+          "401": {
+            "description": "Authorization header missing"
+          },
+          "403": {
+            "description": "Authorization key invalid"
+          },
+          "404": {
+            "description": "Conversation ID/Deduction request not found"
+          },
+          "503": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/health-record-requests/{nhsNumber}": {
       "post": {
         "tags": [

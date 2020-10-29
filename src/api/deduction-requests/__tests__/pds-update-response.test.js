@@ -29,7 +29,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   it('should call sendHealthRecordRequest with nhs number and return a 204', done => {
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockReturnValue({ nhsNumber: expectedNhsNumber });
+      .mockReturnValue({ nhs_number: expectedNhsNumber });
     request(app)
       .patch(`/deduction-requests/${conversationId}/pds-update`)
       .expect(() => {

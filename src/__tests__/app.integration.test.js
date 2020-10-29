@@ -83,8 +83,8 @@ describe('app', () => {
     });
   });
 
-  describe('POST /deduction-requests/:nhsNumber', () => {
-    it('should return a 204 status code and empty body for /deduction-requests/:nhsNumber', done => {
+  describe('POST /deduction-requests/', () => {
+    it('should return a 204 status code and empty body for /deduction-requests/', done => {
       request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '1111111111' })
@@ -96,7 +96,7 @@ describe('app', () => {
         .end(done);
     });
 
-    it('should return a 503 status code with Errors for /deduction-requests/:nhsNumber', done => {
+    it('should return a 503 status code with Errors for /deduction-requests/', done => {
       axios.patch.mockImplementation(() =>
         Promise.resolve({ status: 200, data: 'incorrect data!' })
       );
@@ -124,6 +124,48 @@ describe('app', () => {
   describe('POST /health-record-requests/:nhsNumber', () => {
     it('should return a 401 when authorization is not provided', done => {
       request(app).post('/health-record-requests/1111111111').expect(401).end(done);
+    });
+  });
+
+  describe('GET /deduction-requests/:conversationId', () => {
+    const conversationId = 'e12d49fb-6827-4648-8ec8-a951f3cf6ac0';
+    const expectedNhsNumber = '1234567890';
+    const expectedStatus = 'pds_update_sent';
+
+    it('should return deduction request info', async done => {
+      await DeductionRequest.create({
+        conversation_id: conversationId,
+        nhs_number: expectedNhsNumber,
+        status: expectedStatus,
+        ods_code: 'something'
+      });
+
+      request(app)
+        .get(`/deduction-requests/${conversationId}`)
+        .set('Authorization', 'correct-key')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).toEqual({
+            data: {
+              type: 'deduction-requests',
+              id: conversationId,
+              attributes: {
+                nhsNumber: expectedNhsNumber,
+                status: expectedStatus
+              }
+            }
+          });
+        })
+        .end(done);
+    });
+
+    it('should return 404 when deduction request cannot be found', done => {
+      const invalidConversationId = '58eff803-48f3-4a30-8189-632141bd823d';
+      request(app)
+        .get(`/deduction-requests/${invalidConversationId}`)
+        .set('Authorization', 'correct-key')
+        .expect(404)
+        .end(done);
     });
   });
 });

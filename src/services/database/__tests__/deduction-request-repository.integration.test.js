@@ -16,15 +16,23 @@ describe('Deduction request repository', () => {
     const conversationId = '22a748b2-fef6-412d-b93a-4f6c68f0f8dd';
 
     const expectedNhsNumber = '1234567890';
+    const expectedStatus = 'pds_update_sent';
     await DeductionRequest.create({
       conversation_id: conversationId,
       nhs_number: expectedNhsNumber,
-      status: 'pds_update_sent',
+      status: expectedStatus,
       ods_code: 'A12345'
     });
 
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
-    expect(deductionRequest.nhsNumber).toBe(expectedNhsNumber);
+    expect(deductionRequest.nhs_number).toBe(expectedNhsNumber);
+    expect(deductionRequest.status).toBe(expectedStatus);
+  });
+
+  it('should return null when cannot find a deduction request', async () => {
+    const nonExistentConversationId = 'dabcb112-e14c-46a6-b1eb-aad7acfc7bdf';
+    const deductionRequest = await getDeductionRequestByConversationId(nonExistentConversationId);
+    expect(deductionRequest).toBe(null);
   });
 
   it('should change deduction request status to pds_updated', async () => {

@@ -1,6 +1,6 @@
 import getParameters from './parameters';
 
-const modelName = 'DeductionRequest';
+export const deductionRequestModelName = 'DeductionRequest';
 const tableName = 'deduction_requests';
 
 const model = dataType => ({
@@ -47,6 +47,6 @@ const model = dataType => ({
   deleted_at: dataType.DATE
 });
 
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(modelName, model(DataTypes), getParameters(tableName));
+export default (sequelize, DataTypes) => {
+  return sequelize.define(deductionRequestModelName, model(DataTypes), getParameters(tableName));
 };

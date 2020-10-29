@@ -3,6 +3,7 @@ import request from 'supertest';
 import app from '../app';
 import config from '../config';
 import ModelFactory from '../models';
+import { deductionRequestModelName } from "../models/DeductionRequest";
 
 jest.mock('../config/logging');
 jest.mock('axios');
@@ -16,7 +17,7 @@ const retrievalResponse = {
   }
 };
 
-const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+const DeductionRequest = ModelFactory.getByName(deductionRequestModelName);
 
 describe('app', () => {
   beforeEach(() => {

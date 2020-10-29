@@ -1,6 +1,6 @@
 import getParameters from './parameters';
 
-const modelName = 'HealthCheck';
+export const healthCheckModelName = 'HealthCheck';
 const tableName = 'health_checks';
 
 const model = dataType => ({
@@ -20,8 +20,8 @@ const model = dataType => ({
   deleted_at: dataType.DATE
 });
 
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define(modelName, model(DataTypes), {
+export default (sequelize, DataTypes) => {
+  return sequelize.define(healthCheckModelName, model(DataTypes), {
     ...getParameters(tableName)
   });
 };

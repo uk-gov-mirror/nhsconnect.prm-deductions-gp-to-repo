@@ -14,6 +14,7 @@ jest.mock('../../../services/database/create-deduction-request', () => ({
   createDeductionRequest: jest.fn().mockResolvedValue()
 }));
 jest.mock('uuid');
+uuid.mockImplementation(() => 'mockConversationId');
 
 const retrievalResponse = {
   data: {
@@ -57,9 +58,9 @@ describe('POST /deduction-requests/', () => {
       .mockResolvedValue({ status: 200, data: invalidRetrievalResponse });
 
     when(sendUpdateRequest)
-      .calledWith('123', 'hello', '1111111111')
+      .calledWith('123', 'hello', '1111111111', uuid())
       .mockResolvedValue({ status: 204 })
-      .calledWith('123', 'hellno', '1111111112')
+      .calledWith('123', 'hellno', '1111111112', uuid())
       .mockResolvedValue({ status: 503, data: 'could not update ods code on pds' });
   });
 
@@ -76,6 +77,15 @@ describe('POST /deduction-requests/', () => {
       .send({ nhsNumber: '1111111111' })
       .expect(() => {
         expect(createDeductionRequest).toHaveBeenCalledWith(uuid(), '1111111111', 'B1234');
+      })
+      .end(done);
+  });
+  it('should sendUpdateRequest with correct info when patient is found in PDS', done => {
+    request(app)
+      .post('/deduction-requests/')
+      .send({ nhsNumber: '1111111111' })
+      .expect(() => {
+        expect(sendUpdateRequest).toHaveBeenCalledWith('123', 'hello', '1111111111', uuid());
       })
       .end(done);
   });

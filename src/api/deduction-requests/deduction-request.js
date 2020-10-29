@@ -21,7 +21,11 @@ export const deductionRequest = async (req, res) => {
       req.body.nhsNumber,
       pdsRetrievalResponse.data.data.odsCode
     );
-    const pdsUpdateResponse = await handleUpdateRequest(pdsRetrievalResponse, req.body.nhsNumber);
+    const pdsUpdateResponse = await handleUpdateRequest(
+      pdsRetrievalResponse,
+      req.body.nhsNumber,
+      conversationId
+    );
     res.status(204).json(pdsUpdateResponse.data);
   } catch (err) {
     updateLogEventWithError(err);

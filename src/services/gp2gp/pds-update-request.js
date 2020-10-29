@@ -4,13 +4,14 @@ import * as config from '../../config/index';
 
 const { gp2gpUrl, gp2gpAuthKeys, repositoryOdsCode } = config.default;
 
-export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber) => {
+export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber, conversationId) => {
   const url = `${gp2gpUrl}/patient-demographics/${nhsNumber}`;
 
   const axiosBody = {
     serialChangeNumber,
     pdsId,
-    newOdsCode: repositoryOdsCode
+    newOdsCode: repositoryOdsCode,
+    conversationId
   };
 
   const axiosHeaders = {

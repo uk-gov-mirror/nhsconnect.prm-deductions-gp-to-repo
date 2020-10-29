@@ -1,7 +1,7 @@
 import { sendUpdateRequest } from '../../services/gp2gp';
 import { updateLogEvent } from '../../middleware/logging';
 
-export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber) => {
+export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber, conversationId) => {
   if (pdsRetrievalResponse.status === 200) {
     updateLogEvent({
       status: '200 GP2GP response received',
@@ -11,7 +11,8 @@ export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber) => {
     const updateResponse = await sendUpdateRequest(
       pdsRetrievalResponse.data.data.serialChangeNumber,
       pdsRetrievalResponse.data.data.patientPdsId,
-      nhsNumber
+      nhsNumber,
+      conversationId
     );
 
     if (updateResponse.status === 204) return updateResponse;

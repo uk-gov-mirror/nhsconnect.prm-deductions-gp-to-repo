@@ -39,14 +39,15 @@ describe('Deduction request repository', () => {
     const conversationId = 'e30d008e-0134-479c-bf59-6d4978227617';
     const expectedNhsNumber = '1234567890';
     const expectedStatus = 'pds_updated';
+
     await DeductionRequest.create({
       conversation_id: conversationId,
       nhs_number: expectedNhsNumber,
       status: 'started',
       ods_code: 'A12345'
     });
-
     await updateDeductionRequestStatus(conversationId, expectedStatus);
+
     const deductionRequest = await DeductionRequest.findByPk(conversationId);
 
     expect(deductionRequest.status).toBe(expectedStatus);

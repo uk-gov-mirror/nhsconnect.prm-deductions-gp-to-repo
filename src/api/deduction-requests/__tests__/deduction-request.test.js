@@ -4,17 +4,18 @@ import { updateLogEvent } from '../../../middleware/logging';
 import { sendRetrievalRequest, sendUpdateRequest } from '../../../services/gp2gp';
 import app from '../../../app';
 import { createDeductionRequest } from '../../../services/database/create-deduction-request';
+import { updateDeductionRequestStatus } from '../../../services/database/deduction-request-repository';
 import { v4 as uuid } from 'uuid';
 
 jest.mock('../../../config/logging');
 jest.mock('../../../middleware/logging');
 jest.mock('../../../middleware/auth');
 jest.mock('../../../services/gp2gp');
-jest.mock('../../../services/database/create-deduction-request', () => ({
-  createDeductionRequest: jest.fn().mockResolvedValue()
-}));
+jest.mock('../../../services/database/create-deduction-request');
+jest.mock('../../../services/database/deduction-request-repository');
 jest.mock('uuid');
-uuid.mockImplementation(() => 'mockConversationId');
+const conversationId = 'c9b24d61-f5b0-4329-a731-e73064d89832';
+uuid.mockImplementation(() => conversationId);
 
 const retrievalResponse = {
   data: {
@@ -46,7 +47,6 @@ function generateLogEvent(message) {
 
 describe('POST /deduction-requests/', () => {
   beforeEach(() => {
-    process.env.AUTHORIZATION_KEYS = 'correct-key';
     when(sendRetrievalRequest)
       .calledWith('1234567890')
       .mockImplementation(() => {
@@ -58,9 +58,9 @@ describe('POST /deduction-requests/', () => {
       .mockResolvedValue({ status: 200, data: invalidRetrievalResponse });
 
     when(sendUpdateRequest)
-      .calledWith('123', 'hello', '1111111111', uuid())
+      .calledWith('123', 'hello', '1111111111', conversationId)
       .mockResolvedValue({ status: 204 })
-      .calledWith('123', 'hellno', '1111111112', uuid())
+      .calledWith('123', 'hellno', '1111111112', conversationId)
       .mockResolvedValue({ status: 503, data: 'could not update ods code on pds' });
   });
 
@@ -76,7 +76,7 @@ describe('POST /deduction-requests/', () => {
       .post('/deduction-requests/')
       .send({ nhsNumber: '1111111111' })
       .expect(() => {
-        expect(createDeductionRequest).toHaveBeenCalledWith(uuid(), '1111111111', 'B1234');
+        expect(createDeductionRequest).toHaveBeenCalledWith(conversationId, '1111111111', 'B1234');
       })
       .end(done);
   });
@@ -85,7 +85,31 @@ describe('POST /deduction-requests/', () => {
       .post('/deduction-requests/')
       .send({ nhsNumber: '1111111111' })
       .expect(() => {
-        expect(sendUpdateRequest).toHaveBeenCalledWith('123', 'hello', '1111111111', uuid());
+        expect(sendUpdateRequest).toHaveBeenCalledWith(
+          '123',
+          'hello',
+          '1111111111',
+          conversationId
+        );
+      })
+      .end(done);
+  });
+  it('should update the status of the deduction request to pds_update_sent when pds retrieval and update are successful', done => {
+    const status = 'pds_update_sent';
+    request(app)
+      .post('/deduction-requests/')
+      .send({ nhsNumber: '1111111111' })
+      .expect(() => {
+        expect(updateDeductionRequestStatus).toHaveBeenCalledWith(conversationId, status);
+      })
+      .end(done);
+  });
+  it('should not update the status of updateDeductionsRequest when pds retrieval and update are not successful', done => {
+    request(app)
+      .post('/deduction-requests/')
+      .send({ nhsNumber: '1111111112' })
+      .expect(() => {
+        expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
       })
       .end(done);
   });

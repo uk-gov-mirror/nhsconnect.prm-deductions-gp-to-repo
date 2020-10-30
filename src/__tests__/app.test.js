@@ -12,9 +12,8 @@ jest.mock('../middleware/logging');
 jest.mock('../services/gp2gp');
 jest.mock('../services/get-health-check');
 jest.mock('../middleware/auth');
-jest.mock('../services/database/create-deduction-request', () => ({
-  createDeductionRequest: jest.fn().mockResolvedValue()
-}));
+jest.mock('../services/database/create-deduction-request');
+jest.mock('../services/database/deduction-request-repository');
 
 const retrievalResponse = {
   data: { serialChangeNumber: '123', patientPdsId: 'hello', nhsNumber: 1111111111 }

@@ -84,7 +84,7 @@ describe('GET /deduction-requests/', () => {
       .end(done);
   });
 
-  it('should return 404 when conversation id cannot be found', async done => {
+  it('should return 404 when conversation id cannot be found', done => {
     request(app)
       .get(`/deduction-requests/${invalidConversationId}`)
       .expect(404)

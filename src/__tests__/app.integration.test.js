@@ -84,12 +84,12 @@ describe('app', () => {
   });
 
   describe('POST /deduction-requests/', () => {
-    it('should return a 204 status code and empty body for /deduction-requests/', done => {
+    it('should return a 201 status code and empty body for /deduction-requests/', done => {
       request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '1111111111' })
         .set('Authorization', 'correct-key')
-        .expect(204)
+        .expect(201)
         .expect(res => {
           expect(res.body).toEqual({});
         })

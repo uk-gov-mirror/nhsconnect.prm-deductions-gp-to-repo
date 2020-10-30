@@ -42,12 +42,12 @@ describe('app', () => {
   });
 
   describe('POST /deduction-requests', () => {
-    it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
+    it('should return a 201 if :nhsNumber is numeric and 10 digits and Authorization Header provided', async done => {
       request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '1111111111' })
         .set('Authorization', 'correct-key')
-        .expect(204)
+        .expect(201)
         .end(done);
     });
   });

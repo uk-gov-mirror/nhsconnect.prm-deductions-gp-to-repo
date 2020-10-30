@@ -1,11 +1,12 @@
 import request from 'supertest';
 import { when } from 'jest-when';
+import { v4 as uuid } from 'uuid';
 import { updateLogEvent } from '../../../middleware/logging';
 import { sendRetrievalRequest, sendUpdateRequest } from '../../../services/gp2gp';
-import app from '../../../app';
 import { createDeductionRequest } from '../../../services/database/create-deduction-request';
 import { updateDeductionRequestStatus } from '../../../services/database/deduction-request-repository';
-import { v4 as uuid } from 'uuid';
+import config from '../../../config';
+import app from '../../../app';
 
 jest.mock('../../../config/logging');
 jest.mock('../../../middleware/logging');
@@ -14,6 +15,7 @@ jest.mock('../../../services/gp2gp');
 jest.mock('../../../services/database/create-deduction-request');
 jest.mock('../../../services/database/deduction-request-repository');
 jest.mock('uuid');
+const oldConfig = config;
 const conversationId = 'c9b24d61-f5b0-4329-a731-e73064d89832';
 uuid.mockImplementation(() => conversationId);
 
@@ -47,6 +49,7 @@ function generateLogEvent(message) {
 
 describe('POST /deduction-requests/', () => {
   beforeEach(() => {
+    config.url = 'fake-url';
     when(sendRetrievalRequest)
       .calledWith('1234567890')
       .mockImplementation(() => {
@@ -59,19 +62,26 @@ describe('POST /deduction-requests/', () => {
 
     when(sendUpdateRequest)
       .calledWith('123', 'hello', '1111111111', conversationId)
-      .mockResolvedValue({ status: 204 })
+      .mockResolvedValue({ status: 204, data: { response: 'data' } })
       .calledWith('123', 'hellno', '1111111112', conversationId)
       .mockResolvedValue({ status: 503, data: 'could not update ods code on pds' });
   });
 
-  it('should return a 204 if :nhsNumber is numeric and 10 digits and Authorization Header provided', done => {
+  afterEach(() => {
+    config.url = oldConfig.url;
+  });
+
+  it('should return a 201 if :nhsNumber is numeric and 10 digits and Authorization Header provided', async done => {
     request(app)
       .post('/deduction-requests/')
       .send({ nhsNumber: '1111111111' })
-      .expect(204)
+      .expect(201)
+      .expect(res => {
+        expect(res.header.location).toBe(`${config.url}/deduction-requests/${conversationId}`);
+      })
       .end(done);
   });
-  it('should call createDeductionRequest when patient is found in pds', done => {
+  it('should call createDeductionRequest when patient is found in pds', async done => {
     request(app)
       .post('/deduction-requests/')
       .send({ nhsNumber: '1111111111' })

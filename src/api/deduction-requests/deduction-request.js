@@ -4,6 +4,7 @@ import { sendRetrievalRequest } from '../../services/gp2gp';
 import { handleUpdateRequest } from './handle-update-request';
 import { updateLogEventWithError } from '../../middleware/logging';
 import { createDeductionRequest } from '../../services/database/create-deduction-request';
+import config from '../../config/index';
 
 export const deductionRequestValidationRules = [
   body('nhsNumber').isNumeric().withMessage("'nhsNumber' provided is not numeric"),
@@ -21,12 +22,11 @@ export const deductionRequest = async (req, res) => {
       req.body.nhsNumber,
       pdsRetrievalResponse.data.data.odsCode
     );
-    const pdsUpdateResponse = await handleUpdateRequest(
-      pdsRetrievalResponse,
-      req.body.nhsNumber,
-      conversationId
-    );
-    res.status(204).json(pdsUpdateResponse.data);
+    await handleUpdateRequest(pdsRetrievalResponse, req.body.nhsNumber, conversationId);
+
+    const statusEndpoint = `${config.url}/deduction-requests/${conversationId}`;
+
+    res.set('Location', statusEndpoint).sendStatus(201);
   } catch (err) {
     updateLogEventWithError(err);
     res.status(503).json({

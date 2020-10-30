@@ -6,7 +6,8 @@ locals {
     { name = "NODE_ENV", value = var.environment },
     { name = "GP2GP_URL", value = data.aws_ssm_parameter.gp2gp_url.value },
     { name = "DATABASE_NAME", value = var.database_name },
-    { name = "DATABASE_HOST", value = data.aws_ssm_parameter.rds_endpoint.value }
+    { name = "DATABASE_HOST", value = data.aws_ssm_parameter.rds_endpoint.value },
+    { name = "SERVICE_URL", value = aws_ssm_parameter.service_url.value}
   ]
   secret_environment_variables = [
     { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn },

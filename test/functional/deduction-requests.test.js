@@ -1,8 +1,8 @@
 import axios from 'axios';
 import adapter from 'axios/lib/adapters/http';
 
-describe('End to end test of /deduction-requests/:nhsNumber', () => {
-  it('should return a 204 from GP2GP Adaptor with a valid NHS number', () => {
+describe('End to end test of /deduction-requests/', () => {
+  it('should return a 201 from GP2GP Adaptor with a valid NHS number', () => {
     const nhsNumber = process.env.NHS_ENVIRONMENT === 'dev' ? '9473480032' : '9442964410';
 
     return expect(
@@ -18,7 +18,7 @@ describe('End to end test of /deduction-requests/:nhsNumber', () => {
       )
     ).resolves.toEqual(
       expect.objectContaining({
-        status: 204
+        status: 201
       })
     );
   });

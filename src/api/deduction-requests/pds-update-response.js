@@ -14,9 +14,18 @@ export const pdsUpdateResponse = async (req, res) => {
       res.sendStatus(404);
       return;
     }
-    const nhsNumber = deductionRequest.nhs_number;
-    await updateDeductionRequestStatus(conversationId);
-    await sendHealthRecordRequest(nhsNumber);
+
+    if (deductionRequest.status === 'started') {
+      res.sendStatus(409);
+      return;
+    }
+
+    if (deductionRequest.status === 'pds_update_sent') {
+      const nhsNumber = deductionRequest.nhs_number;
+      await updateDeductionRequestStatus(conversationId);
+      await sendHealthRecordRequest(nhsNumber);
+    }
+
     res.sendStatus(204);
   } catch (err) {
     updateLogEventWithError(err);

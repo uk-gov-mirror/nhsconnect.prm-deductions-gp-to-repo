@@ -9,7 +9,12 @@ export const pdsResponseValidationRules = [];
 export const pdsUpdateResponse = async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const nhsNumber = getDeductionRequestByConversationId(conversationId).nhs_number;
+    const deductionRequest = await getDeductionRequestByConversationId(conversationId);
+    if (deductionRequest === null) {
+      res.sendStatus(404);
+      return;
+    }
+    const nhsNumber = deductionRequest.nhs_number;
     await updateDeductionRequestStatus(conversationId);
     await sendHealthRecordRequest(nhsNumber);
     res.sendStatus(204);

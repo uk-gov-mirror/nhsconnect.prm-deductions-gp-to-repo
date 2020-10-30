@@ -34,8 +34,8 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .patch(`/deduction-requests/${conversationId}/pds-update`)
       .expect(() => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
-        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber);
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(conversationId);
+        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber);
       })
       .expect(204)
       .end(done);
@@ -44,5 +44,22 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   it('should return a 503', done => {
     sendHealthRecordRequest.mockRejectedValue({ errors: ['error'] });
     request(app).patch(`/deduction-requests/${conversationId}/pds-update`).expect(503).end(done);
+  });
+
+  it('should not send the health record request when the deduction request status update fails', done => {
+    when(getDeductionRequestByConversationId)
+      .calledWith(conversationId)
+      .mockReturnValue({ nhs_number: expectedNhsNumber });
+    when(updateDeductionRequestStatus).calledWith(conversationId).mockRejectedValue({});
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .expect(() => {
+        expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
+        expect(updateDeductionRequestStatus).toHaveBeenCalledWith(conversationId);
+        expect(sendHealthRecordRequest).not.toHaveBeenCalled();
+      })
+      .expect(503)
+      .end(done);
   });
 });

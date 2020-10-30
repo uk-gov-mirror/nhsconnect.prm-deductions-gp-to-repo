@@ -10,7 +10,7 @@ export const pdsUpdateResponse = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const nhsNumber = getDeductionRequestByConversationId(conversationId).nhs_number;
-    updateDeductionRequestStatus(conversationId);
+    await updateDeductionRequestStatus(conversationId);
     await sendHealthRecordRequest(nhsNumber);
     res.sendStatus(204);
   } catch (err) {

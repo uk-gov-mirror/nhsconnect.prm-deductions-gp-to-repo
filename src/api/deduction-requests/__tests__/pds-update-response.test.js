@@ -2,6 +2,7 @@ import request from 'supertest';
 import { when } from 'jest-when';
 import app from '../../../app';
 import { sendHealthRecordRequest } from '../../../services/gp2gp';
+import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
@@ -38,6 +39,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(conversationId, 'pds_updated');
         expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber);
+        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request sent' });
       })
       .expect(204)
       .end(done);
@@ -59,7 +61,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .end(done);
   });
 
-  ['pds_updated', 'ehr_request_sent', 'ehr_extract_received', 'failed'].forEach(status => {
+  ['pds_updated', 'ehr_request_sent', 'ehr_extract_received'].forEach(status => {
     it(`should not call sendHealthRecordRequest with nhs number and return a 204 for status: ${status}`, done => {
       when(getDeductionRequestByConversationId)
         .calledWith(conversationId)
@@ -110,6 +112,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           'ehr_request_sent'
         );
+        expect(updateLogEventWithError).toHaveBeenCalled();
       })
       .expect(503)
       .end(done);
@@ -121,20 +124,6 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .mockResolvedValue({ nhs_number: expectedNhsNumber, status: 'pds_update_sent' });
     sendHealthRecordRequest.mockRejectedValue({ errors: ['error'] });
     request(app).patch(`/deduction-requests/${conversationId}/pds-update`).expect(503).end(done);
-  });
-
-  it('should return a 409 if the deduction request status equals started', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: 'started' });
-    request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
-      .expect(() => {
-        expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
-        expect(sendHealthRecordRequest).not.toHaveBeenCalled();
-      })
-      .expect(409)
-      .end(done);
   });
 
   it('should not send the health record request when the deduction request status update fails', done => {
@@ -154,6 +143,23 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .end(done);
   });
 
+  it('should return a 409 if the deduction request status equals started', done => {
+    when(getDeductionRequestByConversationId)
+      .calledWith(conversationId)
+      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: 'started' });
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .expect(() => {
+        expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
+        expect(sendHealthRecordRequest).not.toHaveBeenCalled();
+        expect(updateLogEvent).toHaveBeenCalledWith({
+          status: 'Pds update has not been requested'
+        });
+      })
+      .expect(409)
+      .end(done);
+  });
+
   it('should return a 404 when conversation id not found', done => {
     const nonexistentConversationId = '1017bc7e-d8c0-49c2-99d6-67672cf408cd';
     when(getDeductionRequestByConversationId)
@@ -166,6 +172,9 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(nonexistentConversationId);
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
+        expect(updateLogEvent).toHaveBeenCalledWith({
+          status: 'Conversation id not found'
+        });
       })
       .end(done);
   });

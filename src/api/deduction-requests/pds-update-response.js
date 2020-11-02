@@ -1,4 +1,4 @@
-import { updateLogEventWithError } from '../../middleware/logging';
+import { updateLogEvent, updateLogEventWithError } from '../../middleware/logging';
 import { sendHealthRecordRequest } from '../../services/gp2gp';
 import {
   getDeductionRequestByConversationId,
@@ -19,11 +19,13 @@ export const pdsUpdateResponse = async (req, res) => {
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
     if (deductionRequest === null) {
       res.sendStatus(404);
+      updateLogEvent({ status: 'Conversation id not found' });
       return;
     }
 
     if (deductionRequest.status === 'started') {
       res.sendStatus(409);
+      updateLogEvent({ status: 'Pds update has not been requested' });
       return;
     }
 
@@ -35,6 +37,7 @@ export const pdsUpdateResponse = async (req, res) => {
         throw new Error();
       }
       await updateDeductionRequestStatus(conversationId, 'ehr_request_sent');
+      updateLogEvent({ status: 'Ehr request sent' });
     }
 
     res.sendStatus(204);

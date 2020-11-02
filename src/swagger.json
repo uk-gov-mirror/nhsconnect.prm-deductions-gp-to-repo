@@ -113,6 +113,51 @@
         ]
       }
     },
+    "/deduction-requests/{conversationId}/pds-update": {
+      "patch": {
+        "tags": [
+          "/deduction-requests/{conversationId}/pds-update"
+        ],
+        "summary": "Update the status of deduction request when pds has been updated and trigger EHR request",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversationId",
+            "description": "Conversation Id (must be UUID)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deduction Request successfully updated and EHR Request sent"
+          },
+          "401": {
+            "description": "Authorization header missing"
+          },
+          "403": {
+            "description": "Authorization key invalid"
+          },
+          "404": {
+            "description": "Conversation ID/Deduction request not found"
+          },
+          "409": {
+            "description": "PDS update request has not been sent yet"
+          },
+          "503": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/health-record-requests/{nhsNumber}": {
       "post": {
         "tags": [

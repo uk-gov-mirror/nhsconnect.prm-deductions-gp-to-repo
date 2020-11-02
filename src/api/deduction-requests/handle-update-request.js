@@ -1,6 +1,7 @@
 import { sendUpdateRequest } from '../../services/gp2gp';
 import { updateLogEvent } from '../../middleware/logging';
 import { updateDeductionRequestStatus } from '../../services/database/deduction-request-repository';
+import { Status } from '../../models/DeductionRequest';
 
 export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber, conversationId) => {
   if (pdsRetrievalResponse.status === 200) {
@@ -17,7 +18,7 @@ export const handleUpdateRequest = async (pdsRetrievalResponse, nhsNumber, conve
     );
 
     if (updateResponse.status === 204) {
-      const status = 'pds_update_sent';
+      const status = Status.PDS_UPDATE_SENT;
       await updateDeductionRequestStatus(conversationId, status);
       return updateResponse;
     } else throw new Error(`Failed to Update: ${updateResponse.data}`);

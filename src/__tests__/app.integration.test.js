@@ -3,6 +3,7 @@ import request from 'supertest';
 import app from '../app';
 import config from '../config';
 import ModelFactory from '../models';
+import { modelName, Status } from '../models/DeductionRequest';
 
 jest.mock('../config/logging');
 jest.mock('axios');
@@ -16,7 +17,7 @@ const retrievalResponse = {
   }
 };
 
-const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+const DeductionRequest = ModelFactory.getByName(modelName);
 
 describe('app', () => {
   beforeEach(() => {
@@ -130,7 +131,7 @@ describe('app', () => {
   describe('GET /deduction-requests/:conversationId', () => {
     const conversationId = 'e12d49fb-6827-4648-8ec8-a951f3cf6ac0';
     const expectedNhsNumber = '1234567890';
-    const expectedStatus = 'pds_update_sent';
+    const expectedStatus = Status.PDS_UPDATE_SENT;
 
     it('should return deduction request info', async done => {
       await DeductionRequest.create({

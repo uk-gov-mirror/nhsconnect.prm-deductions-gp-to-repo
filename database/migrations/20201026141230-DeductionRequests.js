@@ -24,7 +24,7 @@ const model = dataType => {
       isIn: [
         [
           'started',
-          'pds_update_sent',
+          'pds_updated',
           'success_pds_update',
           'ehr_request_sent',
           'ehr_extract_received',

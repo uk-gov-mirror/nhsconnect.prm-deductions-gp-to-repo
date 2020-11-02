@@ -1,7 +1,18 @@
 import getParameters from './parameters';
 
-const modelName = 'DeductionRequest';
+export const modelName = 'DeductionRequest';
 const tableName = 'deduction_requests';
+
+export const Status = {
+  STARTED: 'started',
+  PDS_UPDATE_SENT: 'pds_update_sent',
+  PDS_UPDATED: 'pds_updated',
+  EHR_REQUEST_SENT: 'ehr_request_sent',
+  EHR_REQUEST_RECEIVED: 'ehr_extract_received',
+  FAILED: 'failed'
+};
+
+Object.freeze(Status);
 
 const model = dataType => ({
   conversation_id: {
@@ -20,17 +31,8 @@ const model = dataType => ({
   status: {
     type: dataType.STRING,
     allowNull: false,
-    isIn: [
-      [
-        'started',
-        'pds_update_sent',
-        'pds_updated',
-        'ehr_request_sent',
-        'ehr_extract_received',
-        'failed'
-      ]
-    ],
-    defaultValue: 'started'
+    isIn: [Object.values(Status)],
+    defaultValue: Status.STARTED
   },
   ods_code: {
     type: dataType.STRING,
@@ -47,6 +49,6 @@ const model = dataType => ({
   deleted_at: dataType.DATE
 });
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   return sequelize.define(modelName, model(DataTypes), getParameters(tableName));
 };

@@ -1,7 +1,8 @@
-import ModelFactory from '../../models';
 import { runWithinTransaction } from './helper';
+import ModelFactory from '../../models';
+import { modelName } from '../../models/DeductionRequest';
 
-const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+const DeductionRequest = ModelFactory.getByName(modelName);
 
 export const getDeductionRequestByConversationId = conversationId => {
   return DeductionRequest.findByPk(conversationId);

@@ -7,6 +7,7 @@ import { createDeductionRequest } from '../../../services/database/create-deduct
 import { updateDeductionRequestStatus } from '../../../services/database/deduction-request-repository';
 import config from '../../../config';
 import app from '../../../app';
+import { Status } from '../../../models/DeductionRequest';
 
 jest.mock('../../../config/logging');
 jest.mock('../../../middleware/logging');
@@ -105,7 +106,7 @@ describe('POST /deduction-requests/', () => {
       .end(done);
   });
   it('should update the status of the deduction request to pds_update_sent when pds retrieval and update are successful', done => {
-    const status = 'pds_update_sent';
+    const status = Status.PDS_UPDATE_SENT;
     request(app)
       .post('/deduction-requests/')
       .send({ nhsNumber: '1111111111' })

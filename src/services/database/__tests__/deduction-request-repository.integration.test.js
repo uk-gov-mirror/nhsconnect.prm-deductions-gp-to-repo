@@ -1,11 +1,12 @@
-import ModelFactory from '../../../models';
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
 } from '../../database/deduction-request-repository';
+import ModelFactory from '../../../models';
+import { modelName, Status } from '../../../models/DeductionRequest';
 
 describe('Deduction request repository', () => {
-  const DeductionRequest = ModelFactory.getByName('DeductionRequest');
+  const DeductionRequest = ModelFactory.getByName(modelName);
 
   afterAll(async () => {
     await DeductionRequest.sequelize.sync({ force: true });
@@ -16,7 +17,7 @@ describe('Deduction request repository', () => {
     const conversationId = '22a748b2-fef6-412d-b93a-4f6c68f0f8dd';
 
     const expectedNhsNumber = '1234567890';
-    const expectedStatus = 'pds_update_sent';
+    const expectedStatus = Status.PDS_UPDATE_SENT;
     await DeductionRequest.create({
       conversation_id: conversationId,
       nhs_number: expectedNhsNumber,
@@ -38,12 +39,12 @@ describe('Deduction request repository', () => {
   it('should change deduction request status to pds_updated', async () => {
     const conversationId = 'e30d008e-0134-479c-bf59-6d4978227617';
     const expectedNhsNumber = '1234567890';
-    const expectedStatus = 'pds_updated';
+    const expectedStatus = Status.PDS_UPDATED;
 
     await DeductionRequest.create({
       conversation_id: conversationId,
       nhs_number: expectedNhsNumber,
-      status: 'started',
+      status: Status.STARTED,
       ods_code: 'A12345'
     });
     await updateDeductionRequestStatus(conversationId, expectedStatus);

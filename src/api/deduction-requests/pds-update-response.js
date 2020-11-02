@@ -4,8 +4,15 @@ import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
 } from '../../services/database/deduction-request-repository';
+import { param } from 'express-validator';
 
-export const pdsResponseValidationRules = [];
+export const pdsResponseValidationRules = [
+  param('conversationId')
+    .isUUID('4')
+    .withMessage("'conversationId' provided is not of type UUIDv4"),
+  param('conversationId').not().isEmpty().withMessage(`'conversationId' has not been provided`)
+];
+
 export const pdsUpdateResponse = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -24,7 +31,6 @@ export const pdsUpdateResponse = async (req, res) => {
       const nhsNumber = deductionRequest.nhs_number;
       await updateDeductionRequestStatus(conversationId, 'pds_updated');
       const res = await sendHealthRecordRequest(nhsNumber);
-      // TODO: verify that the assumption of the status is correct
       if (res.status !== 204) {
         throw new Error();
       }

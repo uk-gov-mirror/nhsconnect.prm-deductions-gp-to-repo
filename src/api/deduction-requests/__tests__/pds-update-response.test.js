@@ -43,6 +43,22 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .end(done);
   });
 
+  it('should return an error if :conversationId is not valid', done => {
+    const errorMessage = [{ conversationId: "'conversationId' provided is not of type UUIDv4" }];
+    const invalidConversationId = '12345';
+
+    request(app)
+      .patch(`/deduction-requests/${invalidConversationId}/pds-update`)
+      .expect(422)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        expect(res.body).toEqual({
+          errors: errorMessage
+        });
+      })
+      .end(done);
+  });
+
   ['pds_updated', 'ehr_request_sent', 'ehr_extract_received', 'failed'].forEach(status => {
     it(`should not call sendHealthRecordRequest with nhs number and return a 204 for status: ${status}`, done => {
       when(getDeductionRequestByConversationId)
@@ -139,7 +155,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should return a 404 when conversation id not found', done => {
-    const nonexistentConversationId = '70fc78dc-1aa4-11eb-adc1-0242ac120002';
+    const nonexistentConversationId = '1017bc7e-d8c0-49c2-99d6-67672cf408cd';
     when(getDeductionRequestByConversationId)
       .calledWith(nonexistentConversationId)
       .mockResolvedValue(null);

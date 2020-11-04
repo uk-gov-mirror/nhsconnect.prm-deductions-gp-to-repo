@@ -5,8 +5,8 @@ describe('POST /health-record-requests/:nhsNumber', () => {
   it('should test successful POST request for /health-record-requests/:nhsNumber with Authorization', async () => {
     const nhsNumber = process.env.NHS_ENVIRONMENT === 'dev' ? '9473480032' : '9442964410';
     const postPromise = axios.post(
-      `${process.env.SERVICE_URL}/health-record-requests/${nhsNumber}`,
-      null,
+      `${process.env.SERVICE_URL}/deduction-requests`,
+      { nhsNumber },
       {
         headers: {
           Authorization: process.env.AUTHORIZATION_KEYS

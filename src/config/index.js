@@ -8,7 +8,6 @@ export const initialiseConfig = () => ({
   gp2gpAuthKeys: process.env.GP2GP_AUTHORIZATION_KEYS,
   repositoryOdsCode: process.env.REPOSITORY_ODS_CODE || 'B86041',
   repositoryAsid: process.env.REPOSITORY_ASID || '200000001161',
-  practiceOdsCode: 'M85019',
   practiceAsid: '200000000149',
   url: process.env.SERVICE_URL || `http://127.0.0.1:${portNumber}`,
   sequelize: sequelizeConfig

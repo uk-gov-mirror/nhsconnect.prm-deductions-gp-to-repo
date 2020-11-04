@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/index';
 
-export const sendHealthRecordRequest = (nhsNumber, conversationId) => {
+export const sendHealthRecordRequest = (nhsNumber, conversationId, odsCode) => {
   const url = `${config.gp2gpUrl}/health-record-requests/${nhsNumber}`;
 
   const axiosHeaders = {
@@ -15,7 +15,7 @@ export const sendHealthRecordRequest = (nhsNumber, conversationId) => {
     {
       repositoryOdsCode: config.repositoryOdsCode,
       repositoryAsid: config.repositoryAsid,
-      practiceOdsCode: config.practiceOdsCode,
+      practiceOdsCode: odsCode,
       practiceAsid: config.practiceAsid,
       conversationId
     },

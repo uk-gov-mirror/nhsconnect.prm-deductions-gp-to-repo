@@ -8,6 +8,7 @@ jest.mock('../../../middleware/logging');
 const oldConfig = config;
 const nhsNumber = '1111111111';
 const conversationId = '2d8ac681-0721-4d0c-8b76-5a26987829fb';
+const odsCode = 'Z1234';
 describe('sendHealthRecordRequest', () => {
   beforeEach(() => {
     axios.post.mockResolvedValue({ status: 200, body: {} });
@@ -22,7 +23,7 @@ describe('sendHealthRecordRequest', () => {
   });
 
   it('should call axios with nhs number and resolve', () => {
-    return expect(sendHealthRecordRequest(nhsNumber, conversationId)).resolves.toEqual(
+    return expect(sendHealthRecordRequest(nhsNumber, conversationId, odsCode)).resolves.toEqual(
       expect.objectContaining({ status: 200 })
     );
   });
@@ -31,7 +32,7 @@ describe('sendHealthRecordRequest', () => {
     axios.post.mockRejectedValue({
       errors: [{ repositoryOdsCode: "'repositoryOdsCode' is not configured" }]
     });
-    return expect(sendHealthRecordRequest(nhsNumber, conversationId)).rejects.toEqual(
+    return expect(sendHealthRecordRequest(nhsNumber, conversationId, odsCode)).rejects.toEqual(
       expect.objectContaining({
         errors: expect.arrayContaining([
           { repositoryOdsCode: "'repositoryOdsCode' is not configured" }
@@ -40,28 +41,15 @@ describe('sendHealthRecordRequest', () => {
     );
   });
 
-  it('should call axios post with body parameter repository ODS code', async done => {
-    await sendHealthRecordRequest(nhsNumber, conversationId);
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        repositoryOdsCode: config.repositoryOdsCode
-      }),
-      expect.anything()
-    );
-    done();
-  });
-
   it('should call axios post with body parameter repository asid', async done => {
-    await sendHealthRecordRequest(nhsNumber, conversationId);
+    await sendHealthRecordRequest(nhsNumber, conversationId, odsCode);
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith(
       `${config.gp2gpUrl}/health-record-requests/${nhsNumber}`,
       {
         repositoryAsid: config.repositoryAsid,
         repositoryOdsCode: config.repositoryOdsCode,
-        practiceOdsCode: config.practiceOdsCode,
+        practiceOdsCode: odsCode,
         practiceAsid: config.practiceAsid,
         conversationId
       },

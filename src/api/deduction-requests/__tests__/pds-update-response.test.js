@@ -20,6 +20,7 @@ jest.mock('../../../services/database/deduction-request-repository', () => ({
 }));
 
 const expectedNhsNumber = '1234567891';
+const odsCode = 'Y4321';
 
 describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   const conversationId = 'b3e0cfe6-7401-4ced-b5b3-34862d602c28';
@@ -29,9 +30,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should call sendHealthRecordRequest with nhs number and return a 204', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.PDS_UPDATE_SENT });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.PDS_UPDATE_SENT
+    });
     sendHealthRecordRequest.mockResolvedValue({ status: 204 });
 
     request(app)
@@ -42,7 +45,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           Status.PDS_UPDATED
         );
-        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber, conversationId);
+        expect(sendHealthRecordRequest).toHaveBeenCalledWith(
+          expectedNhsNumber,
+          conversationId,
+          odsCode
+        );
         expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request sent' });
       })
       .expect(204)
@@ -69,7 +76,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     it(`should not call sendHealthRecordRequest with nhs number and return a 204 for status: ${status}`, done => {
       when(getDeductionRequestByConversationId)
         .calledWith(conversationId)
-        .mockResolvedValue({ nhs_number: expectedNhsNumber, status: status });
+        .mockResolvedValue({ nhs_number: expectedNhsNumber, ods_code: odsCode, status: status });
 
       request(app)
         .patch(`/deduction-requests/${conversationId}/pds-update`)
@@ -84,9 +91,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should update the deduction status again after sending the health record request', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.PDS_UPDATE_SENT });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.PDS_UPDATE_SENT
+    });
     request(app)
       .patch(`/deduction-requests/${conversationId}/pds-update`)
       .expect(() => {
@@ -94,7 +103,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           Status.PDS_UPDATED
         );
-        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber, conversationId);
+        expect(sendHealthRecordRequest).toHaveBeenCalledWith(
+          expectedNhsNumber,
+          conversationId,
+          odsCode
+        );
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
           conversationId,
           Status.EHR_REQUEST_SENT
@@ -105,9 +118,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should not update the deduction status when sending the health record request fails', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.PDS_UPDATE_SENT });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.PDS_UPDATE_SENT
+    });
     sendHealthRecordRequest.mockResolvedValue({ status: 503 });
 
     request(app)
@@ -129,17 +144,21 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should return a 503 when sending health record request fails', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.PDS_UPDATE_SENT });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.PDS_UPDATE_SENT
+    });
     sendHealthRecordRequest.mockRejectedValue({ errors: ['error'] });
     request(app).patch(`/deduction-requests/${conversationId}/pds-update`).expect(503).end(done);
   });
 
   it('should not send the health record request when the deduction request status update fails', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.PDS_UPDATE_SENT });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.PDS_UPDATE_SENT
+    });
     when(updateDeductionRequestStatus).calledWith(conversationId).mockRejectedValue({});
 
     request(app)
@@ -157,9 +176,11 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
   });
 
   it('should return a 409 if the deduction request status equals started', done => {
-    when(getDeductionRequestByConversationId)
-      .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: expectedNhsNumber, status: Status.STARTED });
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: expectedNhsNumber,
+      ods_code: odsCode,
+      status: Status.STARTED
+    });
     request(app)
       .patch(`/deduction-requests/${conversationId}/pds-update`)
       .expect(() => {

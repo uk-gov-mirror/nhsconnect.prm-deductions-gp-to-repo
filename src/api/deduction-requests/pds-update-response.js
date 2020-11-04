@@ -33,7 +33,7 @@ export const pdsUpdateResponse = async (req, res) => {
     if (deductionRequest.status === Status.PDS_UPDATE_SENT) {
       const nhsNumber = deductionRequest.nhs_number;
       await updateDeductionRequestStatus(conversationId, Status.PDS_UPDATED);
-      const res = await sendHealthRecordRequest(nhsNumber);
+      const res = await sendHealthRecordRequest(nhsNumber, conversationId);
       if (res.status !== 204) {
         throw new Error();
       }

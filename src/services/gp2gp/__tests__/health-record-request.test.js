@@ -6,6 +6,8 @@ jest.mock('axios');
 jest.mock('../../../middleware/logging');
 
 const oldConfig = config;
+const nhsNumber = '1111111111';
+const conversationId = '2d8ac681-0721-4d0c-8b76-5a26987829fb';
 describe('sendHealthRecordRequest', () => {
   beforeEach(() => {
     axios.post.mockResolvedValue({ status: 200, body: {} });
@@ -20,7 +22,7 @@ describe('sendHealthRecordRequest', () => {
   });
 
   it('should call axios with nhs number and resolve', () => {
-    return expect(sendHealthRecordRequest('1111111111')).resolves.toEqual(
+    return expect(sendHealthRecordRequest(nhsNumber, conversationId)).resolves.toEqual(
       expect.objectContaining({ status: 200 })
     );
   });
@@ -29,7 +31,7 @@ describe('sendHealthRecordRequest', () => {
     axios.post.mockRejectedValue({
       errors: [{ repositoryOdsCode: "'repositoryOdsCode' is not configured" }]
     });
-    return expect(sendHealthRecordRequest('1111111111')).rejects.toEqual(
+    return expect(sendHealthRecordRequest(nhsNumber, conversationId)).rejects.toEqual(
       expect.objectContaining({
         errors: expect.arrayContaining([
           { repositoryOdsCode: "'repositoryOdsCode' is not configured" }
@@ -39,7 +41,7 @@ describe('sendHealthRecordRequest', () => {
   });
 
   it('should call axios post with body parameter repository ODS code', async done => {
-    await sendHealthRecordRequest('1111111111');
+    await sendHealthRecordRequest(nhsNumber, conversationId);
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith(
       expect.anything(),
@@ -52,55 +54,22 @@ describe('sendHealthRecordRequest', () => {
   });
 
   it('should call axios post with body parameter repository asid', async done => {
-    await sendHealthRecordRequest('1111111111');
+    await sendHealthRecordRequest(nhsNumber, conversationId);
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        repositoryAsid: config.repositoryAsid
-      }),
-      expect.anything()
-    );
-    done();
-  });
-
-  it('should call axios post with body parameter practice ODS code', async done => {
-    await sendHealthRecordRequest('1111111111');
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        practiceOdsCode: config.practiceOdsCode
-      }),
-      expect.anything()
-    );
-    done();
-  });
-
-  it('should call axios post with body parameter practice asid', async done => {
-    await sendHealthRecordRequest('1111111111');
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        practiceAsid: config.practiceAsid
-      }),
-      expect.anything()
-    );
-    done();
-  });
-
-  it('should call axios post with authorization header', async done => {
-    await sendHealthRecordRequest('1111111111');
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      expect.objectContaining({
-        headers: expect.objectContaining({
+      `${config.gp2gpUrl}/health-record-requests/${nhsNumber}`,
+      {
+        repositoryAsid: config.repositoryAsid,
+        repositoryOdsCode: config.repositoryOdsCode,
+        practiceOdsCode: config.practiceOdsCode,
+        practiceAsid: config.practiceAsid,
+        conversationId
+      },
+      {
+        headers: {
           Authorization: config.gp2gpAuthKeys
-        })
-      })
+        }
+      }
     );
     done();
   });

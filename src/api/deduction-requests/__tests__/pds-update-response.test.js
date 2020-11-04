@@ -42,7 +42,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           Status.PDS_UPDATED
         );
-        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber);
+        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber, conversationId);
         expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request sent' });
       })
       .expect(204)
@@ -94,7 +94,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           Status.PDS_UPDATED
         );
-        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber);
+        expect(sendHealthRecordRequest).toHaveBeenCalledWith(expectedNhsNumber, conversationId);
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
           conversationId,
           Status.EHR_REQUEST_SENT

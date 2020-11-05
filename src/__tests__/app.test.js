@@ -51,10 +51,4 @@ describe('app', () => {
         .end(done);
     });
   });
-
-  describe('POST /health-record-requests/:nhsNumber', () => {
-    it('should resolve the request', done => {
-      request(app).post('/health-record-requests/1111111111').expect(200).end(done);
-    });
-  });
 });

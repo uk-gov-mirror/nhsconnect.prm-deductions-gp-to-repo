@@ -122,12 +122,6 @@ describe('app', () => {
     });
   });
 
-  describe('POST /health-record-requests/:nhsNumber', () => {
-    it('should return a 401 when authorization is not provided', done => {
-      request(app).post('/health-record-requests/1111111111').expect(401).end(done);
-    });
-  });
-
   describe('GET /deduction-requests/:conversationId', () => {
     const conversationId = 'e12d49fb-6827-4648-8ec8-a951f3cf6ac0';
     const expectedNhsNumber = '1234567890';

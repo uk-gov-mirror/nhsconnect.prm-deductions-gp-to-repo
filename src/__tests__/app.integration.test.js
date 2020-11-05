@@ -1,12 +1,12 @@
+import app from '../app';
 import axios from 'axios';
 import request from 'supertest';
-import app from '../app';
 import config from '../config';
 import ModelFactory from '../models';
 import { modelName, Status } from '../models/DeductionRequest';
 
-jest.mock('../config/logging');
 jest.mock('axios');
+jest.mock('../config/logging');
 
 const retrievalResponse = {
   data: {
@@ -24,6 +24,7 @@ describe('app', () => {
     process.env.AUTHORIZATION_KEYS = 'correct-key';
     axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: retrievalResponse }));
     axios.patch.mockImplementation(() => Promise.resolve({ status: 204, data: {} }));
+    axios.post.mockImplementation(() => Promise.resolve({ status: 204, data: {} }));
   });
 
   afterEach(() => {
@@ -160,6 +161,31 @@ describe('app', () => {
         .get(`/deduction-requests/${invalidConversationId}`)
         .set('Authorization', 'correct-key')
         .expect(404)
+        .end(done);
+    });
+  });
+
+  describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
+    const conversationId = 'dad8fe6d-f525-4961-b086-bb9730a4822f';
+    const expectedNhsNumber = '1234567891';
+    const expectedStatus = Status.PDS_UPDATE_SENT;
+    const odsCode = 'B1234';
+
+    it('should return 204 upon successful deduction request PDS update', async done => {
+      await DeductionRequest.create({
+        conversation_id: conversationId,
+        nhs_number: expectedNhsNumber,
+        status: expectedStatus,
+        ods_code: odsCode
+      });
+
+      request(app)
+        .patch(`/deduction-requests/${conversationId}/pds-update`)
+        .set('Authorization', 'correct-key')
+        .expect(204)
+        .expect(res => {
+          expect(res.body).toEqual({});
+        })
         .end(done);
     });
   });

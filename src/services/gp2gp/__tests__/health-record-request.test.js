@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { sendHealthRecordRequest } from '../health-record-request';
 import config from '../../../config';
+import { sendHealthRecordRequest } from '../health-record-request';
+
 
 jest.mock('axios');
 jest.mock('../../../middleware/logging');
@@ -41,23 +42,30 @@ describe('sendHealthRecordRequest', () => {
     );
   });
 
-  it('should call axios post with body parameter repository asid', async done => {
+  it('should call axios post with body parameter practice ODS code', async done => {
     await sendHealthRecordRequest(nhsNumber, conversationId, odsCode);
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith(
-      `${config.gp2gpUrl}/health-record-requests/${nhsNumber}`,
-      {
-        repositoryAsid: config.repositoryAsid,
-        repositoryOdsCode: config.repositoryOdsCode,
-        practiceOdsCode: odsCode,
-        practiceAsid: config.practiceAsid,
-        conversationId
-      },
-      {
-        headers: {
+      expect.anything(),
+      expect.objectContaining({
+        practiceOdsCode: odsCode
+      }),
+      expect.anything()
+    );
+    done();
+  });
+
+  it('should call axios post with authorization header', async done => {
+    await sendHealthRecordRequest(nhsNumber, conversationId, odsCode);
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({
+        headers: expect.objectContaining({
           Authorization: config.gp2gpAuthKeys
-        }
-      }
+        })
+      })
     );
     done();
   });

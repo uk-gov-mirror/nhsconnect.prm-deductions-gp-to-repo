@@ -2,11 +2,18 @@ import request from 'supertest';
 import app from '../../../app';
 import { v4 as uuid } from 'uuid';
 import { when } from 'jest-when';
-import { getDeductionRequestByConversationId } from '../../../services/database/deduction-request-repository';
+import {
+  getDeductionRequestByConversationId,
+  updateDeductionRequestStatus
+} from '../../../services/database/deduction-request-repository';
+import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
+import { Status } from '../../../models/DeductionRequest';
 
 jest.mock('../../../middleware/auth');
+jest.mock('../../../services/ehrRepo/ehr-details-request');
 jest.mock('../../../services/database/deduction-request-repository', () => ({
-  getDeductionRequestByConversationId: jest.fn()
+  getDeductionRequestByConversationId: jest.fn(),
+  updateDeductionRequestStatus: jest.fn()
 }));
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
@@ -45,6 +52,47 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
         expect(res.body).toEqual({
           errors: errorMessage
         });
+      })
+      .end(done);
+  });
+
+  it('should update the status if the EHR is not complete', done => {
+    const conversationId = uuid();
+    const nhsNumber = '1234567890';
+    when(getDeductionRequestByConversationId)
+      .calledWith(conversationId)
+      .mockResolvedValue({ nhs_number: nhsNumber });
+
+    when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(true);
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .expect(204)
+      .expect(() => {
+        expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
+        expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
+          conversationId,
+          Status.EHR_REQUEST_RECEIVED
+        );
+      })
+      .end(done);
+  });
+
+  it('should not update the status if the EHR is not complete', done => {
+    const conversationId = uuid();
+    const nhsNumber = '1234567890';
+    when(getDeductionRequestByConversationId)
+      .calledWith(conversationId)
+      .mockResolvedValue({ nhs_number: nhsNumber });
+
+    when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(false);
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .expect(204)
+      .expect(() => {
+        expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
+        expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
       })
       .end(done);
   });

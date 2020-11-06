@@ -2,7 +2,6 @@ import axios from 'axios';
 import config from '../../../config';
 import { sendHealthRecordRequest } from '../health-record-request';
 
-
 jest.mock('axios');
 jest.mock('../../../middleware/logging');
 

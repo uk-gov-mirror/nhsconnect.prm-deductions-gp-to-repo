@@ -189,4 +189,30 @@ describe('app', () => {
         .end(done);
     });
   });
+
+  describe('PATCH /deduction-requests/:conversation-id/ehr-message-received', () => {
+    const conversationId = '7dfabb00-2869-4120-9053-315d4e4086d9';
+    const expectedNhsNumber = '1234567891';
+    const status = Status.EHR_REQUEST_SENT;
+    const odsCode = 'B1234';
+
+    it('should return 204 upon successful receipt of notification of EHR message being received', async done => {
+      axios.get.mockImplementation(() => Promise.resolve({ status: 200 }));
+      await DeductionRequest.create({
+        conversation_id: conversationId,
+        nhs_number: expectedNhsNumber,
+        status: status,
+        ods_code: odsCode
+      });
+
+      request(app)
+        .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+        .set('Authorization', 'correct-key')
+        .expect(204)
+        .expect(res => {
+          expect(res.body).toEqual({});
+        })
+        .end(done);
+    });
+  });
 });

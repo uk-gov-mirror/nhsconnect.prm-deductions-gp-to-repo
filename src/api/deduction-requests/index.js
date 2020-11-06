@@ -7,6 +7,10 @@ import {
   deductionRequestStatusValidationRules,
   deductionRequestStatus
 } from './deduction-request-status';
+import {
+  ehrMessageReceived,
+  ehrMessageReceivedValidationRules
+} from './ehr-message-received-controller';
 
 const deductionRequests = express.Router();
 
@@ -32,6 +36,14 @@ deductionRequests.patch(
   pdsResponseValidationRules,
   validate,
   pdsUpdateResponse
+);
+
+deductionRequests.patch(
+  '/:conversationId/ehr-message-received',
+  authenticateRequest,
+  ehrMessageReceivedValidationRules,
+  validate,
+  ehrMessageReceived
 );
 
 export { deductionRequests };

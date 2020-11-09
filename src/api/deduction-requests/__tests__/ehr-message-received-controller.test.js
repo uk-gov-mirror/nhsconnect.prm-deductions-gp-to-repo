@@ -8,6 +8,7 @@ import {
 } from '../../../services/database/deduction-request-repository';
 import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../../models/DeductionRequest';
+import { updateLogEventWithError } from '../../../middleware/logging';
 
 jest.mock('../../../middleware/auth');
 jest.mock('../../../services/ehrRepo/ehr-details-request');
@@ -15,6 +16,7 @@ jest.mock('../../../services/database/deduction-request-repository', () => ({
   getDeductionRequestByConversationId: jest.fn(),
   updateDeductionRequestStatus: jest.fn()
 }));
+jest.mock('../../../middleware/logging');
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
   it('should return 204', done => {
@@ -94,6 +96,35 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
         expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
       })
+      .end(done);
+  });
+
+  it('should not update the status when retrieving the health record request fails', done => {
+    const conversationId = uuid();
+    const nhsNumber = '1234567890';
+
+    when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
+      nhs_number: nhsNumber,
+      ods_code: 'Z1234',
+      status: Status.EHR_REQUEST_RECEIVED
+    });
+    when(checkEHRComplete)
+      .calledWith(nhsNumber, conversationId)
+      .mockImplementation(() => {
+        throw new Error('Cannot retrieve the record');
+      });
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .expect(() => {
+        expect(checkEHRComplete).toHaveBeenCalled();
+        expect(updateDeductionRequestStatus).not.toHaveBeenCalledWith(
+          conversationId,
+          Status.EHR_REQUEST_RECEIVED
+        );
+        expect(updateLogEventWithError).toHaveBeenCalled();
+      })
+      .expect(503)
       .end(done);
   });
 });

@@ -195,9 +195,18 @@ describe('app', () => {
     const expectedNhsNumber = '1234567891';
     const status = Status.EHR_REQUEST_SENT;
     const odsCode = 'B1234';
+    const body = {
+      data: {
+        type: 'health-record',
+        id: conversationId,
+        attributes: {
+          status: 'success'
+        }
+      }
+    };
 
     it('should return 204 upon successful receipt of notification of EHR message being received', async done => {
-      axios.get.mockImplementation(() => Promise.resolve({ status: 200 }));
+      axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: body }));
       await DeductionRequest.create({
         conversation_id: conversationId,
         nhs_number: expectedNhsNumber,

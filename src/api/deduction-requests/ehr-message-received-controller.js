@@ -5,7 +5,7 @@ import {
 import { param } from 'express-validator';
 import { checkEHRComplete } from '../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../models/DeductionRequest';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { updateLogEvent, updateLogEventWithError } from '../../middleware/logging';
 
 export const ehrMessageReceivedValidationRules = [
   param('conversationId').isUUID('4').withMessage("'conversationId' provided is not of type UUIDv4")
@@ -22,6 +22,7 @@ export const ehrMessageReceived = async (req, res) => {
     const isEhrComplete = await checkEHRComplete(deductionRequest.nhs_number, conversationId);
     if (isEhrComplete) {
       await updateDeductionRequestStatus(conversationId, Status.EHR_REQUEST_RECEIVED);
+      updateLogEvent({ status: 'Ehr request received' });
     }
     res.sendStatus(204);
   } catch (err) {

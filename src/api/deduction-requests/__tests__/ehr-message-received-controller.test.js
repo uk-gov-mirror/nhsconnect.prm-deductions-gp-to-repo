@@ -8,7 +8,7 @@ import {
 } from '../../../services/database/deduction-request-repository';
 import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../../models/DeductionRequest';
-import { updateLogEventWithError } from '../../../middleware/logging';
+import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
 
 jest.mock('../../../middleware/auth');
 jest.mock('../../../services/ehrRepo/ehr-details-request');
@@ -58,7 +58,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
       .end(done);
   });
 
-  it('should update the status if the EHR is not complete', done => {
+  it('should update the status if the EHR is complete', done => {
     const conversationId = uuid();
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
@@ -76,6 +76,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
           conversationId,
           Status.EHR_REQUEST_RECEIVED
         );
+        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request received' });
       })
       .end(done);
   });

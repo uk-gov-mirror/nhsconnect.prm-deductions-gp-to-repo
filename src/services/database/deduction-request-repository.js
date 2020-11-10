@@ -1,6 +1,6 @@
 import { runWithinTransaction } from './helper';
 import ModelFactory from '../../models';
-import { modelName } from '../../models/DeductionRequest';
+import { modelName } from '../../models/deduction-request';
 
 const DeductionRequest = ModelFactory.getByName(modelName);
 

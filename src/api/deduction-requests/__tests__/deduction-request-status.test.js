@@ -34,7 +34,7 @@ describe('GET /deduction-requests/', () => {
       .calledWith(invalidConversationId)
       .mockResolvedValue(null)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: nhsNumber, status });
+      .mockResolvedValue({ nhsNumber, status });
   });
 
   it('should return a 200 if :conversationId is uuid and Authorization Header provided', done => {

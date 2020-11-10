@@ -7,7 +7,7 @@ import { createDeductionRequest } from '../../../services/database/create-deduct
 import { updateDeductionRequestStatus } from '../../../services/database/deduction-request-repository';
 import config from '../../../config';
 import app from '../../../app';
-import { Status } from '../../../models/DeductionRequest';
+import { Status } from '../../../models/deduction-request';
 
 jest.mock('../../../config/logging');
 jest.mock('../../../middleware/logging');

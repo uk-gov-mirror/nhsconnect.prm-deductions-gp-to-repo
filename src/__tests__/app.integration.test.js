@@ -3,7 +3,7 @@ import axios from 'axios';
 import request from 'supertest';
 import config from '../config';
 import ModelFactory from '../models';
-import { modelName, Status } from '../models/DeductionRequest';
+import { modelName, Status } from '../models/deduction-request';
 
 jest.mock('axios');
 jest.mock('../config/logging');
@@ -130,10 +130,10 @@ describe('app', () => {
 
     it('should return deduction request info', async done => {
       await DeductionRequest.create({
-        conversation_id: conversationId,
-        nhs_number: expectedNhsNumber,
+        conversationId,
+        nhsNumber: expectedNhsNumber,
         status: expectedStatus,
-        ods_code: 'something'
+        odsCode: 'something'
       });
 
       request(app)
@@ -173,10 +173,10 @@ describe('app', () => {
 
     it('should return 204 upon successful deduction request PDS update', async done => {
       await DeductionRequest.create({
-        conversation_id: conversationId,
-        nhs_number: expectedNhsNumber,
+        conversationId,
+        nhsNumber: expectedNhsNumber,
         status: expectedStatus,
-        ods_code: odsCode
+        odsCode
       });
 
       request(app)
@@ -208,10 +208,10 @@ describe('app', () => {
     it('should return 204 upon successful receipt of notification of EHR message being received', async done => {
       axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: body }));
       await DeductionRequest.create({
-        conversation_id: conversationId,
-        nhs_number: expectedNhsNumber,
+        conversationId,
+        nhsNumber: expectedNhsNumber,
         status: status,
-        ods_code: odsCode
+        odsCode
       });
 
       request(app)

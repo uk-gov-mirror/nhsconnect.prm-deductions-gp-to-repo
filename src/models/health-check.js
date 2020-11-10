@@ -5,19 +5,25 @@ const tableName = 'health_checks';
 
 const model = dataType => ({
   id: {
+    field: 'id',
     type: dataType.UUID,
     primaryKey: true,
     defaultValue: dataType.UUIDV4
   },
-  created_at: {
+  createdAt: {
+    field: 'created_at',
     type: dataType.DATE,
     allowNull: false
   },
-  updated_at: {
+  updatedAt: {
+    field: 'updated_at',
     type: dataType.DATE,
     allowNull: false
   },
-  deleted_at: dataType.DATE
+  deletedAt: {
+    field: 'deleted_at',
+    type: dataType.DATE
+  }
 });
 
 export default (sequelize, DataTypes) => {

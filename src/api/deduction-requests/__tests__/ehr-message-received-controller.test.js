@@ -7,7 +7,7 @@ import {
   updateDeductionRequestStatus
 } from '../../../services/database/deduction-request-repository';
 import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
-import { Status } from '../../../models/DeductionRequest';
+import { Status } from '../../../models/deduction-request';
 import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
 
 jest.mock('../../../middleware/auth');
@@ -23,7 +23,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const conversationId = uuid();
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: '1234567890' });
+      .mockResolvedValue({ nhsNumber: '1234567890' });
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
@@ -63,7 +63,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: nhsNumber });
+      .mockResolvedValue({ nhsNumber });
 
     when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(true);
 
@@ -86,7 +86,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhs_number: nhsNumber });
+      .mockResolvedValue({ nhsNumber });
 
     when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(false);
 
@@ -105,8 +105,8 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const nhsNumber = '1234567890';
 
     when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
-      nhs_number: nhsNumber,
-      ods_code: 'Z1234',
+      nhsNumber,
+      odsCode: 'Z1234',
       status: Status.EHR_REQUEST_RECEIVED
     });
     when(checkEHRComplete)

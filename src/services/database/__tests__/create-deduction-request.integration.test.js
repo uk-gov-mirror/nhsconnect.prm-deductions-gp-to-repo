@@ -3,7 +3,7 @@ import { createDeductionRequest } from '../create-deduction-request';
 import { runWithinTransaction } from '../helper';
 import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
 import ModelFactory from '../../../models';
-import { modelName } from '../../../models/DeductionRequest';
+import { modelName } from '../../../models/deduction-request';
 
 jest.mock('../../../middleware/logging');
 
@@ -39,8 +39,8 @@ describe('createDeductionRequest', () => {
       })
     );
     expect(deductionRequest).not.toBeNull();
-    expect(deductionRequest.get().conversation_id).toBe(conversationId);
-    expect(deductionRequest.get().nhs_number).toBe(nhsNumber);
+    expect(deductionRequest.get().conversationId).toBe(conversationId);
+    expect(deductionRequest.get().nhsNumber).toBe(nhsNumber);
   });
 
   it('should log errors when nhs number is invalid', () => {
@@ -48,7 +48,7 @@ describe('createDeductionRequest', () => {
     return createDeductionRequest(conversationId, '123', odsCode).catch(error => {
       expect(updateLogEventWithError).toHaveBeenCalledTimes(1);
       expect(updateLogEventWithError).toHaveBeenCalledWith(error);
-      return expect(error.message).toContain('Validation len on nhs_number failed');
+      return expect(error.message).toContain('Validation len on nhsNumber failed');
     });
   });
 

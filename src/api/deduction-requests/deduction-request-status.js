@@ -20,7 +20,7 @@ export const deductionRequestStatus = async (req, res) => {
         type: 'deduction-requests',
         id: req.params.conversationId,
         attributes: {
-          nhsNumber: requestStatus.nhs_number,
+          nhsNumber: requestStatus.nhsNumber,
           status: requestStatus.status
         }
       }

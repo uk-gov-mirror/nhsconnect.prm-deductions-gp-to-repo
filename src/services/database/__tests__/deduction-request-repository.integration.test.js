@@ -3,7 +3,7 @@ import {
   updateDeductionRequestStatus
 } from '../../database/deduction-request-repository';
 import ModelFactory from '../../../models';
-import { modelName, Status } from '../../../models/DeductionRequest';
+import { modelName, Status } from '../../../models/deduction-request';
 
 describe('Deduction request repository', () => {
   const DeductionRequest = ModelFactory.getByName(modelName);
@@ -19,14 +19,14 @@ describe('Deduction request repository', () => {
     const expectedNhsNumber = '1234567890';
     const expectedStatus = Status.PDS_UPDATE_SENT;
     await DeductionRequest.create({
-      conversation_id: conversationId,
-      nhs_number: expectedNhsNumber,
+      conversationId,
+      nhsNumber: expectedNhsNumber,
       status: expectedStatus,
-      ods_code: 'A12345'
+      odsCode: 'A12345'
     });
 
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
-    expect(deductionRequest.nhs_number).toBe(expectedNhsNumber);
+    expect(deductionRequest.nhsNumber).toBe(expectedNhsNumber);
     expect(deductionRequest.status).toBe(expectedStatus);
   });
 
@@ -42,10 +42,10 @@ describe('Deduction request repository', () => {
     const expectedStatus = Status.PDS_UPDATED;
 
     await DeductionRequest.create({
-      conversation_id: conversationId,
-      nhs_number: expectedNhsNumber,
+      conversationId,
+      nhsNumber: expectedNhsNumber,
       status: Status.STARTED,
-      ods_code: 'A12345'
+      odsCode: 'A12345'
     });
     await updateDeductionRequestStatus(conversationId, expectedStatus);
 

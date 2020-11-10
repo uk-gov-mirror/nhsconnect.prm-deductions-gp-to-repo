@@ -1,5 +1,5 @@
-import DeductionRequest from './DeductionRequest';
-import HealthCheck from './HealthCheck';
+import DeductionRequest from './deduction-request';
+import HealthCheck from './health-check';
 
 export { DeductionRequest };
 export { HealthCheck };

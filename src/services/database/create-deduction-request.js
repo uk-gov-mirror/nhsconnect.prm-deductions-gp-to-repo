@@ -1,7 +1,7 @@
 import { runWithinTransaction } from './helper';
 import { updateLogEvent } from '../../middleware/logging';
 import ModelFactory from '../../models';
-import { modelName } from '../../models/DeductionRequest';
+import { modelName } from '../../models/deduction-request';
 
 const DeductionRequest = ModelFactory.getByName(modelName);
 
@@ -9,9 +9,9 @@ export const createDeductionRequest = (conversationId, nhsNumber, odsCode) =>
   runWithinTransaction(transaction =>
     DeductionRequest.create(
       {
-        conversation_id: conversationId,
-        nhs_number: nhsNumber,
-        ods_code: odsCode
+        conversationId,
+        nhsNumber,
+        odsCode
       },
       transaction
     )

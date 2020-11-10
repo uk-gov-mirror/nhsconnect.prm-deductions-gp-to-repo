@@ -4,21 +4,24 @@ const tableName = 'deduction_requests';
 
 const model = dataType => {
   return {
-    conversation_id: {
+    conversationId: {
+      field: 'conversation_id',
       type: dataType.UUID,
       primaryKey: true,
       defaultValue: dataType.UUIDV4
     },
-    nhs_number: {
+    nhsNumber: {
+      field: 'nhs_number',
       type: dataType.CHAR(10),
       validate: {
         isNumeric: true,
         len: 10
       },
-      unique: true,
+      unique: false,
       allowNull: false
     },
     status: {
+      field: 'status',
       type: dataType.STRING,
       allowNull: false,
       isIn: [
@@ -32,19 +35,25 @@ const model = dataType => {
         ]
       ]
     },
-    ods_code: {
+    odsCode: {
+      field: 'ods_code',
       type: dataType.STRING,
       allowNull: false
     },
-    created_at: {
+    createdAt: {
+      field: 'created_at',
       type: dataType.DATE,
       allowNull: false
     },
-    updated_at: {
+    updatedAt: {
+      field: 'updated_at',
       type: dataType.DATE,
       allowNull: false
     },
-    deleted_at: dataType.DATE
+    deletedAt: {
+      field: 'deleted_at',
+      type: dataType.DATE
+    }
   };
 };
 

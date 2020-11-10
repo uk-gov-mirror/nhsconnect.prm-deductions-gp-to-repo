@@ -5,7 +5,7 @@ import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
 } from '../../services/database/deduction-request-repository';
-import { Status } from '../../models/DeductionRequest';
+import { Status } from '../../models/deduction-request';
 
 export const pdsResponseValidationRules = [
   param('conversationId')
@@ -33,9 +33,9 @@ export const pdsUpdateResponse = async (req, res) => {
     if (deductionRequest.status === Status.PDS_UPDATE_SENT) {
       await updateDeductionRequestStatus(conversationId, Status.PDS_UPDATED);
       const res = await sendHealthRecordRequest(
-        deductionRequest.nhs_number,
+        deductionRequest.nhsNumber,
         conversationId,
-        deductionRequest.ods_code
+        deductionRequest.odsCode
       );
       if (res.status !== 204) {
         throw new Error();

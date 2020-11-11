@@ -9,6 +9,7 @@ import {
 import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../../models/deduction-request';
 import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
+import { sendHealthRecordAcknowledgement } from '../../../services/gp2gp/health-record-acknowledgement';
 
 jest.mock('../../../middleware/auth');
 jest.mock('../../../services/ehrRepo/ehr-details-request');
@@ -17,6 +18,7 @@ jest.mock('../../../services/database/deduction-request-repository', () => ({
   updateDeductionRequestStatus: jest.fn()
 }));
 jest.mock('../../../middleware/logging');
+jest.mock('../../../services/gp2gp/health-record-acknowledgement');
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
   it('should return 204', done => {
@@ -76,7 +78,28 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
           conversationId,
           Status.EHR_REQUEST_RECEIVED
         );
-        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request received' });
+        expect(updateLogEvent).toHaveBeenCalledWith({
+          status: 'Ehr request received and acknowledgement sent'
+        });
+      })
+      .end(done);
+  });
+
+  it('should send acknowledgement when the EHR is complete', done => {
+    const conversationId = uuid();
+    const nhsNumber = '1234567890';
+    when(getDeductionRequestByConversationId)
+      .calledWith(conversationId)
+      .mockResolvedValue({ nhsNumber });
+
+    when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(true);
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .expect(204)
+      .expect(() => {
+        expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
+        expect(sendHealthRecordAcknowledgement).toHaveBeenCalledWith(nhsNumber, conversationId);
       })
       .end(done);
   });

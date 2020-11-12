@@ -21,11 +21,13 @@ jest.mock('../../../middleware/logging');
 jest.mock('../../../services/gp2gp/health-record-acknowledgement');
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
+  const odsCode = 'B12345';
+
   it('should return 204', done => {
     const conversationId = uuid();
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhsNumber: '1234567890' });
+      .mockResolvedValue({ nhsNumber: '1234567890', odsCode });
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
@@ -65,7 +67,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhsNumber });
+      .mockResolvedValue({ nhsNumber, odsCode });
 
     when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(true);
 
@@ -85,12 +87,12 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
       .end(done);
   });
 
-  it('should send acknowledgement when the EHR is complete', done => {
+  it('should send acknowledgement with correct values when the EHR is complete', done => {
     const conversationId = uuid();
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhsNumber });
+      .mockResolvedValue({ nhsNumber, odsCode });
 
     when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(true);
 
@@ -99,7 +101,11 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
       .expect(204)
       .expect(() => {
         expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
-        expect(sendHealthRecordAcknowledgement).toHaveBeenCalledWith(nhsNumber, conversationId);
+        expect(sendHealthRecordAcknowledgement).toHaveBeenCalledWith(
+          nhsNumber,
+          conversationId,
+          odsCode
+        );
       })
       .end(done);
   });
@@ -109,7 +115,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
-      .mockResolvedValue({ nhsNumber });
+      .mockResolvedValue({ nhsNumber, odsCode });
 
     when(checkEHRComplete).calledWith(nhsNumber, conversationId).mockResolvedValue(false);
 
@@ -129,7 +135,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({
       nhsNumber,
-      odsCode: 'Z1234',
+      odsCode,
       status: Status.EHR_REQUEST_RECEIVED
     });
     when(checkEHRComplete)

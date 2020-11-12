@@ -23,7 +23,11 @@ export const ehrMessageReceived = async (req, res) => {
     const isEhrComplete = await checkEHRComplete(deductionRequest.nhsNumber, conversationId);
     if (isEhrComplete) {
       await updateDeductionRequestStatus(conversationId, Status.EHR_REQUEST_RECEIVED);
-      await sendHealthRecordAcknowledgement(deductionRequest.nhsNumber, conversationId);
+      await sendHealthRecordAcknowledgement(
+        deductionRequest.nhsNumber,
+        conversationId,
+        deductionRequest.odsCode
+      );
       updateLogEvent({ status: 'Ehr request received and acknowledgement sent' });
     }
     res.sendStatus(204);

@@ -38,10 +38,10 @@ export const pdsUpdateResponse = async (req, res) => {
         deductionRequest.odsCode
       );
       if (res.status !== 204) {
-        throw new Error();
+        throw new Error(`EHR request failed with status ${res.status}`);
       }
       await updateDeductionRequestStatus(conversationId, Status.EHR_REQUEST_SENT);
-      updateLogEvent({ status: 'Ehr request sent' });
+      updateLogEvent({ status: 'EHR request sent' });
     }
 
     res.sendStatus(204);

@@ -49,7 +49,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           odsCode
         );
-        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'Ehr request sent' });
+        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'EHR request sent' });
       })
       .expect(204)
       .end(done);

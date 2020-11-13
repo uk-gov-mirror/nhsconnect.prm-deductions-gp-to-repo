@@ -129,6 +129,14 @@
             "description": "Conversation Id (must be UUID)",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "messageId",
+            "description": "Message Id (must be UUID)",
+            "schema": {
+              "$ref": "#/definitions/ehrMessageReceived"
+            }
           }
         ],
         "responses": {
@@ -271,6 +279,15 @@
         }
       },
       "required": ["nhsNumber"]
+    },
+    "ehrMessageReceived": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "string"
+        }
+      },
+      "required": ["messageId"]
     },
     "errorResponse": {
       "type": "object",

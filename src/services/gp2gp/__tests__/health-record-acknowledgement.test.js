@@ -9,6 +9,7 @@ jest.mock('../../../config/');
 
 const nhsNumber = '1111111111';
 const conversationId = uuid();
+const messageId = uuid();
 const odsCode = 'B12345';
 
 describe('sendHealthRecordAcknowledgement', () => {
@@ -19,10 +20,10 @@ describe('sendHealthRecordAcknowledgement', () => {
 
   const headers = { headers: { Authorization: `${initialiseConfig().gp2gpAuthKeys}` } };
   const url = `${initialiseConfig().gp2gpUrl}/health-record-requests/${nhsNumber}/acknowledgement`;
-  const body = { conversationId, odsCode };
+  const body = { conversationId, odsCode, messageId };
 
   it('should call endpoint with nhs number and conversation id in the body', async () => {
-    await sendHealthRecordAcknowledgement(nhsNumber, conversationId, odsCode);
+    await sendHealthRecordAcknowledgement(nhsNumber, conversationId, odsCode, messageId);
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith(url, body, headers);
   });
@@ -30,7 +31,7 @@ describe('sendHealthRecordAcknowledgement', () => {
   it('should throw an error when cannot send acknowledgement', async () => {
     axios.post.mockRejectedValue(new Error('Original error'));
     return expect(
-      sendHealthRecordAcknowledgement(nhsNumber, conversationId, odsCode)
+      sendHealthRecordAcknowledgement(nhsNumber, conversationId, odsCode, messageId)
     ).rejects.toThrowError('Error sending EHR acknowledgement - axios error: Original error');
   });
 });

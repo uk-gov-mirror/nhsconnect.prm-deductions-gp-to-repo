@@ -22,6 +22,7 @@ jest.mock('../../../services/gp2gp/health-record-acknowledgement');
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
   const odsCode = 'B12345';
+  const messageId = uuid();
 
   it('should return 204', done => {
     const conversationId = uuid();
@@ -31,6 +32,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(204)
       .end(done);
   });
@@ -42,6 +44,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
       .mockResolvedValue(null);
     request(app)
       .patch(`/deduction-requests/${nonexistentConversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(404)
       .end(done);
   });
@@ -52,6 +55,25 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${invalidConversationId}/ehr-message-received`)
+      .send({ messageId })
+      .expect(422)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        expect(res.body).toEqual({
+          errors: errorMessage
+        });
+      })
+      .end(done);
+  });
+
+  it('should return an error if :messageId is not valid', done => {
+    const errorMessage = [{ messageId: "'messageId' provided is not of type UUIDv4" }];
+    const conversationId = uuid();
+    const invalidMessageId = '12345';
+
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId: invalidMessageId })
       .expect(422)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -73,6 +95,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(204)
       .expect(() => {
         expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
@@ -98,13 +121,16 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(204)
+      .send({ messageId })
       .expect(() => {
         expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
         expect(sendHealthRecordAcknowledgement).toHaveBeenCalledWith(
           nhsNumber,
           conversationId,
-          odsCode
+          odsCode,
+          messageId
         );
       })
       .end(done);
@@ -121,6 +147,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(204)
       .expect(() => {
         expect(checkEHRComplete).toHaveBeenCalledWith(nhsNumber, conversationId);
@@ -146,6 +173,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
 
     request(app)
       .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId })
       .expect(() => {
         expect(checkEHRComplete).toHaveBeenCalled();
         expect(updateDeductionRequestStatus).not.toHaveBeenCalledWith(

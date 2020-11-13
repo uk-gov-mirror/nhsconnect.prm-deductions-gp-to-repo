@@ -192,6 +192,7 @@ describe('app', () => {
 
   describe('PATCH /deduction-requests/:conversation-id/ehr-message-received', () => {
     const conversationId = '7dfabb00-2869-4120-9053-315d4e4086d9';
+    const messageId = '32b2ccf4-fa73-48d6-97a7-1d0aae9c0fa1';
     const expectedNhsNumber = '1234567891';
     const status = Status.EHR_REQUEST_SENT;
     const odsCode = 'B1234';
@@ -216,6 +217,7 @@ describe('app', () => {
 
       request(app)
         .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+        .send({ messageId })
         .set('Authorization', 'correct-key')
         .expect(204)
         .expect(res => {

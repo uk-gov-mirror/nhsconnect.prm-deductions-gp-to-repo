@@ -9,12 +9,13 @@ export const sendHealthRecordAcknowledgement = async (
   messageId
 ) => {
   try {
+    const { repositoryAsid } = initialiseConfig();
     const url = `${
       initialiseConfig().gp2gpUrl
     }/health-record-requests/${nhsNumber}/acknowledgement`;
     return await axios.post(
       url,
-      { conversationId, odsCode, messageId },
+      { conversationId, odsCode, messageId, repositoryAsid },
       { headers: { Authorization: initialiseConfig().gp2gpAuthKeys } }
     );
   } catch (err) {

@@ -15,12 +15,18 @@ const odsCode = 'B12345';
 describe('sendHealthRecordAcknowledgement', () => {
   initialiseConfig.mockReturnValue({
     gp2gpUrl: 'gp2gp-url',
-    gp2gpAuthKeys: 'secret'
+    gp2gpAuthKeys: 'secret',
+    repositoryAsid: '200000001162'
   });
 
   const headers = { headers: { Authorization: `${initialiseConfig().gp2gpAuthKeys}` } };
   const url = `${initialiseConfig().gp2gpUrl}/health-record-requests/${nhsNumber}/acknowledgement`;
-  const body = { conversationId, odsCode, messageId };
+  const body = {
+    conversationId,
+    odsCode,
+    messageId,
+    repositoryAsid: initialiseConfig().repositoryAsid
+  };
 
   it('should call endpoint with nhs number and conversation id in the body', async () => {
     await sendHealthRecordAcknowledgement(nhsNumber, conversationId, odsCode, messageId);

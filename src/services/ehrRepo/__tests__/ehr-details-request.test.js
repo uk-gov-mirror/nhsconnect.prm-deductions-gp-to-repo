@@ -32,7 +32,7 @@ describe('checkEHRComplete', () => {
   const headers = { headers: { Authorization: `${initialiseConfig().ehrRepoAuthKeys}` } };
   const ehrRepoUrl = `${
     initialiseConfig().ehrRepoUrl
-  }/patients/${nhsNumber}/health-record/${conversationId}`;
+  }/patients/${nhsNumber}/health-records/${conversationId}`;
 
   it('should call axios with nhs number and resolve', async () => {
     const body = ehrBodyWithStatus('success', conversationId);

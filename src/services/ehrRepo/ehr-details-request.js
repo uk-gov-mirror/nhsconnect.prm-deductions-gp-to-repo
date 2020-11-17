@@ -5,7 +5,7 @@ import { updateLogEventWithError } from '../../middleware/logging';
 export const checkEHRComplete = async (nhsNumber, conversationId) => {
   try {
     const config = initialiseConfig();
-    const url = `${config.ehrRepoUrl}/patients/${nhsNumber}/health-record/${conversationId}`;
+    const url = `${config.ehrRepoUrl}/patients/${nhsNumber}/health-records/${conversationId}`;
     const response = await axios.get(url, { headers: { Authorization: config.ehrRepoAuthKeys } });
     const responseBody = response.data;
     const { status } = responseBody.data.attributes;

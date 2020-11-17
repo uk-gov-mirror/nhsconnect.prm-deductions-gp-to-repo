@@ -12,7 +12,7 @@ export const ehrMessageReceivedValidationRules = [
   param('conversationId')
     .isUUID('4')
     .withMessage("'conversationId' provided is not of type UUIDv4"),
-  body('messageId').isUUID('4').withMessage("'messageId' provided is not of type UUIDv4")
+  body('messageId').isUUID().withMessage("'messageId' provided is not of type UUID")
 ];
 
 export const ehrMessageReceived = async (req, res) => {

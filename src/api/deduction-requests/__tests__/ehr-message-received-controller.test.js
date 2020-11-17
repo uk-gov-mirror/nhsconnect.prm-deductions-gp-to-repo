@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../../app';
-import { v4 as uuid } from 'uuid';
+import { v1 as uuidv1, v4 as uuidv4 } from 'uuid';
 import { when } from 'jest-when';
 import {
   getDeductionRequestByConversationId,
@@ -22,10 +22,10 @@ jest.mock('../../../services/gp2gp/health-record-acknowledgement');
 
 describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () => {
   const odsCode = 'B12345';
-  const messageId = uuid();
+  const messageId = uuidv1();
+  const conversationId = uuidv4();
 
   it('should return 204', done => {
-    const conversationId = uuid();
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
       .mockResolvedValue({ nhsNumber: '1234567890', odsCode });
@@ -38,7 +38,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
   });
 
   it('should return 404 when there is no deduction request for the specified conversationId', done => {
-    const nonexistentConversationId = uuid();
+    const nonexistentConversationId = uuidv4();
     when(getDeductionRequestByConversationId)
       .calledWith(nonexistentConversationId)
       .mockResolvedValue(null);
@@ -67,8 +67,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
   });
 
   it('should return an error if :messageId is not valid', done => {
-    const errorMessage = [{ messageId: "'messageId' provided is not of type UUIDv4" }];
-    const conversationId = uuid();
+    const errorMessage = [{ messageId: "'messageId' provided is not of type UUID" }];
     const invalidMessageId = '12345';
 
     request(app)
@@ -84,8 +83,15 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
       .end(done);
   });
 
+  it('should accept a messageId of uuidv4', done => {
+    request(app)
+      .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+      .send({ messageId: uuidv4() })
+      .expect(204)
+      .end(done);
+  });
+
   it('should update the status if the EHR is complete', done => {
-    const conversationId = uuid();
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
@@ -111,7 +117,6 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
   });
 
   it('should send acknowledgement with correct values when the EHR is complete', done => {
-    const conversationId = uuid();
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
@@ -137,7 +142,6 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
   });
 
   it('should not update the status if the EHR is not complete', done => {
-    const conversationId = uuid();
     const nhsNumber = '1234567890';
     when(getDeductionRequestByConversationId)
       .calledWith(conversationId)
@@ -157,7 +161,6 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
   });
 
   it('should not update the status when retrieving the health record request fails', done => {
-    const conversationId = uuid();
     const nhsNumber = '1234567890';
 
     when(getDeductionRequestByConversationId).calledWith(conversationId).mockResolvedValue({

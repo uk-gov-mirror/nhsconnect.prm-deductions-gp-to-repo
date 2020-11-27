@@ -12,7 +12,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
       adapter
     })
     .catch(err => {
-      console.log(err.response);
+      console.log(err);
     });
 
   // - update PDS
@@ -33,7 +33,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
       }
     )
     .catch(err => {
-      console.log(err.response);
+      console.log(err);
     });
 
   //we have to wait as PDS needs time to process the update
@@ -49,7 +49,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
       adapter
     })
     .catch(err => {
-      console.log(err.response);
+      console.log(err);
     });
   expect(pdsResponseCheck.data.data.odsCode).toBe(tppOdsCode);
 };
@@ -58,6 +58,7 @@ describe('Smoke test for deduction process', () => {
     const nhsNumber = '9442964410';
     const tppOdsCode = 'M85019';
 
+    console.log('GP2GP Adaptor URL:', process.env.GP2GP_ADAPTOR_URL);
     //setup: make sure the patient nhs number is assigned to TPP in PDS
     await assignPatientToOdsCode(nhsNumber, tppOdsCode);
     //action: call /deduction-request with the TPP patient number
@@ -74,7 +75,7 @@ describe('Smoke test for deduction process', () => {
         }
       )
       .catch(err => {
-        console.log(err.response);
+        console.log(err);
       });
     const deductionRequestResourceUrl = response.headers['location'];
 

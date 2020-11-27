@@ -198,10 +198,10 @@ function test_functional {
 function test_smoke {
   check_env
   npm install
-  if [[ $NHS_ENVIRONMENT == "dev" ]]; then
-    echo "Smoke tests should only be run against the test environment!"
-  else
+  if [[ $NHS_ENVIRONMENT == "test" ]]; then
     npm run test:smoke
+  else
+    echo "Smoke tests should only be run against the test environment!"
   fi
 }
 

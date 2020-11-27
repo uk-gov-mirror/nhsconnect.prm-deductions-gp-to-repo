@@ -18,7 +18,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
   // - update PDS
   const patchResponse = await axios
     .patch(
-      `${process.env.GP2GP_ADAPTOR_URL}/patient-demographics/${nhsNumber}`,
+      `${process.env.GP2GP_URL}/patient-demographics/${nhsNumber}`,
       {
         pdsId: pdsResponse.data.data.patientPdsId,
         serialChangeNumber: pdsResponse.data.data.serialChangeNumber,
@@ -42,7 +42,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
 
   expect(patchResponse.status).toBe(204);
   const pdsResponseCheck = await axios
-    .get(`${process.env.GP2GP_ADAPTOR_URL}/patient-demographics/${nhsNumber}/`, {
+    .get(`${process.env.GP2GP_URL}/patient-demographics/${nhsNumber}/`, {
       headers: {
         Authorization: process.env.GP2GP_AUTHORIZATION_KEYS
       },
@@ -58,7 +58,7 @@ describe('Smoke test for deduction process', () => {
     const nhsNumber = '9442964410';
     const tppOdsCode = 'M85019';
 
-    console.log('GP2GP Adaptor URL:', process.env.GP2GP_ADAPTOR_URL);
+    console.log('GP2GP Adaptor URL:', process.env.GP2GP_URL);
     //setup: make sure the patient nhs number is assigned to TPP in PDS
     await assignPatientToOdsCode(nhsNumber, tppOdsCode);
     //action: call /deduction-request with the TPP patient number

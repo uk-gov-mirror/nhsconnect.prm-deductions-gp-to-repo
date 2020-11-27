@@ -5,9 +5,9 @@ import { v4 as uuid } from 'uuid';
 const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
   // - get the PDS info
   const pdsResponse = await axios
-    .get(`${process.env.GP2GP_ADAPTOR_URL}/patient-demographics/${nhsNumber}/`, {
+    .get(`${process.env.GP2GP_URL}/patient-demographics/${nhsNumber}/`, {
       headers: {
-        Authorization: process.env.GP2GP_ADAPTOR_AUTHORIZATION_KEYS
+        Authorization: process.env.GP2GP_AUTHORIZATION_KEYS
       },
       adapter
     })
@@ -27,7 +27,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
       },
       {
         headers: {
-          Authorization: process.env.GP2GP_ADAPTOR_AUTHORIZATION_KEYS
+          Authorization: process.env.GP2GP_AUTHORIZATION_KEYS
         },
         adapter
       }
@@ -44,7 +44,7 @@ const assignPatientToOdsCode = async (nhsNumber, tppOdsCode) => {
   const pdsResponseCheck = await axios
     .get(`${process.env.GP2GP_ADAPTOR_URL}/patient-demographics/${nhsNumber}/`, {
       headers: {
-        Authorization: process.env.GP2GP_ADAPTOR_AUTHORIZATION_KEYS
+        Authorization: process.env.GP2GP_AUTHORIZATION_KEYS
       },
       adapter
     })

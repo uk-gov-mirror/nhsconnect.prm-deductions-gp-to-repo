@@ -1,5 +1,5 @@
 import app from './app';
 import { portNumber } from './config';
-import logger from './config/logging';
+import { logEvent } from './middleware/logging';
 
-app.listen(portNumber, () => logger.info(`Listening on port ${portNumber}`));
+app.listen(portNumber, () => logEvent(`Listening on port ${portNumber}`));

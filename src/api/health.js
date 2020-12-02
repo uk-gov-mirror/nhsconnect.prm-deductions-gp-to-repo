@@ -1,21 +1,21 @@
 import express from 'express';
-import { updateLogEvent, updateLogEventWithError } from '../middleware/logging';
+import { logEvent, logError } from '../middleware/logging';
 import { getHealthCheck } from '../services/get-health-check';
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
   getHealthCheck()
     .then(status => {
-      updateLogEvent({ status: 'Health check completed' });
       if (status.details.database.writable) {
+        logEvent('Health check succeeded');
         res.status(200).json(status);
       } else {
-        updateLogEvent(status);
+        logError('Health check failed', status);
         res.status(503).json(status);
       }
     })
     .catch(err => {
-      updateLogEventWithError(err);
+      logError('Health check error', err);
       next(err);
     });
 });

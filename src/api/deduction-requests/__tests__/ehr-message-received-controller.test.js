@@ -8,7 +8,7 @@ import {
 } from '../../../services/database/deduction-request-repository';
 import { checkEHRComplete } from '../../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../../models/deduction-request';
-import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
+import { logEvent, logError } from '../../../middleware/logging';
 import { sendHealthRecordAcknowledgement } from '../../../services/gp2gp/health-record-acknowledgement';
 
 jest.mock('../../../middleware/auth');
@@ -109,9 +109,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
           conversationId,
           Status.EHR_REQUEST_RECEIVED
         );
-        expect(updateLogEvent).toHaveBeenCalledWith({
-          status: 'Ehr request received and acknowledgement sent'
-        });
+        expect(logEvent).toHaveBeenCalledWith('Ehr request received and acknowledgement sent');
       })
       .end(done);
   });
@@ -183,7 +181,7 @@ describe('PATCH /deduction-requests/:conversationId/ehr-message-received', () =>
           conversationId,
           Status.EHR_REQUEST_RECEIVED
         );
-        expect(updateLogEventWithError).toHaveBeenCalled();
+        expect(logError).toHaveBeenCalled();
       })
       .expect(503)
       .end(done);

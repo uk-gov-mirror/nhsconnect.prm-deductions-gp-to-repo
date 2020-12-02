@@ -1,5 +1,5 @@
 import { param } from 'express-validator';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 import { getDeductionRequestByConversationId } from '../../services/database/deduction-request-repository';
 
 export const deductionRequestStatusValidationRules = [
@@ -27,7 +27,7 @@ export const deductionRequestStatus = async (req, res) => {
     };
     res.status(200).json(data);
   } catch (err) {
-    updateLogEventWithError(err);
+    logError('deductionRequestStatus failed', err);
     res.status(503).json({
       errors: err.message
     });

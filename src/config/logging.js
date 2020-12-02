@@ -14,15 +14,8 @@ export const obfuscateSecrets = format(info => {
 });
 
 export const options = {
-  level: 'debug',
   format: format.combine(obfuscateSecrets(), format.timestamp(), format.json()),
   transports: [new transports.Console({ handleExceptions: true })]
 };
 
-const logger = createLogger(options);
-
-logger.error = (message, error) => {
-  logger.log('error', `${message}: ${error.message}`, { error, stack: error.stack });
-};
-
-export default logger;
+export const logger = createLogger(options);

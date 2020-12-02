@@ -1,5 +1,5 @@
 import { runWithinTransaction } from './helper';
-import { updateLogEvent } from '../../middleware/logging';
+import { logEvent } from '../../middleware/logging';
 import ModelFactory from '../../models';
 import { modelName } from '../../models/deduction-request';
 
@@ -16,5 +16,5 @@ export const createDeductionRequest = (conversationId, nhsNumber, odsCode) =>
       transaction
     )
       .then(requests => requests[0])
-      .then(() => updateLogEvent({ status: 'Deduction request has been stored' }))
+      .then(() => logEvent('Deduction request has been stored'))
   );

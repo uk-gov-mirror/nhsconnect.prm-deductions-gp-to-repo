@@ -2,7 +2,7 @@ import request from 'supertest';
 import { when } from 'jest-when';
 import app from '../../../app';
 import { sendHealthRecordRequest } from '../../../services/gp2gp';
-import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
+import { logEvent, logError } from '../../../middleware/logging';
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
@@ -49,7 +49,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           odsCode
         );
-        expect(updateLogEvent).toHaveBeenCalledWith({ status: 'EHR request sent' });
+        expect(logEvent).toHaveBeenCalledWith('EHR request sent');
       })
       .expect(204)
       .end(done);
@@ -136,7 +136,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           Status.EHR_REQUEST_SENT
         );
-        expect(updateLogEventWithError).toHaveBeenCalled();
+        expect(logError).toHaveBeenCalled();
       })
       .expect(503)
       .end(done);
@@ -185,9 +185,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .expect(() => {
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
-        expect(updateLogEvent).toHaveBeenCalledWith({
-          status: 'Pds update has not been requested'
-        });
+        expect(logEvent).toHaveBeenCalledWith('Pds update has not been requested');
       })
       .expect(409)
       .end(done);
@@ -205,9 +203,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(nonexistentConversationId);
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
-        expect(updateLogEvent).toHaveBeenCalledWith({
-          status: 'Conversation id not found'
-        });
+        expect(logEvent).toHaveBeenCalledWith('Conversation id not found');
       })
       .end(done);
   });

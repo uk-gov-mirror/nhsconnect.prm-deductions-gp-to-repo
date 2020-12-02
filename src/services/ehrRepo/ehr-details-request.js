@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { initialiseConfig } from '../../config/index';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 
 export const checkEHRComplete = async (nhsNumber, conversationId) => {
   try {
@@ -11,7 +11,8 @@ export const checkEHRComplete = async (nhsNumber, conversationId) => {
     const { status } = responseBody.data.attributes;
     return status === 'success';
   } catch (err) {
-    updateLogEventWithError(err);
-    throw new Error(`Error retrieving EHR details - axios error: ${err.message}`);
+    const errorMessage = `Error retrieving EHR details - axios error: ${err.message}`;
+    logError(errorMessage, err);
+    throw new Error(errorMessage);
   }
 };

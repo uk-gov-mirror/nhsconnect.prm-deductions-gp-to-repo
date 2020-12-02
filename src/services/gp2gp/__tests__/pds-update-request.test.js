@@ -42,7 +42,7 @@ describe('sendUpdateRequest', () => {
     });
   });
 
-  it('should call updateLogEventWithError if there is an error with axios.patch request', () => {
+  it('should call logError if there is an error with axios.patch request', () => {
     axios.patch.mockRejectedValue(new Error());
 
     return expect(

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { when } from 'jest-when';
-import { updateLogEvent } from '../../../middleware/logging';
+import { logError } from '../../../middleware/logging';
 import app from '../../../app';
 import { v4 as uuid } from 'uuid';
 import { getDeductionRequestByConversationId } from '../../../services/database/deduction-request-repository';
@@ -17,16 +17,6 @@ const status = 'updated';
 const invalidConversationId = 'fd9271ea-9086-4f7e-8993-0271518fdb6f';
 
 jest.mock('../../../services/database/deduction-request-repository');
-
-function generateLogEvent(message) {
-  return {
-    status: 'validation-failed',
-    validation: {
-      errors: message,
-      status: 'failed'
-    }
-  };
-}
 
 describe('GET /deduction-requests/', () => {
   beforeEach(() => {
@@ -69,8 +59,8 @@ describe('GET /deduction-requests/', () => {
         expect(res.body).toEqual({
           errors: errorMessage
         });
-        expect(updateLogEvent).toHaveBeenCalledTimes(1);
-        expect(updateLogEvent).toHaveBeenCalledWith(generateLogEvent(errorMessage));
+        expect(logError).toHaveBeenCalledTimes(1);
+        expect(logError).toHaveBeenCalledWith('validation-failed', { errors: errorMessage });
       })
       .end(done);
   });

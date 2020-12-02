@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { when } from 'jest-when';
 import { v4 as uuid } from 'uuid';
-import { updateLogEvent } from '../../../middleware/logging';
+import { logError } from '../../../middleware/logging';
 import { sendRetrievalRequest, sendUpdateRequest } from '../../../services/gp2gp';
 import { createDeductionRequest } from '../../../services/database/create-deduction-request';
 import { updateDeductionRequestStatus } from '../../../services/database/deduction-request-repository';
@@ -37,16 +37,6 @@ const invalidRetrievalResponse = {
     odsCode: 'C1234'
   }
 };
-
-function generateLogEvent(message) {
-  return {
-    status: 'validation-failed',
-    validation: {
-      errors: message,
-      status: 'failed'
-    }
-  };
-}
 
 describe('POST /deduction-requests/', () => {
   beforeEach(() => {
@@ -135,8 +125,8 @@ describe('POST /deduction-requests/', () => {
         expect(res.body).toEqual({
           errors: errorMessage
         });
-        expect(updateLogEvent).toHaveBeenCalledTimes(1);
-        expect(updateLogEvent).toHaveBeenCalledWith(generateLogEvent(errorMessage));
+        expect(logError).toHaveBeenCalledTimes(1);
+        expect(logError).toHaveBeenCalledWith('validation-failed', { errors: errorMessage });
       })
       .end(done);
   });
@@ -151,8 +141,8 @@ describe('POST /deduction-requests/', () => {
         expect(res.body).toEqual({
           errors: errorMessage
         });
-        expect(updateLogEvent).toHaveBeenCalledTimes(1);
-        expect(updateLogEvent).toHaveBeenCalledWith(generateLogEvent(errorMessage));
+        expect(logError).toHaveBeenCalledTimes(1);
+        expect(logError).toHaveBeenCalledWith('validation-failed', { errors: errorMessage });
       })
       .end(done);
   });

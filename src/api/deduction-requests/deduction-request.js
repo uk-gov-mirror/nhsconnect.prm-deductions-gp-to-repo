@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 import { v4 as uuid } from 'uuid';
 import { sendRetrievalRequest } from '../../services/gp2gp';
 import { handleUpdateRequest } from './handle-update-request';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 import { createDeductionRequest } from '../../services/database/create-deduction-request';
 import config from '../../config/index';
 
@@ -28,7 +28,7 @@ export const deductionRequest = async (req, res) => {
 
     res.set('Location', statusEndpoint).sendStatus(201);
   } catch (err) {
-    updateLogEventWithError(err);
+    logError('deductionRequest failed', err);
     res.status(503).json({
       errors: err.message
     });

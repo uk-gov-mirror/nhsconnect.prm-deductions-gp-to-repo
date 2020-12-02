@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 import * as config from '../../config/index';
 
 const { gp2gpUrl, gp2gpAuthKeys, repositoryOdsCode } = config.default;
@@ -21,12 +21,11 @@ export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber, conversa
   };
 
   return axios.patch(url, axiosBody, axiosHeaders).catch(error => {
-    const axiosError = new Error(
-      `PATCH ${url} - ${error.message || 'Request failed'}, body: ${
-        (axiosBody.serialChangeNumber, axiosBody.pdsId)
-      }`
-    );
-    updateLogEventWithError(axiosError);
+    const errorMessage = `PATCH ${url} - ${error.message || 'Request failed'}, body: ${
+      (axiosBody.serialChangeNumber, axiosBody.pdsId)
+    }`;
+    const axiosError = new Error(errorMessage);
+    logError(errorMessage, error);
     throw axiosError;
   });
 };

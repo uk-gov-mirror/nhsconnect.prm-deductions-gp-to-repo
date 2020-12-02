@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { createDeductionRequest } from '../create-deduction-request';
 import { runWithinTransaction } from '../helper';
-import { updateLogEvent, updateLogEventWithError } from '../../../middleware/logging';
+import { logEvent, logError } from '../../../middleware/logging';
 import ModelFactory from '../../../models';
 import { modelName } from '../../../models/deduction-request';
 
@@ -17,13 +17,11 @@ describe('createDeductionRequest', () => {
     await ModelFactory.sequelize.close();
   });
 
-  it('should call updateLogEvent if data persisted correctly', () => {
+  it('should call logEvent if data persisted correctly', () => {
     const conversationId = uuid();
     return createDeductionRequest(conversationId, nhsNumber, odsCode).then(() => {
-      expect(updateLogEvent).toHaveBeenCalledTimes(1);
-      return expect(updateLogEvent).toHaveBeenCalledWith({
-        status: 'Deduction request has been stored'
-      });
+      expect(logEvent).toHaveBeenCalledTimes(1);
+      return expect(logEvent).toHaveBeenCalledWith('Deduction request has been stored');
     });
   });
 
@@ -46,16 +44,16 @@ describe('createDeductionRequest', () => {
   it('should log errors when nhs number is invalid', () => {
     const conversationId = uuid();
     return createDeductionRequest(conversationId, '123', odsCode).catch(error => {
-      expect(updateLogEventWithError).toHaveBeenCalledTimes(1);
-      expect(updateLogEventWithError).toHaveBeenCalledWith(error);
+      expect(logError).toHaveBeenCalledTimes(1);
+      expect(logError).toHaveBeenCalledWith('runWithinTransaction error', error);
       return expect(error.message).toContain('Validation len on nhsNumber failed');
     });
   });
 
   it('should log errors when conversationId is invalid', () => {
     return createDeductionRequest('invalid-conversation-id', nhsNumber, odsCode).catch(error => {
-      expect(updateLogEventWithError).toHaveBeenCalledTimes(1);
-      expect(updateLogEventWithError).toHaveBeenCalledWith(error);
+      expect(logError).toHaveBeenCalledTimes(1);
+      expect(logError).toHaveBeenCalledWith('runWithinTransaction error', error);
       return expect(error.message).toContain(
         'invalid input syntax for type uuid: "invalid-conversation-id"'
       );

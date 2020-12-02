@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { initialiseConfig } from '../../config/index';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 
 export const sendHealthRecordAcknowledgement = async (
   nhsNumber,
@@ -19,7 +19,8 @@ export const sendHealthRecordAcknowledgement = async (
       { headers: { Authorization: initialiseConfig().gp2gpAuthKeys } }
     );
   } catch (err) {
-    updateLogEventWithError(err);
-    throw new Error(`Error sending EHR acknowledgement - axios error: ${err.message}`);
+    const errorMessage = `Error sending EHR acknowledgement - axios error: ${err.message}`;
+    logError(errorMessage, err);
+    throw new Error(errorMessage);
   }
 };

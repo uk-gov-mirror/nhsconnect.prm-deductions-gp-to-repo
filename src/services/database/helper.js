@@ -1,5 +1,5 @@
 import ModelFactory from '../../models';
-import { updateLogEventWithError } from '../../middleware/logging';
+import { logError } from '../../middleware/logging';
 
 const sequelize = ModelFactory.sequelize;
 
@@ -10,7 +10,7 @@ export const runWithinTransaction = async dbInteractionLambda => {
     await transaction.commit();
     return response;
   } catch (err) {
-    updateLogEventWithError(err);
+    logError('runWithinTransaction error', err);
     await transaction.rollback();
     throw err;
   }

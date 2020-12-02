@@ -26,7 +26,7 @@ describe('sendRetrievalRequest', () => {
     });
   });
 
-  it('should call updateLogEventWithError if there is an error with axios.get request', () => {
+  it('should call logError if there is an error with axios.get request', () => {
     axios.get.mockRejectedValue(new Error());
 
     return expect(sendRetrievalRequest(mockNhsNumber)).rejects.toThrowError(
@@ -34,7 +34,7 @@ describe('sendRetrievalRequest', () => {
     );
   });
 
-  it('should call updateLogEventWithError if there is a 503 with axios.get request', () => {
+  it('should call logError if there is a 503 with axios.get request', () => {
     axios.get.mockRejectedValue({ response: { status: 503 } });
 
     return expect(sendRetrievalRequest(mockNhsNumber)).rejects.toThrowError(

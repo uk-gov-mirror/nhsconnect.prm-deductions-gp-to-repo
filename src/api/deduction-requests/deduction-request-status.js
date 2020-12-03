@@ -15,13 +15,15 @@ export const deductionRequestStatus = async (req, res) => {
 
     if (requestStatus === null) return res.sendStatus(404);
 
+    const { conversationId, nhsNumber, status } = requestStatus;
+
     const data = {
       data: {
         type: 'deduction-requests',
-        id: req.params.conversationId,
+        id: conversationId,
         attributes: {
-          nhsNumber: requestStatus.nhsNumber,
-          status: requestStatus.status
+          nhsNumber,
+          status
         }
       }
     };

@@ -34,8 +34,7 @@ const model = dataType => ({
     field: 'status',
     type: dataType.STRING,
     allowNull: false,
-    isIn: [Object.values(Status)],
-    defaultValue: Status.STARTED
+    isIn: [Object.values(Status)]
   },
   odsCode: {
     field: 'ods_code',

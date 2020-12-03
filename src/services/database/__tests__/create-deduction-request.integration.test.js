@@ -3,7 +3,7 @@ import { createDeductionRequest } from '../create-deduction-request';
 import { runWithinTransaction } from '../helper';
 import { logEvent, logError } from '../../../middleware/logging';
 import ModelFactory from '../../../models';
-import { modelName } from '../../../models/deduction-request';
+import { modelName, Status } from '../../../models/deduction-request';
 
 jest.mock('../../../middleware/logging');
 
@@ -39,6 +39,8 @@ describe('createDeductionRequest', () => {
     expect(deductionRequest).not.toBeNull();
     expect(deductionRequest.get().conversationId).toBe(conversationId);
     expect(deductionRequest.get().nhsNumber).toBe(nhsNumber);
+    expect(deductionRequest.get().odsCode).toBe(odsCode);
+    expect(deductionRequest.get().status).toBe(Status.STARTED);
   });
 
   it('should log errors when nhs number is invalid', () => {

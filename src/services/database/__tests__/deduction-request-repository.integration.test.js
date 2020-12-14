@@ -1,9 +1,12 @@
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
-} from '../../database/deduction-request-repository';
+} from '../deduction-request-repository';
 import ModelFactory from '../../../models';
 import { modelName, Status } from '../../../models/deduction-request';
+import { logEvent } from '../../../middleware/logging';
+
+jest.mock('../../../middleware/logging');
 
 describe('Deduction request repository', () => {
   const DeductionRequest = ModelFactory.getByName(modelName);
@@ -36,7 +39,7 @@ describe('Deduction request repository', () => {
     expect(deductionRequest).toBe(null);
   });
 
-  it('should change deduction request status to pds_updated', async () => {
+  it('should change deduction request status to pds_updated and log event', async () => {
     const conversationId = 'e30d008e-0134-479c-bf59-6d4978227617';
     const expectedNhsNumber = '1234567890';
     const expectedStatus = Status.PDS_UPDATED;
@@ -48,6 +51,11 @@ describe('Deduction request repository', () => {
       odsCode: 'A12345'
     });
     await updateDeductionRequestStatus(conversationId, expectedStatus);
+
+    expect(logEvent).toHaveBeenCalledWith('Successfully updated deduction request status', {
+      conversationId,
+      status: expectedStatus
+    });
 
     const deductionRequest = await DeductionRequest.findByPk(conversationId);
 

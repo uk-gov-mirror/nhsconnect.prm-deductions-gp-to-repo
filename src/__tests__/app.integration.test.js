@@ -98,6 +98,20 @@ describe('app', () => {
         .end(done);
     });
 
+    it('should return a location header with lowercase conversationId', done => {
+      request(app)
+        .post('/deduction-requests/')
+        .send({ nhsNumber: '1111111111' })
+        .set('Authorization', 'correct-key')
+        .expect(201)
+        .expect(res => {
+          expect(res.header.location).toMatch(
+            /^.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}).*$/
+          );
+        })
+        .end(done);
+    });
+
     it('should return a 503 status code with Errors for /deduction-requests/', done => {
       axios.patch.mockImplementation(() =>
         Promise.resolve({ status: 200, data: 'incorrect data!' })

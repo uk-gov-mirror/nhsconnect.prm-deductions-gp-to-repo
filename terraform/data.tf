@@ -63,3 +63,7 @@ data "aws_ssm_parameter" "deductions_private_int_alb_httpsl_arn" {
 data "aws_ssm_parameter" "deductions_private_alb_internal_dns" {
   name = "/repo/${var.environment}/output/prm-deductions-infra/deductions-private-alb-internal-dns"
 }
+
+data "aws_ssm_parameter" "use_new_ehr_repo_api" {
+  name = "/repo/${var.environment}/user-input/feature-toggle/use-new-ehr-repo-api"
+}

@@ -3,6 +3,7 @@ import axios from 'axios';
 import request from 'supertest';
 import config from '../config';
 import ModelFactory from '../models';
+import { v4 as uuid } from 'uuid';
 import { modelName, Status } from '../models/deduction-request';
 
 jest.mock('axios');
@@ -138,7 +139,7 @@ describe('app', () => {
   });
 
   describe('GET /deduction-requests/:conversationId', () => {
-    const conversationId = 'e12d49fb-6827-4648-8ec8-a951f3cf6ac0';
+    const conversationId = uuid();
     const expectedNhsNumber = '1234567890';
     const expectedStatus = Status.PDS_UPDATE_SENT;
 
@@ -180,7 +181,7 @@ describe('app', () => {
   });
 
   describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
-    const conversationId = 'dad8fe6d-f525-4961-b086-bb9730a4822f';
+    const conversationId = uuid();
     const expectedNhsNumber = '1234567891';
     const expectedStatus = Status.PDS_UPDATE_SENT;
     const odsCode = 'B1234';
@@ -205,8 +206,8 @@ describe('app', () => {
   });
 
   describe('PATCH /deduction-requests/:conversation-id/ehr-message-received', () => {
-    const conversationId = '7dfabb00-2869-4120-9053-315d4e4086d9';
-    const messageId = '32b2ccf4-fa73-48d6-97a7-1d0aae9c0fa1';
+    const conversationId = uuid();
+    const messageId = uuid();
     const expectedNhsNumber = '1234567891';
     const status = Status.EHR_REQUEST_SENT;
     const odsCode = 'B1234';
@@ -221,7 +222,30 @@ describe('app', () => {
     };
 
     it('should return 204 upon successful receipt of notification of EHR message being received', async done => {
-      axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: body }));
+      process.env.USE_NEW_EHR_REPO_API = false;
+      axios.get.mockImplementationOnce(() => Promise.resolve({ status: 200, data: body }));
+      await DeductionRequest.create({
+        conversationId,
+        nhsNumber: expectedNhsNumber,
+        status: status,
+        odsCode
+      });
+
+      request(app)
+        .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
+        .send({ messageId })
+        .set('Authorization', 'correct-key')
+        .expect(204)
+        .expect(res => {
+          expect(res.body).toEqual({});
+        })
+        .end(done);
+    });
+
+    it('should return 204 when EHR message is received and is using new ehr repo api', async done => {
+      const conversationId = uuid();
+      process.env.USE_NEW_EHR_REPO_API = true;
+      axios.get.mockImplementation(() => Promise.resolve({ status: 200 }));
       await DeductionRequest.create({
         conversationId,
         nhsNumber: expectedNhsNumber,

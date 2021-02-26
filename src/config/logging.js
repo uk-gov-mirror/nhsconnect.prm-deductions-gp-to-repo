@@ -17,7 +17,7 @@ export const addCommonFields = format(info => {
   const { nhsEnvironment } = initialiseConfig();
   const updated = cloneDeep(info);
   updated.level = updated.level.toUpperCase();
-  updated['service'] = 'ehr-repository';
+  updated['service'] = 'gp-to-repo';
   updated['environment'] = nhsEnvironment;
   return updated;
 });

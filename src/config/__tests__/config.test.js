@@ -1,4 +1,4 @@
-import { initialiseConfig } from '..';
+import { initializeConfig } from '..';
 
 describe('config', () => {
   let repositoryOdsCode;
@@ -19,36 +19,36 @@ describe('config', () => {
 
   it('repository ods code defaults to the correct value when environment variables not set', () => {
     if (process.env.REPOSITORY_ODS_CODE) delete process.env.REPOSITORY_ODS_CODE;
-    expect(initialiseConfig().repositoryOdsCode).toEqual('B86041');
+    expect(initializeConfig().repositoryOdsCode).toEqual('B86041');
   });
 
   it('repository ods code is the correct value when environment variable is set', () => {
     process.env.REPOSITORY_ODS_CODE = 'something';
-    expect(initialiseConfig().repositoryOdsCode).toEqual('something');
+    expect(initializeConfig().repositoryOdsCode).toEqual('something');
   });
 
   it('service url defaults to the correct value when environment variables not set', () => {
     if (process.env.SERVICE_URL) delete process.env.SERVICE_URL;
-    expect(initialiseConfig().url).toEqual(`http://127.0.0.1:3000`);
+    expect(initializeConfig().url).toEqual(`http://127.0.0.1:3000`);
   });
 
   it('service url is the correct value when environment variables are set', () => {
     process.env.SERVICE_URL = 'url';
-    expect(initialiseConfig().url).toEqual(`url`);
+    expect(initializeConfig().url).toEqual(`url`);
   });
 
   it('repository asid defaults to the correct value when environment variables not set', () => {
     if (process.env.REPOSITORY_ASID) delete process.env.REPOSITORY_ASID;
-    expect(initialiseConfig().repositoryAsid).toEqual('200000001161');
+    expect(initializeConfig().repositoryAsid).toEqual('200000001161');
   });
 
   it('repository asid is the correct value when environment variables are set', () => {
     process.env.REPOSITORY_ASID = 'repo-asid';
-    expect(initialiseConfig().repositoryAsid).toEqual('repo-asid');
+    expect(initializeConfig().repositoryAsid).toEqual('repo-asid');
   });
 
   it('nhs Environment is the correct value when environment variables are set', () => {
     process.env.NHS_ENVIRONMENT = 'local';
-    expect(initialiseConfig().nhsEnvironment).toEqual('local');
+    expect(initializeConfig().nhsEnvironment).toEqual('local');
   });
 });

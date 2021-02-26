@@ -1,7 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
-import { initialiseConfig } from './index';
+import { initializeConfig } from './index';
 
 export const obfuscateSecrets = format(info => {
   const OBFUSCATED_VALUE = '********';
@@ -14,7 +14,7 @@ export const obfuscateSecrets = format(info => {
 });
 
 export const addCommonFields = format(info => {
-  const { nhsEnvironment } = initialiseConfig();
+  const { nhsEnvironment } = initializeConfig();
   const updated = cloneDeep(info);
   updated.level = updated.level.toUpperCase();
   updated['service'] = 'gp-to-repo';

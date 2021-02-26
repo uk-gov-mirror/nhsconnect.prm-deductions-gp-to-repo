@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
-import { initialiseConfig } from '../../../config/index';
+import { initializeConfig } from '../../../config/index';
 import { sendHealthRecordAcknowledgement } from '../health-record-acknowledgement';
 
 jest.mock('../../../middleware/logging');
@@ -13,19 +13,19 @@ const messageId = uuid();
 const odsCode = 'B12345';
 
 describe('sendHealthRecordAcknowledgement', () => {
-  initialiseConfig.mockReturnValue({
+  initializeConfig.mockReturnValue({
     gp2gpUrl: 'gp2gp-url',
     gp2gpAuthKeys: 'secret',
     repositoryAsid: '200000001162'
   });
 
-  const headers = { headers: { Authorization: `${initialiseConfig().gp2gpAuthKeys}` } };
-  const url = `${initialiseConfig().gp2gpUrl}/health-record-requests/${nhsNumber}/acknowledgement`;
+  const headers = { headers: { Authorization: `${initializeConfig().gp2gpAuthKeys}` } };
+  const url = `${initializeConfig().gp2gpUrl}/health-record-requests/${nhsNumber}/acknowledgement`;
   const body = {
     conversationId,
     odsCode,
     messageId,
-    repositoryAsid: initialiseConfig().repositoryAsid
+    repositoryAsid: initializeConfig().repositoryAsid
   };
 
   it('should call endpoint with nhs number and conversation id in the body', async () => {

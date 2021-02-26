@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
-import { initialiseConfig } from '../../../config';
+import { initializeConfig } from '../../../config';
 import { checkEHRComplete } from '../ehr-details-request';
 
 jest.mock('axios');
@@ -24,7 +24,7 @@ const ehrBodyWithStatus = (status, conversationId) => {
 
 describe('checkEHRComplete', () => {
   beforeEach(() => {
-    initialiseConfig.mockReturnValue({
+    initializeConfig.mockReturnValue({
       useNewEhrRepoApi: false
     });
   });
@@ -55,7 +55,7 @@ describe('checkEHRComplete', () => {
 
 describe('use new ehr repo api', () => {
   beforeEach(() => {
-    initialiseConfig.mockReturnValue({
+    initializeConfig.mockReturnValue({
       useNewEhrRepoApi: true
     });
   });

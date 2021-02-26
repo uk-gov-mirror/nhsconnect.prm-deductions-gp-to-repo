@@ -4,7 +4,7 @@ import {
 } from '../deduction-request-repository';
 import ModelFactory from '../../../models';
 import { modelName, Status } from '../../../models/deduction-request';
-import { logEvent } from '../../../middleware/logging';
+import { logInfo } from '../../../middleware/logging';
 
 jest.mock('../../../middleware/logging');
 
@@ -52,7 +52,7 @@ describe('Deduction request repository', () => {
     });
     await updateDeductionRequestStatus(conversationId, expectedStatus);
 
-    expect(logEvent).toHaveBeenCalledWith('Successfully updated deduction request status', {
+    expect(logInfo).toHaveBeenCalledWith('Successfully updated deduction request status', {
       conversationId,
       status: expectedStatus
     });

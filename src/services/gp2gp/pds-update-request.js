@@ -25,7 +25,7 @@ export const sendUpdateRequest = (serialChangeNumber, pdsId, nhsNumber, conversa
       (axiosBody.serialChangeNumber, axiosBody.pdsId)
     }`;
     const axiosError = new Error(errorMessage);
-    logError(errorMessage, error);
+    logError(`${errorMessage}`, { error });
     throw axiosError;
   });
 };

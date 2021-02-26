@@ -20,7 +20,7 @@ export const sendHealthRecordAcknowledgement = async (
     );
   } catch (err) {
     const errorMessage = `Error sending EHR acknowledgement - axios error: ${err.message}`;
-    logError(errorMessage, err);
+    logError(`${errorMessage}`, { err });
     throw new Error(errorMessage);
   }
 };

@@ -1,5 +1,5 @@
 import { param } from 'express-validator';
-import { logEvent, logError } from '../../middleware/logging';
+import { logInfo, logError } from '../../middleware/logging';
 import { sendHealthRecordRequest } from '../../services/gp2gp';
 import {
   getDeductionRequestByConversationId,
@@ -20,13 +20,13 @@ export const pdsUpdateResponse = async (req, res) => {
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
     if (deductionRequest === null) {
       res.sendStatus(404);
-      logEvent('Conversation id not found');
+      logInfo('Conversation id not found');
       return;
     }
 
     if (deductionRequest.status === Status.STARTED) {
       res.sendStatus(409);
-      logEvent('Pds update has not been requested');
+      logInfo('Pds update has not been requested');
       return;
     }
 
@@ -41,12 +41,12 @@ export const pdsUpdateResponse = async (req, res) => {
         throw new Error(`EHR request failed with status ${res.status}`);
       }
       await updateDeductionRequestStatus(conversationId, Status.EHR_REQUEST_SENT);
-      logEvent('EHR request sent');
+      logInfo('EHR request sent');
     }
 
     res.sendStatus(204);
   } catch (err) {
-    logError('pdsUpdateResponse failed', err);
+    logError('pdsUpdateResponse failed', { err });
     res.status(503).json({
       errors: err.message
     });

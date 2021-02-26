@@ -13,7 +13,8 @@ export const initialiseConfig = () => ({
   practiceOdsCode: 'M85019',
   url: process.env.SERVICE_URL || `http://127.0.0.1:${portNumber}`,
   sequelize: sequelizeConfig,
-  useNewEhrRepoApi: process.env.USE_NEW_EHR_REPO_API === 'true'
+  useNewEhrRepoApi: process.env.USE_NEW_EHR_REPO_API === 'true',
+  nhsEnvironment: process.env.NHS_ENVIRONMENT || 'local'
 });
 
 export default initialiseConfig();

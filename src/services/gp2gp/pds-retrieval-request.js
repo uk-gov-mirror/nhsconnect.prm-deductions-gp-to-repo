@@ -9,7 +9,7 @@ export const sendRetrievalRequest = nhsNumber => {
   return axios.get(url, { headers: { Authorization: gp2gpAuthKeys } }).catch(error => {
     const errorMessage = `GET ${url} - ${error.message || 'Request failed'}`;
     const axiosError = new Error(errorMessage);
-    logError(errorMessage, error);
+    logError(`${errorMessage}`, { error });
     throw axiosError;
   });
 };

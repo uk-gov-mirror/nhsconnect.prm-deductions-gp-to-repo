@@ -10,7 +10,7 @@ export const runWithinTransaction = async dbInteractionLambda => {
     await transaction.commit();
     return response;
   } catch (err) {
-    logError('runWithinTransaction error', err);
+    logError('runWithinTransaction error', { err });
     await transaction.rollback();
     throw err;
   }

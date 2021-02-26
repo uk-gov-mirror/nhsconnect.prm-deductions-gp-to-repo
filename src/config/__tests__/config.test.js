@@ -46,4 +46,9 @@ describe('config', () => {
     process.env.REPOSITORY_ASID = 'repo-asid';
     expect(initialiseConfig().repositoryAsid).toEqual('repo-asid');
   });
+
+  it('nhs Environment is the correct value when environment variables are set', () => {
+    process.env.NHS_ENVIRONMENT = 'local';
+    expect(initialiseConfig().nhsEnvironment).toEqual('local');
+  });
 });

@@ -29,7 +29,7 @@ export const deductionRequestStatus = async (req, res) => {
     };
     res.status(200).json(data);
   } catch (err) {
-    logError('deductionRequestStatus failed', err);
+    logError('deductionRequestStatus failed', { err });
     res.status(503).json({
       errors: err.message
     });

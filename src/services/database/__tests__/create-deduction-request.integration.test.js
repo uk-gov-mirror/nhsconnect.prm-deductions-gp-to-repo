@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { createDeductionRequest } from '../create-deduction-request';
 import { runWithinTransaction } from '../helper';
-import { logEvent, logError } from '../../../middleware/logging';
+import { logInfo, logError } from '../../../middleware/logging';
 import ModelFactory from '../../../models';
 import { modelName, Status } from '../../../models/deduction-request';
 
@@ -17,11 +17,11 @@ describe('createDeductionRequest', () => {
     await ModelFactory.sequelize.close();
   });
 
-  it('should call logEvent if data persisted correctly', () => {
+  it('should call logInfo if data persisted correctly', () => {
     const conversationId = uuid();
     return createDeductionRequest(conversationId, nhsNumber, odsCode).then(() => {
-      expect(logEvent).toHaveBeenCalledTimes(1);
-      return expect(logEvent).toHaveBeenCalledWith('Deduction request has been stored');
+      expect(logInfo).toHaveBeenCalledTimes(1);
+      return expect(logInfo).toHaveBeenCalledWith('Deduction request has been stored');
     });
   });
 

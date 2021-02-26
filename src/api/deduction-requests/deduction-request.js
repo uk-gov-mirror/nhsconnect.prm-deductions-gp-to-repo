@@ -28,7 +28,7 @@ export const deductionRequest = async (req, res) => {
 
     res.set('Location', statusEndpoint).sendStatus(201);
   } catch (err) {
-    logError('deductionRequest failed', err);
+    logError('deductionRequest failed', { err });
     res.status(503).json({
       errors: err.message
     });

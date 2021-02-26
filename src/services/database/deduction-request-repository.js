@@ -1,7 +1,7 @@
 import { runWithinTransaction } from './helper';
 import ModelFactory from '../../models';
 import { modelName } from '../../models/deduction-request';
-import { logEvent } from '../../middleware/logging';
+import { logInfo } from '../../middleware/logging';
 
 const DeductionRequest = ModelFactory.getByName(modelName);
 
@@ -19,5 +19,5 @@ export const updateDeductionRequestStatus = async (conversationId, status) => {
       }
     );
   });
-  logEvent('Successfully updated deduction request status', { conversationId, status });
+  logInfo('Successfully updated deduction request status', { conversationId, status });
 };

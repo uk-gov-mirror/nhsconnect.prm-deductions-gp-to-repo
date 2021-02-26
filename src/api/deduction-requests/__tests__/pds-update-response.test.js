@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../../app';
 import { sendHealthRecordRequest } from '../../../services/gp2gp';
-import { logEvent, logError } from '../../../middleware/logging';
+import { logInfo, logError } from '../../../middleware/logging';
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
@@ -48,7 +48,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
           conversationId,
           odsCode
         );
-        expect(logEvent).toHaveBeenCalledWith('EHR request sent');
+        expect(logInfo).toHaveBeenCalledWith('EHR request sent');
       })
       .expect(204)
       .end(done);
@@ -189,7 +189,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       .expect(() => {
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
-        expect(logEvent).toHaveBeenCalledWith('Pds update has not been requested');
+        expect(logInfo).toHaveBeenCalledWith('Pds update has not been requested');
       })
       .expect(409)
       .end(done);
@@ -205,7 +205,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(nonexistentConversationId);
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
-        expect(logEvent).toHaveBeenCalledWith('Conversation id not found');
+        expect(logInfo).toHaveBeenCalledWith('Conversation id not found');
       })
       .end(done);
   });

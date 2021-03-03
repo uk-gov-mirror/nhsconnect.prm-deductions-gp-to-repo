@@ -8,8 +8,7 @@ locals {
     { name = "EHR_REPO_URL", value = "http://${var.environment}.ehr-repo.patient-deductions.nhs.uk" },
     { name = "DATABASE_NAME", value = var.database_name },
     { name = "DATABASE_HOST", value = data.aws_ssm_parameter.rds_endpoint.value },
-    { name = "SERVICE_URL", value = aws_ssm_parameter.service_url.value},
-    { name = "USE_NEW_EHR_REPO_API", value = data.aws_ssm_parameter.use_new_ehr_repo_api.value }
+    { name = "SERVICE_URL", value = aws_ssm_parameter.service_url.value}
   ]
   secret_environment_variables = [
     { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn },

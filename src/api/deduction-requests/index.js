@@ -11,6 +11,10 @@ import {
   ehrMessageReceived,
   ehrMessageReceivedValidationRules
 } from './ehr-message-received-controller';
+import {
+  largeEhrTransferStarted,
+  largeEhrTransferStartedValidationRules
+} from './large-ehr-transfer-started';
 
 const deductionRequests = express.Router();
 
@@ -44,6 +48,14 @@ deductionRequests.patch(
   ehrMessageReceivedValidationRules,
   validate,
   ehrMessageReceived
+);
+
+deductionRequests.patch(
+  '/:conversationId/large-ehr-transfer-started',
+  authenticateRequest,
+  largeEhrTransferStartedValidationRules,
+  validate,
+  largeEhrTransferStarted
 );
 
 export { deductionRequests };

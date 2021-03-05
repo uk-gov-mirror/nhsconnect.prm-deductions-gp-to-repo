@@ -9,6 +9,7 @@ export const Status = {
   PDS_UPDATED: 'pds_updated',
   EHR_REQUEST_SENT: 'ehr_request_sent',
   EHR_REQUEST_RECEIVED: 'ehr_extract_received',
+  LARGE_EHR_TRANSFER_STARTED: 'large_ehr_transfer_started',
   FAILED: 'failed'
 };
 

@@ -212,7 +212,7 @@ describe('app', () => {
     const status = Status.EHR_REQUEST_SENT;
     const odsCode = 'B1234';
 
-    it('should return 204 when EHR message is received and is using new ehr repo api', async done => {
+    it('should return 204 when EHR message is received', async done => {
       axios.get.mockImplementation(() => Promise.resolve({ status: 200 }));
       await DeductionRequest.create({
         conversationId,
@@ -230,6 +230,45 @@ describe('app', () => {
           expect(res.body).toEqual({});
         })
         .end(done);
+    });
+  });
+
+  describe('PATCH /deduction-requests/:conversation-id/large-ehr-transfer-started', () => {
+    const conversationId = uuid();
+    const expectedNhsNumber = '1234567898';
+    const status = Status.EHR_REQUEST_SENT;
+    const expectedUpdatedStatus = Status.LARGE_EHR_TRANSFER_STARTED;
+    const odsCode = 'B1234';
+
+    it('should return 204 when first large message is received and status has been updated', async () => {
+      await DeductionRequest.create({
+        conversationId,
+        nhsNumber: expectedNhsNumber,
+        status: status,
+        odsCode
+      });
+
+      const res = await request(app)
+        .patch(`/deduction-requests/${conversationId}/large-ehr-transfer-started`)
+        .set('Authorization', 'correct-key');
+
+      expect(res.status).toEqual(204);
+
+      const statusRes = await request(app)
+        .get(`/deduction-requests/${conversationId}`)
+        .set('Authorization', 'correct-key');
+
+      expect(statusRes.status).toEqual(200);
+      expect(statusRes.body).toEqual({
+        data: {
+          type: 'deduction-requests',
+          id: conversationId,
+          attributes: {
+            nhsNumber: '1234567898',
+            status: expectedUpdatedStatus
+          }
+        }
+      });
     });
   });
 });

@@ -6,11 +6,11 @@ import {
 import { Status } from '../../models/deduction-request';
 import { logError, logInfo } from '../../middleware/logging';
 
-export const largeEhrTransferStartedValidationRules = [
+export const largeEhrStartedValidationRules = [
   param('conversationId').isUUID().withMessage("'conversationId' provided is not of type UUIDv4")
 ];
 
-export const largeEhrTransferStarted = async (req, res) => {
+export const largeEhrStarted = async (req, res) => {
   const { conversationId } = req.params;
 
   try {
@@ -20,11 +20,11 @@ export const largeEhrTransferStarted = async (req, res) => {
       return;
     }
 
-    await updateDeductionRequestStatus(conversationId, Status.LARGE_EHR_TRANSFER_STARTED);
-    logInfo('Updated deduction request status to largeEhrTransferStarted');
+    await updateDeductionRequestStatus(conversationId, Status.LARGE_EHR_STARTED);
+    logInfo('Updated deduction request status to largeEhrStarted');
     res.sendStatus(204);
   } catch (err) {
-    logError('Could not update deduction request to largeEhrTransferStarted');
+    logError('Could not update deduction request to largeEhrStarted');
     res.sendStatus(503);
   }
 };

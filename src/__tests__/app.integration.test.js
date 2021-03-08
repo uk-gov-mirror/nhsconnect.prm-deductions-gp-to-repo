@@ -233,11 +233,11 @@ describe('app', () => {
     });
   });
 
-  describe('PATCH /deduction-requests/:conversation-id/large-ehr-transfer-started', () => {
+  describe('PATCH /deduction-requests/:conversation-id/large-ehr-started', () => {
     const conversationId = uuid();
     const expectedNhsNumber = '1234567898';
     const status = Status.EHR_REQUEST_SENT;
-    const expectedUpdatedStatus = Status.LARGE_EHR_TRANSFER_STARTED;
+    const expectedUpdatedStatus = Status.LARGE_EHR_STARTED;
     const odsCode = 'B1234';
 
     it('should return 204 when first large message is received and status has been updated', async () => {
@@ -249,7 +249,7 @@ describe('app', () => {
       });
 
       const res = await request(app)
-        .patch(`/deduction-requests/${conversationId}/large-ehr-transfer-started`)
+        .patch(`/deduction-requests/${conversationId}/large-ehr-started`)
         .set('Authorization', 'correct-key');
 
       expect(res.status).toEqual(204);

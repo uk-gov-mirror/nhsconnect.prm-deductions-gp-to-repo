@@ -12,7 +12,7 @@ jest.mock('../../../middleware/auth');
 jest.mock('../../../middleware/logging');
 jest.mock('../../../services/database/deduction-request-repository');
 
-describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started', () => {
+describe('PATCH /deduction-requests/:conversationId/large-ehr-started', () => {
   describe('success', () => {
     it('should return 204 and update status to large ehr transfer started', async () => {
       const conversationId = uuid();
@@ -21,16 +21,14 @@ describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started',
         status: Status.EHR_REQUEST_SENT
       });
       const res = await request(app).patch(
-        `/deduction-requests/${conversationId}/large-ehr-transfer-started`
+        `/deduction-requests/${conversationId}/large-ehr-started`
       );
 
       expect(res.status).toEqual(204);
-      expect(logInfo).toHaveBeenCalledWith(
-        'Updated deduction request status to largeEhrTransferStarted'
-      );
+      expect(logInfo).toHaveBeenCalledWith('Updated deduction request status to largeEhrStarted');
       expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
         conversationId,
-        Status.LARGE_EHR_TRANSFER_STARTED
+        Status.LARGE_EHR_STARTED
       );
     });
   });
@@ -40,7 +38,7 @@ describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started',
       getDeductionRequestByConversationId.mockResolvedValueOnce(null);
       const conversationId = uuid();
       const res = await request(app).patch(
-        `/deduction-requests/${conversationId}/large-ehr-transfer-started`
+        `/deduction-requests/${conversationId}/large-ehr-started`
       );
 
       expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
@@ -51,13 +49,13 @@ describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started',
       getDeductionRequestByConversationId.mockRejectedValueOnce({});
       const conversationId = uuid();
       const res = await request(app).patch(
-        `/deduction-requests/${conversationId}/large-ehr-transfer-started`
+        `/deduction-requests/${conversationId}/large-ehr-started`
       );
 
       expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
       expect(res.status).toEqual(503);
       expect(logError).toHaveBeenCalledWith(
-        'Could not update deduction request to largeEhrTransferStarted'
+        'Could not update deduction request to largeEhrStarted'
       );
     });
 
@@ -70,11 +68,11 @@ describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started',
       updateDeductionRequestStatus.mockRejectedValueOnce({});
 
       const res = await request(app).patch(
-        `/deduction-requests/${conversationId}/large-ehr-transfer-started`
+        `/deduction-requests/${conversationId}/large-ehr-started`
       );
       expect(res.status).toEqual(503);
       expect(logError).toHaveBeenCalledWith(
-        'Could not update deduction request to largeEhrTransferStarted'
+        'Could not update deduction request to largeEhrStarted'
       );
     });
   });
@@ -85,7 +83,7 @@ describe('PATCH /deduction-requests/:conversationId/large-ehr-transfer-started',
       const invalidConversationId = '12345';
 
       const res = await request(app).patch(
-        `/deduction-requests/${invalidConversationId}/large-ehr-transfer-started`
+        `/deduction-requests/${invalidConversationId}/large-ehr-started`
       );
 
       expect(res.status).toEqual(422);

@@ -169,10 +169,10 @@
         ]
       }
     },
-    "/deduction-requests/{conversationId}/large-ehr-transfer-started": {
+    "/deduction-requests/{conversationId}/large-ehr-started": {
       "patch": {
         "tags": [
-          "/deduction-requests/{conversationId}/large-ehr-transfer-started"
+          "/deduction-requests/{conversationId}/large-ehr-started"
         ],
         "summary": "Update the status of a deduction request when we start processing a large ehr",
         "parameters": [
@@ -186,7 +186,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Deduction Request status successfully updated to large-ehr-transfer-started"
+            "description": "Deduction Request status successfully updated to large_ehr_started"
           },
           "401": {
             "description": "Authorization header missing"

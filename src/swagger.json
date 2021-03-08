@@ -211,10 +211,10 @@
         ]
       }
     },
-    "/deduction-requests/{conversationId}/pds-update": {
+    "/deduction-requests/{conversationId}/pds-updated": {
       "patch": {
         "tags": [
-          "/deduction-requests/{conversationId}/pds-update"
+          "/deduction-requests/{conversationId}/pds-updated"
         ],
         "summary": "Update the status of deduction request when pds has been updated and trigger EHR request",
         "parameters": [

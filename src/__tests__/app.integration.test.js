@@ -180,7 +180,7 @@ describe('app', () => {
     });
   });
 
-  describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
+  describe('PATCH /deduction-requests/:conversationId/pds-updated', () => {
     const conversationId = uuid();
     const expectedNhsNumber = '1234567891';
     const expectedStatus = Status.PDS_UPDATE_SENT;
@@ -195,7 +195,7 @@ describe('app', () => {
       });
 
       request(app)
-        .patch(`/deduction-requests/${conversationId}/pds-update`)
+        .patch(`/deduction-requests/${conversationId}/pds-updated`)
         .set('Authorization', 'correct-key')
         .expect(204)
         .expect(res => {

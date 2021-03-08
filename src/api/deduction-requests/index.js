@@ -32,7 +32,7 @@ deductionRequests.get(
 );
 
 deductionRequests.patch(
-  '/:conversationId/pds-update',
+  '/:conversationId/pds-updated',
   authenticateRequest,
   pdsResponseValidationRules,
   validate,

@@ -18,7 +18,7 @@ jest.mock('../../../services/database/deduction-request-repository', () => ({
   updateDeductionRequestStatus: jest.fn()
 }));
 
-describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
+describe('PATCH /deduction-requests/:conversationId/pds-updated', () => {
   const conversationId = 'b3e0cfe6-7401-4ced-b5b3-34862d602c28';
   const expectedNhsNumber = '1234567891';
   const odsCode = 'Y4321';
@@ -36,7 +36,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     sendHealthRecordRequest.mockResolvedValue({ status: 204 });
 
     request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .patch(`/deduction-requests/${conversationId}/pds-updated`)
       .expect(() => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
@@ -59,7 +59,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     const invalidConversationId = '12345';
 
     request(app)
-      .patch(`/deduction-requests/${invalidConversationId}/pds-update`)
+      .patch(`/deduction-requests/${invalidConversationId}/pds-updated`)
       .expect(422)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -79,7 +79,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       });
 
       request(app)
-        .patch(`/deduction-requests/${conversationId}/pds-update`)
+        .patch(`/deduction-requests/${conversationId}/pds-updated`)
         .expect(() => {
           expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
           expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
@@ -98,7 +98,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     });
     sendHealthRecordRequest.mockResolvedValue({ status: 204 });
     request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .patch(`/deduction-requests/${conversationId}/pds-updated`)
       .expect(() => {
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
           conversationId,
@@ -127,7 +127,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     sendHealthRecordRequest.mockResolvedValue({ status: 503 });
 
     request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .patch(`/deduction-requests/${conversationId}/pds-updated`)
       .expect(() => {
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
           conversationId,
@@ -151,7 +151,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       status: Status.PDS_UPDATE_SENT
     });
     sendHealthRecordRequest.mockRejectedValue({ errors: ['error'] });
-    const req = await request(app).patch(`/deduction-requests/${conversationId}/pds-update`);
+    const req = await request(app).patch(`/deduction-requests/${conversationId}/pds-updated`);
     expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
     expect(req.status).toBe(503);
   });
@@ -165,7 +165,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     updateDeductionRequestStatus.mockRejectedValue({});
 
     request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .patch(`/deduction-requests/${conversationId}/pds-updated`)
       .expect(() => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(conversationId);
         expect(updateDeductionRequestStatus).toHaveBeenCalledWith(
@@ -185,7 +185,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
       status: Status.STARTED
     });
     request(app)
-      .patch(`/deduction-requests/${conversationId}/pds-update`)
+      .patch(`/deduction-requests/${conversationId}/pds-updated`)
       .expect(() => {
         expect(updateDeductionRequestStatus).not.toHaveBeenCalled();
         expect(sendHealthRecordRequest).not.toHaveBeenCalled();
@@ -199,7 +199,7 @@ describe('PATCH /deduction-requests/:conversationId/pds-update', () => {
     const nonexistentConversationId = '1017bc7e-d8c0-49c2-99d6-67672cf408cd';
     getDeductionRequestByConversationId.mockResolvedValue(null);
     request(app)
-      .patch(`/deduction-requests/${nonexistentConversationId}/pds-update`)
+      .patch(`/deduction-requests/${nonexistentConversationId}/pds-updated`)
       .expect(404)
       .expect(() => {
         expect(getDeductionRequestByConversationId).toHaveBeenCalledWith(nonexistentConversationId);

@@ -35,7 +35,9 @@ export const middleware = (req, res, next) => {
   }
 
   res.on('finish', () => eventFinished(req, res));
-  next();
+  context.with(setSpan(context.active(), span), () => {
+    next();
+  });
   span.end();
 };
 

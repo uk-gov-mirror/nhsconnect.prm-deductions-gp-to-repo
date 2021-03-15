@@ -235,21 +235,22 @@ describe('app', () => {
 
   describe('PATCH /deduction-requests/:conversation-id/large-ehr-started', () => {
     const conversationId = uuid();
+    const ehrExtractMessageId = uuid();
     const expectedNhsNumber = '1234567898';
-    const status = Status.EHR_REQUEST_SENT;
-    const expectedUpdatedStatus = Status.LARGE_EHR_STARTED;
     const odsCode = 'B1234';
 
-    it('should return 204 when first large message is received and status has been updated', async () => {
+    it('should return 204 when continue message has been sent and status updated', async () => {
+      axios.post.mockImplementation(() => Promise.resolve({ status: 204 }));
       await DeductionRequest.create({
         conversationId,
         nhsNumber: expectedNhsNumber,
-        status: status,
+        status: Status.EHR_REQUEST_SENT,
         odsCode
       });
 
       const res = await request(app)
         .patch(`/deduction-requests/${conversationId}/large-ehr-started`)
+        .send({ ehrExtractMessageId })
         .set('Authorization', 'correct-key');
 
       expect(res.status).toEqual(204);
@@ -265,7 +266,7 @@ describe('app', () => {
           id: conversationId,
           attributes: {
             nhsNumber: '1234567898',
-            status: expectedUpdatedStatus
+            status: Status.CONTINUE_MESSAGE_SENT
           }
         }
       });

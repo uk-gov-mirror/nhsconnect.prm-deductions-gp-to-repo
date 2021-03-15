@@ -174,7 +174,7 @@
         "tags": [
           "/deduction-requests/{conversationId}/large-ehr-started"
         ],
-        "summary": "Update the status of a deduction request when we start processing a large ehr",
+        "summary": "Updates the status and sends continue message for large health records",
         "parameters": [
           {
             "in": "path",
@@ -182,6 +182,14 @@
             "description": "Conversation Id (must be UUID)",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "ehrExtractMessageId",
+            "description": "EHR Extract Message Id (must be UUID)",
+            "schema": {
+              "$ref": "#/definitions/largeEhrStarted"
+            }
           }
         ],
         "responses": {
@@ -330,6 +338,15 @@
         }
       },
       "required": ["messageId"]
+    },
+    "largeEhrStarted": {
+      "type": "object",
+      "properties": {
+        "ehrExtractMessageId": {
+          "type": "string"
+        }
+      },
+      "required": ["ehrExtractMessageId"]
     },
     "errorResponse": {
       "type": "object",

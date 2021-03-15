@@ -10,6 +10,7 @@ export const Status = {
   EHR_REQUEST_SENT: 'ehr_request_sent',
   EHR_REQUEST_RECEIVED: 'ehr_extract_received',
   LARGE_EHR_STARTED: 'large_ehr_started',
+  CONTINUE_MESSAGE_SENT: 'continue_message_sent',
   FAILED: 'failed'
 };
 

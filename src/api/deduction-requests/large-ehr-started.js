@@ -1,17 +1,22 @@
-import { param } from 'express-validator';
+import { body, param } from 'express-validator';
 import {
   getDeductionRequestByConversationId,
   updateDeductionRequestStatus
 } from '../../services/database/deduction-request-repository';
 import { Status } from '../../models/deduction-request';
 import { logError, logInfo } from '../../middleware/logging';
+import { sendContinueRequest } from '../../services/gp2gp/send-continue-request';
 
 export const largeEhrStartedValidationRules = [
-  param('conversationId').isUUID().withMessage("'conversationId' provided is not of type UUIDv4")
+  param('conversationId').isUUID().withMessage("'conversationId' provided is not of type UUID"),
+  body('ehrExtractMessageId')
+    .isUUID()
+    .withMessage("'ehrExtractMessageId' provided is not of type UUID")
 ];
 
 export const largeEhrStarted = async (req, res) => {
   const { conversationId } = req.params;
+  const { ehrExtractMessageId } = req.body;
 
   try {
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
@@ -22,9 +27,15 @@ export const largeEhrStarted = async (req, res) => {
 
     await updateDeductionRequestStatus(conversationId, Status.LARGE_EHR_STARTED);
     logInfo('Updated deduction request status to largeEhrStarted');
+
+    await sendContinueRequest(conversationId, ehrExtractMessageId, deductionRequest.odsCode);
+    logInfo('Sent continue request');
+
+    await updateDeductionRequestStatus(conversationId, Status.CONTINUE_MESSAGE_SENT);
+    logInfo('Updated deduction request status to continueMessageSent');
     res.sendStatus(204);
   } catch (err) {
-    logError('Could not update deduction request to largeEhrStarted');
+    logError('Error sending continue message', err);
     res.sendStatus(503);
   }
 };

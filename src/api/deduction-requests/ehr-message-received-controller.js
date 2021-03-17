@@ -7,6 +7,7 @@ import { checkEHRComplete } from '../../services/ehrRepo/ehr-details-request';
 import { Status } from '../../models/deduction-request';
 import { logInfo, logError } from '../../middleware/logging';
 import { sendHealthRecordAcknowledgement } from '../../services/gp2gp/health-record-acknowledgement';
+import { setCurrentSpanAttributes } from '../../config/tracing';
 
 export const ehrMessageReceivedValidationRules = [
   param('conversationId')
@@ -19,6 +20,8 @@ export const ehrMessageReceived = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const { messageId } = req.body;
+    setCurrentSpanAttributes({ conversationId, messageId });
+
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
     if (deductionRequest === null) {
       res.sendStatus(404);

@@ -7,7 +7,6 @@ import { v4 as uuid } from 'uuid';
 import { modelName, Status } from '../models/deduction-request';
 
 jest.mock('axios');
-jest.mock('../config/logging');
 
 const retrievalResponse = {
   data: {

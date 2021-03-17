@@ -1,5 +1,6 @@
 import { param } from 'express-validator';
 import { logError } from '../../middleware/logging';
+import { setCurrentSpanAttributes } from '../../config/tracing';
 import { getDeductionRequestByConversationId } from '../../services/database/deduction-request-repository';
 
 export const deductionRequestStatusValidationRules = [
@@ -11,6 +12,7 @@ export const deductionRequestStatusValidationRules = [
 
 export const deductionRequestStatus = async (req, res) => {
   try {
+    setCurrentSpanAttributes({ conversationId: req.params.conversationId });
     const requestStatus = await getDeductionRequestByConversationId(req.params.conversationId);
 
     if (requestStatus === null) return res.sendStatus(404);

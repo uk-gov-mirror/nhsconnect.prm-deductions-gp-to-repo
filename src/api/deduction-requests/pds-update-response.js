@@ -6,6 +6,7 @@ import {
   updateDeductionRequestStatus
 } from '../../services/database/deduction-request-repository';
 import { Status } from '../../models/deduction-request';
+import { setCurrentSpanAttributes } from '../../config/tracing';
 
 export const pdsResponseValidationRules = [
   param('conversationId')
@@ -17,6 +18,8 @@ export const pdsResponseValidationRules = [
 export const pdsUpdateResponse = async (req, res) => {
   try {
     const { conversationId } = req.params;
+    setCurrentSpanAttributes({ conversationId });
+
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);
     if (deductionRequest === null) {
       res.sendStatus(404);

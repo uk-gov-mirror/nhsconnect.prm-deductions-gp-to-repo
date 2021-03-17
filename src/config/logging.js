@@ -22,6 +22,7 @@ export const addCommonFields = format(info => {
   if (currentSpan) {
     updated['traceId'] = currentSpan.context().traceId;
     updated['conversationId'] = currentSpan.attributes.conversationId;
+    updated['messageId'] = currentSpan.attributes.messageId;
   }
   updated.level = updated.level.toUpperCase();
   updated['service'] = 'gp-to-repo';

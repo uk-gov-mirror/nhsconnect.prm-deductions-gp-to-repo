@@ -29,16 +29,14 @@ export const logDebug = status => {
 let span;
 export const middleware = (req, res, next) => {
   span = tracer.startSpan('inboundRequestSpan', context.active());
-  const conversationId = extractConversationId(req);
-  if (conversationId) {
-    span.setAttribute('conversationId', conversationId);
-  }
-
-  res.on('finish', () => eventFinished(req, res));
   context.with(setSpan(context.active(), span), () => {
     next();
   });
-  span.end();
+
+  res.on('finish', () => {
+    eventFinished(req, res);
+    span.end();
+  });
 };
 
 export const eventFinished = (req, res) => {
@@ -50,11 +48,5 @@ export const eventFinished = (req, res) => {
     logInfo(url, { req: reqLog, res: resLog });
   } else {
     logError(url, { req: reqLog, res: resLog });
-  }
-};
-
-const extractConversationId = req => {
-  if (req.method === 'GET' || req.method === 'PATCH') {
-    return req.url.split('/')[1];
   }
 };

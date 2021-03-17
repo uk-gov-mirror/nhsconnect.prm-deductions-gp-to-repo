@@ -6,6 +6,7 @@ import {
 import { Status } from '../../models/deduction-request';
 import { logError, logInfo } from '../../middleware/logging';
 import { sendContinueRequest } from '../../services/gp2gp/send-continue-request';
+import { setCurrentSpanAttributes } from '../../config/tracing';
 
 export const largeEhrStartedValidationRules = [
   param('conversationId').isUUID().withMessage("'conversationId' provided is not of type UUID"),
@@ -17,6 +18,7 @@ export const largeEhrStartedValidationRules = [
 export const largeEhrStarted = async (req, res) => {
   const { conversationId } = req.params;
   const { ehrExtractMessageId } = req.body;
+  setCurrentSpanAttributes({ conversationId, messageId: ehrExtractMessageId });
 
   try {
     const deductionRequest = await getDeductionRequestByConversationId(conversationId);

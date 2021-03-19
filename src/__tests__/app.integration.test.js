@@ -6,7 +6,7 @@ import { logger } from '../config/logging';
 import ModelFactory from '../models';
 import { v4 as uuid } from 'uuid';
 import { modelName, Status } from '../models/deduction-request';
-import { transportSpy, expectStructuredLogToContain } from "../__builders__/logging-helper";
+import { transportSpy, expectStructuredLogToContain } from '../__builders__/logging-helper';
 
 jest.mock('axios');
 
@@ -59,17 +59,17 @@ describe('app', () => {
 
   describe('Swagger Documentation', () => {
     it('GET /swagger - should return a 301 status code (redirect) and text/html content type response', async () => {
-      const res = await request(app).get('/swagger')
+      const res = await request(app).get('/swagger');
 
       expect(res.statusCode).toBe(301);
-      expect(res.header['content-type']).toBe('text/html; charset=UTF-8')
+      expect(res.header['content-type']).toBe('text/html; charset=UTF-8');
     });
 
     it('GET /swagger/index.html - should return a 200 status code and text/html content type response', async () => {
-      const res = await request(app).get('/swagger/index.html')
+      const res = await request(app).get('/swagger/index.html');
 
       expect(res.statusCode).toBe(200);
-      expect(res.header['content-type']).toBe('text/html; charset=UTF-8')
+      expect(res.header['content-type']).toBe('text/html; charset=UTF-8');
     });
   });
 
@@ -85,8 +85,8 @@ describe('app', () => {
         details: {
           database: { type: 'postgresql', connection: true, writable: true }
         }
-      })
-      expect(res.header['content-type']).toBe('application/json; charset=utf-8')
+      });
+      expect(res.header['content-type']).toBe('application/json; charset=utf-8');
     });
   });
 
@@ -95,22 +95,30 @@ describe('app', () => {
       const res = await request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '1111111111' })
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(201);
-      expect(res.body).toEqual({})
-      expectStructuredLogToContain(transportSpy, { conversationId: expect.anything(), traceId: expect.anything() });
+      expect(res.body).toEqual({});
+      expectStructuredLogToContain(transportSpy, {
+        conversationId: expect.anything(),
+        traceId: expect.anything()
+      });
     });
 
     it('should return a location header with lowercase conversationId', async () => {
       const res = await request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '1111111111' })
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(201);
-      expect(res.header.location).toMatch(/^.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}).*$/)
-      expectStructuredLogToContain(transportSpy, { conversationId: expect.anything(), traceId: expect.anything() });
+      expect(res.header.location).toMatch(
+        /^.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}).*$/
+      );
+      expectStructuredLogToContain(transportSpy, {
+        conversationId: expect.anything(),
+        traceId: expect.anything()
+      });
     });
 
     it('should return a 503 status code with Errors for /deduction-requests/', async () => {
@@ -121,17 +129,20 @@ describe('app', () => {
       const res = await request(app)
         .post('/deduction-requests/')
         .send({ nhsNumber: '9999999999' })
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(503);
-      expect(res.body).toEqual({ errors: 'Failed to Update: incorrect data!' })
-      expectStructuredLogToContain(transportSpy, { conversationId: expect.anything(), traceId: expect.anything() });
+      expect(res.body).toEqual({ errors: 'Failed to Update: incorrect data!' });
+      expectStructuredLogToContain(transportSpy, {
+        conversationId: expect.anything(),
+        traceId: expect.anything()
+      });
     });
 
     it('should return a 422 status code without nhsNumber in body', async () => {
       const res = await request(app)
         .post('/deduction-requests/')
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(422);
       expectStructuredLogToContain(transportSpy, { traceId: expect.anything() });
@@ -153,7 +164,7 @@ describe('app', () => {
 
       const res = await request(app)
         .get(`/deduction-requests/${conversationId}`)
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
@@ -165,7 +176,7 @@ describe('app', () => {
             status: expectedStatus
           }
         }
-      })
+      });
       expectStructuredLogToContain(transportSpy, { conversationId, traceId: expect.anything() });
     });
 
@@ -173,10 +184,13 @@ describe('app', () => {
       const nonExistingConversationId = '58eff803-48f3-4a30-8189-632141bd823d';
       const res = await request(app)
         .get(`/deduction-requests/${nonExistingConversationId}`)
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(404);
-      expectStructuredLogToContain(transportSpy, { conversationId: nonExistingConversationId, traceId: expect.anything() });
+      expectStructuredLogToContain(transportSpy, {
+        conversationId: nonExistingConversationId,
+        traceId: expect.anything()
+      });
     });
   });
 
@@ -196,10 +210,10 @@ describe('app', () => {
 
       const res = await request(app)
         .patch(`/deduction-requests/${conversationId}/pds-updated`)
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(204);
-      expect(res.body).toEqual({})
+      expect(res.body).toEqual({});
       expectStructuredLogToContain(transportSpy, { conversationId, traceId: expect.anything() });
     });
   });
@@ -220,14 +234,18 @@ describe('app', () => {
         odsCode
       });
 
-      const res = await  request(app)
+      const res = await request(app)
         .patch(`/deduction-requests/${conversationId}/ehr-message-received`)
         .send({ messageId })
-        .set('Authorization', 'correct-key')
+        .set('Authorization', 'correct-key');
 
       expect(res.statusCode).toBe(204);
-      expect(res.body).toEqual({})
-      expectStructuredLogToContain(transportSpy, { messageId, conversationId, traceId: expect.anything() });
+      expect(res.body).toEqual({});
+      expectStructuredLogToContain(transportSpy, {
+        messageId,
+        conversationId,
+        traceId: expect.anything()
+      });
     });
   });
 

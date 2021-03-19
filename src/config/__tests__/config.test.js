@@ -17,11 +17,6 @@ describe('config', () => {
     process.env.REPOSITORY_ASID = repositoryAsid;
   });
 
-  it('repository ods code defaults to the correct value when environment variables not set', () => {
-    if (process.env.REPOSITORY_ODS_CODE) delete process.env.REPOSITORY_ODS_CODE;
-    expect(initializeConfig().repositoryOdsCode).toEqual('B86041');
-  });
-
   it('repository ods code is the correct value when environment variable is set', () => {
     process.env.REPOSITORY_ODS_CODE = 'something';
     expect(initializeConfig().repositoryOdsCode).toEqual('something');
@@ -35,11 +30,6 @@ describe('config', () => {
   it('service url is the correct value when environment variables are set', () => {
     process.env.SERVICE_URL = 'url';
     expect(initializeConfig().url).toEqual(`url`);
-  });
-
-  it('repository asid defaults to the correct value when environment variables not set', () => {
-    if (process.env.REPOSITORY_ASID) delete process.env.REPOSITORY_ASID;
-    expect(initializeConfig().repositoryAsid).toEqual('200000001161');
   });
 
   it('repository asid is the correct value when environment variables are set', () => {

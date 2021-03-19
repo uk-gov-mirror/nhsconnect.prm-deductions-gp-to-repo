@@ -10,6 +10,14 @@ variable "repo_name" {
 
 variable "environment" {}
 
+variable "ods_code" {
+  description = "repository ods code"
+}
+
+variable "asid" {
+  description = "repository asid"
+}
+
 variable "component_name" {}
 
 variable "dns_name" {}

@@ -290,6 +290,7 @@ case "${command}" in
       configure_aws_service_gp2gp_auth_keys
       configure_aws_service_ehr_repo_auth_keys
       configure_service_url
+      export EHR_REPO_URL=https://test.ehr-repo.patient-deductions.nhs.uk
       export GP2GP_URL=https://test.gp2gp-adaptor.patient-deductions.nhs.uk
       dojo "./tasks _test_smoke"
       ;;

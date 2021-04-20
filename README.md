@@ -1,4 +1,5 @@
 # prm-deductions-gp-to-repo
+Handle the deduction requests
 
 ## Prerequisites
 
@@ -97,12 +98,23 @@ Please follow this design to ensure the ssm keys are easy to maintain and naviga
 ### Locally
 
 1. Run `npm install` to install all node dependencies.
-2. Create a .env file at the root of the directory
-3. As a reference for .env values, see ecs-task.tf
-4. Run `npm run start:local`
-5. If successful, you will be able to reach the Swagger docs: [http://localhost:3000/swagger/](http://localhost:3000/swagger/)
+2. Configure local environment variables:
+   - enter `dojo`
+   - run `./tasks _setup_test_integration_local`
+3. Run `npm run start:local`
+4. If successful, you will be able to reach the Swagger docs: [http://localhost:3000/swagger/](http://localhost:3000/swagger/)
 
 Note: `npm run start:nodemon` can be used to build the app before launching the Express server on port `3000` using [nodemon](https://www.npmjs.com/package/nodemon) - it will watch and reload the server upon any file changes.
+
+### Run Test Locally
+
+Configure local environment variables:
+    - enter `dojo -c Dojofile-itest`
+    - run `./tasks _test_unit` or `_test_integration` or `_test_functional`
+    
+Note: you can also run your rest directly from your IDE provided you configure your local environment variables first:
+    - enter `dojo`
+    - run `./tasks _setup_test_integration_local`
 
 ### Debugging and testing the app docker image
 
@@ -144,7 +156,7 @@ Run `./tasks test_functional`. This will run the end to end tests within [./test
 
 ## Pre-commit Checks
 
-Before commiting, ensure you run the following tests:
+Before committing, ensure you run the following tests:
 
 1. Unit tests
 2. Integration tests
@@ -156,7 +168,7 @@ Before commiting, ensure you run the following tests:
 Below are the environment variables that are automatically set:
 
 - `NHS_ENVIRONMENT` - is set to the current environment ('dev' for OpenTest and 'test' for PTL environment) in which the container is deployed. It is populated by the pipeline.gocd.yml
-- `SERVICE_URL` - This is prepopulated by `tasks` and will configure it to service URL according to environment.
-- `REPOSITORY_URI` - This is prepopulated by `tasks` (based on `IMAGE_REPO_NAME`)
+- `SERVICE_URL` - This is pre-populated by `tasks` and will configure it to service URL according to environment.
+- `REPOSITORY_URI` - This is pre-populated by `tasks` (based on `IMAGE_REPO_NAME`)
 - `NODE_ENV` - set by the Docker files to be `local`
 - `AUTHORIZATION_KEYS` - a comma-separated list of Authorization keys. These are automatically taken from AWS Parameters Store in the 'dev' and 'test' environments.

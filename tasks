@@ -195,17 +195,6 @@ function test_functional {
   fi
 }
 
-function test_smoke {
-  check_env
-  npm install
-  if [[ $NHS_ENVIRONMENT == "test" ]]; then
-    npm run test:smoke
-  else
-    echo "Smoke tests should only be run against the test environment!"
-  fi
-}
-
-
 ###########
 ## TASKS ##
 ###########
@@ -281,18 +270,6 @@ case "${command}" in
       configure_aws_service_ehr_repo_auth_keys
       configure_service_url
       dojo "./tasks _test_functional"
-      ;;
-  _test_smoke)
-      test_smoke
-      ;;
-  test_smoke)
-      configure_aws_service_auth_keys
-      configure_aws_service_gp2gp_auth_keys
-      configure_aws_service_ehr_repo_auth_keys
-      configure_service_url
-      export EHR_REPO_URL=https://test.ehr-repo.patient-deductions.nhs.uk
-      export GP2GP_URL=https://test.gp2gp-adaptor.patient-deductions.nhs.uk
-      dojo "./tasks _test_smoke"
       ;;
   _test_coverage)
       npm install
